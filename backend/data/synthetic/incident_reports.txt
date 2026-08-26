@@ -1,0 +1,6 @@
+INVESTIGATION INCIDENT INTELLIGENCE REPORT
+Date: 26 August 2026 | Ref: FIR-289/Cyber-Crime
+Surveillance intercept logs confirm that Person_044 contacted Person_078 near Sector 4 Logistics Warehouse (Location_A) using burner line Phone_021. 
+Person_078 later transferred structured funds from Account_103 to Account_221.
+Vehicle_017 was logged departing Gate 2 towards Terminal 2 Safehouse Facility (Location_B).
+Corporate filing cross-match identifies Person_078 as authorized board representative for Apex Maritime Holdings Ltd. (Organization_X).
