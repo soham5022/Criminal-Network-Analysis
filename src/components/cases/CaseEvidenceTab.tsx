@@ -1,13 +1,13 @@
 import React, { useEffect, useState } from 'react';
 import { 
-  FileCheck2, 
-  ShieldCheck, 
+  FileSpreadsheet, 
   Search, 
   ArrowRight, 
-  Hash, 
-  Clock, 
   ExternalLink,
-  Layers
+  Phone,
+  CreditCard,
+  Car,
+  FileText
 } from 'lucide-react';
 import { caseService, EvidenceRecord } from '../../services/caseService';
 import { useInvestigation } from '../../context/InvestigationContext';
@@ -40,91 +40,99 @@ export const CaseEvidenceTab: React.FC<{ caseId: string }> = ({ caseId }) => {
 
   const handleInspectEntity = (entityId: string) => {
     setSelectedEntityId(entityId);
-    navigateTo('network', { entityId });
+    navigateTo('investigate', { entityId });
+  };
+
+  const getChannelIcon = (type: string) => {
+    if (type.includes('CDR') || type.includes('CALL')) return <Phone className="w-3.5 h-3.5 text-emerald-400" />;
+    if (type.includes('BANK') || type.includes('FINANCIAL')) return <CreditCard className="w-3.5 h-3.5 text-blue-400" />;
+    if (type.includes('VEHICLE') || type.includes('ANPR')) return <Car className="w-3.5 h-3.5 text-amber-400" />;
+    return <FileText className="w-3.5 h-3.5 text-purple-400" />;
   };
 
   return (
-    <div className="space-y-4 select-none">
-      {/* Header & Filter */}
-      <div className="intel-card p-4 rounded-xl border border-slate-800 flex flex-wrap items-center justify-between gap-3">
+    <div className="space-y-4 select-none animate-in fade-in">
+      {/* Search and Records Summary */}
+      <div className="intel-card p-4 border border-slate-800 flex flex-wrap items-center justify-between gap-3">
         <div className="flex items-center gap-2">
-          <FileCheck2 className="w-4 h-4 text-cyan-400" />
+          <FileSpreadsheet className="w-4 h-4 text-blue-400" />
           <h3 className="text-xs font-bold uppercase tracking-wider text-white">
-            Data Provenance & Source Evidence Ledger ({filtered.length} Indexed Records)
+            Source Evidence & Intercept Ledger ({filtered.length} Records)
           </h3>
         </div>
 
-        <div className="relative min-w-[240px]">
-          <Search className="w-3.5 h-3.5 text-slate-400 absolute left-2.5 top-1/2 -translate-y-1/2" />
+        <div className="relative min-w-[260px]">
+          <Search className="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
           <input
             type="text"
             value={search}
             onChange={(e) => setSearch(e.target.value)}
             placeholder="Search records, entities, hashes..."
-            className="w-full pl-8 pr-3 py-1.5 rounded-lg bg-slate-900 border border-slate-800 text-xs font-mono text-white placeholder-slate-500 focus:outline-none focus:border-cyan-500"
+            className="w-full pl-9 pr-3 py-1.5 rounded-lg bg-[#090e1a] border border-slate-800 text-xs text-white placeholder-slate-400 focus:outline-none focus:border-blue-500"
           />
         </div>
       </div>
 
-      {/* Evidence Table */}
-      <div className="intel-card rounded-xl border border-slate-800 overflow-hidden">
+      {/* Evidence Records Table */}
+      <div className="intel-card border border-slate-800 overflow-hidden">
         {isLoading ? (
-          <div className="p-8 text-center text-xs font-mono text-slate-400">
-            Verifying data provenance and cryptographic record hashes...
+          <div className="p-8 text-center text-xs text-slate-400">
+            Loading verified evidence records...
           </div>
         ) : filtered.length === 0 ? (
-          <div className="p-8 text-center text-xs font-mono text-slate-400">
-            No source evidence records match your search.
+          <div className="p-8 text-center text-xs text-slate-400">
+            No source records match your search filter.
           </div>
         ) : (
           <div className="overflow-x-auto">
-            <table className="w-full text-left text-xs font-mono">
-              <thead className="bg-slate-950/80 text-[10px] text-slate-400 uppercase tracking-wider border-b border-slate-800">
+            <table className="w-full text-left text-xs">
+              <thead className="bg-[#090e1a] text-[11px] text-slate-400 uppercase tracking-wider border-b border-slate-800">
                 <tr>
-                  <th className="p-3.5">Source Record ID</th>
+                  <th className="p-3.5">Record ID</th>
                   <th className="p-3.5">Channel</th>
-                  <th className="p-3.5">Entities Intercepted</th>
-                  <th className="p-3.5">Timestamp</th>
+                  <th className="p-3.5">Involved Entities</th>
+                  <th className="p-3.5">Intercept Timestamp</th>
                   <th className="p-3.5">Cryptographic Hash</th>
-                  <th className="p-3.5 text-right">Action</th>
+                  <th className="p-3.5 text-right">Inspect</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-slate-800/60">
+              <tbody className="divide-y divide-slate-800/80">
                 {filtered.map((item) => (
                   <tr key={item.record_id} className="hover:bg-slate-900/60 transition-colors">
-                    <td className="p-3.5 font-bold text-cyan-300">
+                    <td className="p-3.5 font-mono font-bold text-blue-400">
                       {item.record_id}
                     </td>
                     <td className="p-3.5">
-                      <span className="px-2 py-0.5 rounded bg-slate-800 border border-slate-700 text-[10px] text-slate-300">
-                        {item.record_type}
+                      <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded bg-[#090e1a] border border-slate-800 text-xs text-slate-300">
+                        {getChannelIcon(item.record_type)}
+                        <span>{item.record_type}</span>
                       </span>
                     </td>
                     <td className="p-3.5 text-white">
                       <button 
                         onClick={() => handleInspectEntity(item.primary_entity)}
-                        className="hover:text-cyan-400 underline decoration-cyan-500/40"
+                        className="hover:text-blue-400 font-medium underline decoration-blue-500/40"
                       >
                         {item.primary_entity}
                       </button>
-                      <span className="text-slate-500 mx-1.5">─▶</span>
+                      <span className="text-slate-500 mx-2">─▶</span>
                       <button 
                         onClick={() => handleInspectEntity(item.counterparty_entity)}
-                        className="hover:text-cyan-400 underline decoration-cyan-500/40"
+                        className="hover:text-blue-400 font-medium underline decoration-blue-500/40"
                       >
                         {item.counterparty_entity}
                       </button>
                     </td>
-                    <td className="p-3.5 text-slate-400">
+                    <td className="p-3.5 text-slate-300">
                       {new Date(item.timestamp).toLocaleString('en-US', { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' })}
                     </td>
-                    <td className="p-3.5 text-slate-500 text-[10px]">
-                      {item.sha256_hash}
+                    <td className="p-3.5 text-slate-500 font-mono text-[11px]">
+                      {item.sha256_hash.substring(0, 16)}...
                     </td>
                     <td className="p-3.5 text-right">
                       <button
                         onClick={() => handleInspectEntity(item.primary_entity)}
-                        className="p-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white transition-colors"
+                        className="p-1.5 rounded-lg bg-slate-800 hover:bg-blue-600 text-slate-300 hover:text-white transition-colors"
                         title="Inspect in Network"
                       >
                         <ExternalLink className="w-3.5 h-3.5" />

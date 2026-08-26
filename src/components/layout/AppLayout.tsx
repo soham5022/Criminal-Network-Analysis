@@ -11,8 +11,6 @@ import { Overview } from '../../pages/Overview';
 import { Cases } from '../../pages/Cases';
 import { CaseDetails } from '../../pages/CaseDetails';
 import { NetworkAnalysis } from '../../pages/NetworkAnalysis';
-import { Entities } from '../../pages/Entities';
-import { Timeline } from '../../pages/Timeline';
 import { Alerts } from '../../pages/Alerts';
 import { Reports } from '../../pages/Reports';
 import { Audit } from '../../pages/Audit';
@@ -22,22 +20,32 @@ export const AppLayout: React.FC = () => {
 
   const renderPage = () => {
     switch (currentPage) {
-      case 'overview': return <Overview />;
-      case 'cases': return <Cases />;
-      case 'case-details': return <CaseDetails />;
-      case 'network': return <NetworkAnalysis />;
-      case 'entities': return <Entities />;
-      case 'timeline': return <Timeline />;
-      case 'alerts': return <Alerts />;
-      case 'reports': return <Reports />;
-      case 'audit': return <Audit />;
-      default: return <Overview />;
+      case 'dashboard':
+      case 'overview': 
+        return <Overview />;
+      case 'cases': 
+        return <Cases />;
+      case 'case-details': 
+        return <CaseDetails />;
+      case 'investigate':
+      case 'network':
+      case 'entities':
+      case 'timeline':
+        return <NetworkAnalysis />;
+      case 'alerts': 
+        return <Alerts />;
+      case 'reports': 
+        return <Reports />;
+      case 'audit': 
+        return <Audit />;
+      default: 
+        return <Overview />;
     }
   };
 
   return (
-    <div className="flex h-screen w-screen overflow-hidden bg-[#060a12] text-slate-100 antialiased font-sans">
-      {/* Collapsible Sidebar (Hidden in Presentation Mode for max screen estate) */}
+    <div className="flex h-screen w-screen overflow-hidden bg-[#090e17] text-slate-100 antialiased font-sans">
+      {/* Collapsible Sidebar */}
       {!isPresentationMode && <Sidebar />}
 
       {/* Main Content Area */}
@@ -49,7 +57,7 @@ export const AppLayout: React.FC = () => {
         <Header />
 
         {/* Dynamic Page Body */}
-        <main className="flex-1 overflow-y-auto p-4 sm:p-6 lg:p-8 bg-[#060a12]">
+        <main className="flex-1 overflow-y-auto p-4 sm:p-6 lg:p-8 bg-[#090e17]">
           <div className={`${isPresentationMode ? 'max-w-full px-2' : 'max-w-7xl'} mx-auto space-y-6`}>
             {renderPage()}
           </div>

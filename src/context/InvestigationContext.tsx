@@ -2,9 +2,11 @@ import React, { createContext, useContext, useState, ReactNode } from 'react';
 import { EntityType, AnalyticalPriority } from '../types';
 
 export type AppPage = 
+  | 'dashboard' 
   | 'overview' 
   | 'cases' 
   | 'case-details' 
+  | 'investigate' 
   | 'network' 
   | 'entities' 
   | 'timeline' 
@@ -14,9 +16,10 @@ export type AppPage =
 
 export type CaseWorkspaceTab = 
   | 'overview' 
-  | 'network' 
-  | 'entities' 
-  | 'timeline' 
+  | 'investigation' 
+  | 'network'
+  | 'entities'
+  | 'timeline'
   | 'alerts' 
   | 'evidence' 
   | 'reports' 
@@ -61,7 +64,7 @@ interface InvestigationContextType {
 const InvestigationContext = createContext<InvestigationContextType | undefined>(undefined);
 
 export const InvestigationProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
-  const [currentPage, setCurrentPage] = useState<AppPage>('overview');
+  const [currentPage, setCurrentPage] = useState<AppPage>('dashboard');
   const [activeCaseId, setActiveCaseId] = useState<string>('CASE-1024');
   const [selectedEntityId, setSelectedEntityId] = useState<string | null>('Person_044');
   const [selectedAlertId, setSelectedAlertId] = useState<string | null>(null);
@@ -88,7 +91,15 @@ export const InvestigationProvider: React.FC<{ children: ReactNode }> = ({ child
     if (options?.entityId !== undefined) setSelectedEntityId(options.entityId);
     if (options?.alertId !== undefined) setSelectedAlertId(options.alertId);
     if (options?.tab) setActiveCaseTab(options.tab);
-    setCurrentPage(page);
+    
+    // Normalize aliases
+    if (page === 'overview') {
+      setCurrentPage('dashboard');
+    } else if (page === 'network') {
+      setCurrentPage('investigate');
+    } else {
+      setCurrentPage(page);
+    }
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 

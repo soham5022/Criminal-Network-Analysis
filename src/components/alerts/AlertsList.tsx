@@ -8,8 +8,9 @@ import {
   Info,
   Network,
   Sparkles,
-  GitFork,
-  Activity
+  ChevronDown,
+  UserCheck,
+  FileSpreadsheet
 } from 'lucide-react';
 import { Alert, AlertStatus } from '../../types';
 import { alertService } from '../../services/alertService';
@@ -17,12 +18,12 @@ import { PriorityBadge, StatusBadge, EntityTypeBadge } from '../common/Badge';
 import { useInvestigation } from '../../context/InvestigationContext';
 
 export const AlertsList: React.FC = () => {
-  const { navigateTo, setSelectedEntityId, selectedAlertId } = useInvestigation();
+  const { navigateTo, setSelectedEntityId, selectedAlertId, setActiveCaseTab } = useInvestigation();
   const [alerts, setAlerts] = useState<Alert[]>([]);
-  const [severityFilter, setSeverityFilter] = useState<string>('ALL');
   const [statusFilter, setStatusFilter] = useState<string>('ALL');
   const [activeAlert, setActiveAlert] = useState<Alert | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(true);
+  const [showMethodology, setShowMethodology] = useState<boolean>(false);
 
   const fetchAlerts = async () => {
     setIsLoading(true);
@@ -57,63 +58,74 @@ export const AlertsList: React.FC = () => {
   };
 
   const filtered = alerts.filter(a => {
-    if (severityFilter !== 'ALL' && a.severity !== severityFilter) return false;
     if (statusFilter !== 'ALL' && a.status !== statusFilter) return false;
     return true;
   });
 
   const handleInvestigateInNetwork = (entityId: string) => {
     setSelectedEntityId(entityId);
-    navigateTo('network', { entityId });
+    navigateTo('investigate', { entityId });
   };
 
   return (
-    <div className="space-y-4 select-none">
-      {/* Filter and Overview Bar */}
-      <div className="intel-card p-4 rounded-xl border border-slate-800 flex flex-wrap items-center justify-between gap-3">
+    <div className="space-y-4 select-none animate-in fade-in">
+      {/* 1. Header & Quick Status Filter Bar */}
+      <div className="intel-card p-4 border border-slate-800 flex flex-wrap items-center justify-between gap-3">
         <div className="flex items-center gap-2">
-          <AlertTriangle className="w-4 h-4 text-rose-400 animate-pulse" />
+          <AlertTriangle className="w-4 h-4 text-amber-400" />
           <h3 className="text-xs font-bold uppercase tracking-wider text-white">
-            Pattern & Intelligence Anomaly Queue ({filtered.length} Flagged Leads)
+            Alerts & Emerging Patterns ({filtered.length} Items)
           </h3>
         </div>
 
-        <div className="flex flex-wrap items-center gap-2 text-xs">
-          <select
-            value={severityFilter}
-            onChange={(e) => setSeverityFilter(e.target.value)}
-            className="px-3 py-1.5 rounded-lg bg-slate-900 border border-slate-800 text-xs font-mono text-white focus:outline-none focus:border-cyan-500"
+        <div className="flex items-center gap-2 text-xs">
+          <button
+            onClick={() => setStatusFilter('ALL')}
+            className={`px-3 py-1.5 rounded-lg border text-xs transition-colors ${
+              statusFilter === 'ALL' ? 'bg-blue-600/20 border-blue-500/40 text-blue-300 font-semibold' : 'bg-[#090e1a] border-slate-800 text-slate-400 hover:text-white'
+            }`}
           >
-            <option value="ALL">All Severities</option>
-            <option value="CRITICAL">Critical Severity</option>
-            <option value="HIGH">High Severity</option>
-            <option value="MEDIUM">Medium Severity</option>
-          </select>
-
-          <select
-            value={statusFilter}
-            onChange={(e) => setStatusFilter(e.target.value)}
-            className="px-3 py-1.5 rounded-lg bg-slate-900 border border-slate-800 text-xs font-mono text-white focus:outline-none focus:border-cyan-500"
+            All ({alerts.length})
+          </button>
+          <button
+            onClick={() => setStatusFilter('NEW')}
+            className={`px-3 py-1.5 rounded-lg border text-xs transition-colors ${
+              statusFilter === 'NEW' ? 'bg-rose-500/20 border-rose-500/40 text-rose-300 font-semibold' : 'bg-[#090e1a] border-slate-800 text-slate-400 hover:text-white'
+            }`}
           >
-            <option value="ALL">All Statuses</option>
-            <option value="NEW">New Alerts</option>
-            <option value="INVESTIGATING">Under Investigation</option>
-            <option value="REVIEWED">Reviewed</option>
-          </select>
+            Needs Review ({alerts.filter(a => a.status === 'NEW').length})
+          </button>
+          <button
+            onClick={() => setStatusFilter('INVESTIGATING')}
+            className={`px-3 py-1.5 rounded-lg border text-xs transition-colors ${
+              statusFilter === 'INVESTIGATING' ? 'bg-amber-500/20 border-amber-500/40 text-amber-300 font-semibold' : 'bg-[#090e1a] border-slate-800 text-slate-400 hover:text-white'
+            }`}
+          >
+            Investigating ({alerts.filter(a => a.status === 'INVESTIGATING').length})
+          </button>
+          <button
+            onClick={() => setStatusFilter('REVIEWED')}
+            className={`px-3 py-1.5 rounded-lg border text-xs transition-colors ${
+              statusFilter === 'REVIEWED' ? 'bg-emerald-500/20 border-emerald-500/40 text-emerald-300 font-semibold' : 'bg-[#090e1a] border-slate-800 text-slate-400 hover:text-white'
+            }`}
+          >
+            Reviewed ({alerts.filter(a => a.status === 'REVIEWED').length})
+          </button>
         </div>
       </div>
 
-      {/* Main Grid: Left Alert Cards, Right Explainability Detail */}
+      {/* 2. Two Column Triage Grid */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-5">
-        {/* Alerts List (5 Cols) */}
-        <div className="lg:col-span-5 space-y-2.5 max-h-[75vh] overflow-y-auto pr-1">
+        
+        {/* Left: Alerts Queue (5 Cols) */}
+        <div className="lg:col-span-5 space-y-2.5 max-h-[72vh] overflow-y-auto pr-1">
           {isLoading ? (
-            <div className="p-8 text-center text-xs font-mono text-slate-400">
-              Loading explainable pattern alerts from graph engine...
+            <div className="p-8 text-center text-xs text-slate-400">
+              Fetching active investigative anomaly alerts...
             </div>
           ) : filtered.length === 0 ? (
-            <div className="p-8 text-center text-xs font-mono text-slate-400">
-              No alerts match the selected criteria.
+            <div className="p-8 text-center text-xs text-slate-400 intel-card border border-slate-800">
+              No alerts found under selected filter.
             </div>
           ) : (
             filtered.map((alert) => {
@@ -122,30 +134,30 @@ export const AlertsList: React.FC = () => {
                 <div
                   key={alert.id}
                   onClick={() => setActiveAlert(alert)}
-                  className={`p-4 rounded-xl border cursor-pointer transition-all space-y-2.5 ${
+                  className={`p-4 rounded-xl border cursor-pointer transition-colors space-y-2 ${
                     isSelected
-                      ? 'bg-slate-900 border-cyan-500/50 shadow-[0_0_20px_rgba(6,182,212,0.15)]'
-                      : 'bg-slate-900/60 hover:bg-slate-900/90 border-slate-800/80 hover:border-slate-700'
+                      ? 'bg-slate-900 border-blue-500 shadow-md'
+                      : 'bg-[#0c1322] hover:bg-slate-900/80 border-slate-800'
                   }`}
                 >
                   <div className="flex items-center justify-between">
                     <div className="flex items-center gap-2">
-                      <span className="font-mono text-xs font-bold text-cyan-400">{alert.id}</span>
-                      <PriorityBadge priority={alert.severity} />
+                      <span className="font-mono text-xs font-bold text-blue-400">{alert.id}</span>
+                      <PriorityBadge priority={alert.severity} size="sm" />
                     </div>
-                    <StatusBadge status={alert.status} />
+                    <StatusBadge status={alert.status} size="sm" />
                   </div>
 
                   <div>
-                    <h4 className="text-xs font-bold text-white">{alert.title}</h4>
-                    <p className="text-[11px] text-slate-400 mt-1 line-clamp-2 leading-relaxed">
+                    <h4 className="text-xs font-bold text-white leading-snug">{alert.title}</h4>
+                    <p className="text-xs text-slate-300 mt-1 line-clamp-2 leading-relaxed">
                       {alert.reason}
                     </p>
                   </div>
 
-                  <div className="flex items-center justify-between text-[10px] font-mono text-slate-500 pt-1 border-t border-slate-800/60">
+                  <div className="flex items-center justify-between text-[11px] text-slate-400 pt-1 border-t border-slate-800/80">
                     <span>{alert.category}</span>
-                    <span className="text-slate-400">{alert.timestamp}</span>
+                    <span>{alert.timestamp.split('(')[0]}</span>
                   </div>
                 </div>
               );
@@ -153,116 +165,131 @@ export const AlertsList: React.FC = () => {
           )}
         </div>
 
-        {/* Selected Alert Explainability Diagnostic Dossier (7 Cols) */}
+        {/* Right: Selected Alert Detail & Review Actions (7 Cols) */}
         <div className="lg:col-span-7">
           {activeAlert ? (
-            <div className="intel-card p-6 rounded-xl border border-slate-800 space-y-5">
-              {/* Header Info */}
-              <div className="flex items-start justify-between border-b border-slate-800/80 pb-4">
+            <div className="intel-card p-6 border border-slate-800 space-y-5">
+              
+              {/* Alert Header */}
+              <div className="flex items-start justify-between border-b border-slate-800 pb-4">
                 <div className="space-y-1">
                   <div className="flex items-center gap-2">
-                    <h3 className="font-mono text-base font-bold text-white">
-                      {activeAlert.id} // {activeAlert.title}
+                    <h3 className="text-base font-bold text-white">
+                      {activeAlert.title}
                     </h3>
                     <PriorityBadge priority={activeAlert.severity} />
                   </div>
                   <p className="text-xs text-slate-400">
-                    Category: <span className="font-mono text-cyan-300">{activeAlert.category}</span> • Case: <span className="font-mono text-slate-300">{activeAlert.associatedCaseId}</span>
+                    Alert ID: <strong className="text-blue-400 font-mono">{activeAlert.id}</strong> • Case: <strong className="text-slate-300">{activeAlert.associatedCaseId}</strong>
                   </p>
                 </div>
-
-                {/* Status Triage Switcher */}
-                <div className="flex items-center gap-1.5 p-1 rounded-lg bg-slate-950/80 border border-slate-800">
-                  {(['NEW', 'INVESTIGATING', 'REVIEWED'] as AlertStatus[]).map((st) => (
-                    <button
-                      key={st}
-                      onClick={() => handleStatusChange(activeAlert.id, st)}
-                      className={`px-2.5 py-1 rounded text-[10px] font-mono font-bold transition-all ${
-                        activeAlert.status === st
-                          ? 'bg-cyan-500 text-black shadow-sm'
-                          : 'text-slate-400 hover:text-white'
-                      }`}
-                    >
-                      {st}
-                    </button>
-                  ))}
-                </div>
+                <StatusBadge status={activeAlert.status} />
               </div>
 
-              {/* Explainability / Why it was flagged */}
-              <div className="space-y-2">
-                <h5 className="text-[11px] font-bold uppercase tracking-wider text-slate-300 flex items-center gap-1.5">
-                  <Sparkles className="w-3.5 h-3.5 text-cyan-400" />
-                  <span>Analytical Explainability & Pattern Evidence</span>
-                </h5>
-                <div className="p-3.5 rounded-xl bg-slate-950/70 border border-slate-800 text-xs text-slate-300 leading-relaxed space-y-2">
-                  <p>{activeAlert.explanation}</p>
-                </div>
-              </div>
-
-              {/* Analytical Metrics Comparison Table */}
-              <div className="space-y-2">
-                <h5 className="text-[11px] font-bold uppercase tracking-wider text-slate-300 flex items-center gap-1.5">
-                  <Activity className="w-3.5 h-3.5 text-indigo-400" />
-                  <span>Quantitative Signal Verification</span>
-                </h5>
-                <div className="grid grid-cols-1 sm:grid-cols-3 gap-2.5">
-                  {activeAlert.analyticalMetrics.map((metric, idx) => (
-                    <div key={idx} className="p-3 rounded-lg bg-slate-950/80 border border-slate-800/80 space-y-1 font-mono">
-                      <div className="text-[10px] text-slate-400 uppercase truncate">{metric.metricName}</div>
-                      <div className="text-sm font-bold text-rose-400">{metric.observedValue}</div>
-                      <div className="text-[9px] text-slate-500">Baseline: {metric.baselineValue}</div>
-                    </div>
-                  ))}
-                </div>
-              </div>
-
-              {/* Related Entities in this Pattern */}
-              <div className="space-y-2">
-                <h5 className="text-[11px] font-bold uppercase tracking-wider text-slate-300 flex items-center gap-1.5">
-                  <Network className="w-3.5 h-3.5 text-purple-400" />
-                  <span>Involved Network Entities</span>
-                </h5>
-                <div className="space-y-2">
-                  {activeAlert.relatedEntities.map((ent) => (
-                    <div
-                      key={ent.id}
-                      className="p-3 rounded-lg bg-slate-900/80 border border-slate-800 flex items-center justify-between"
-                    >
-                      <div className="flex items-center gap-2.5">
-                        <EntityTypeBadge type={ent.type} />
-                        <div>
-                          <div className="text-xs font-bold font-mono text-white">{ent.label}</div>
-                          <div className="text-[10px] text-cyan-400">{ent.roleInAlert}</div>
-                        </div>
-                      </div>
-
-                      <button
-                        onClick={() => handleInvestigateInNetwork(ent.id)}
-                        className="flex items-center gap-1 px-3 py-1.5 rounded-lg bg-indigo-600/30 hover:bg-indigo-600/50 border border-indigo-500/40 text-xs font-mono text-indigo-300 transition-colors"
-                      >
-                        <span>Investigate in Network</span>
-                        <ArrowRight className="w-3.5 h-3.5" />
-                      </button>
-                    </div>
-                  ))}
-                </div>
-              </div>
-
-              {/* Recommended Action Box */}
-              <div className="p-3.5 rounded-xl bg-amber-950/20 border border-amber-500/30 space-y-1.5">
-                <h6 className="text-[11px] font-bold uppercase tracking-wider text-amber-300 flex items-center gap-1.5">
-                  <Info className="w-3.5 h-3.5" />
-                  <span>Recommended Investigative Action</span>
-                </h6>
-                <p className="text-xs text-slate-300 leading-relaxed">
-                  {activeAlert.recommendedAction}
+              {/* 1. Why are you seeing this alert? */}
+              <div className="p-4 rounded-lg bg-[#090e1a] border border-slate-800 space-y-2">
+                <h4 className="text-xs font-bold uppercase tracking-wider text-slate-200 flex items-center gap-1.5">
+                  <Info className="w-4 h-4 text-blue-400" />
+                  <span>Why is this finding important?</span>
+                </h4>
+                <p className="text-xs text-slate-300 leading-relaxed font-sans">
+                  {activeAlert.explanation || activeAlert.reason}
                 </p>
+              </div>
+
+              {/* 2. Key Involved Suspects / Entities */}
+              {activeAlert.relatedEntities && activeAlert.relatedEntities.length > 0 && (
+                <div className="space-y-2">
+                  <h4 className="text-xs font-bold uppercase tracking-wider text-slate-300">
+                    Involved Suspects & Assets ({activeAlert.relatedEntities.length})
+                  </h4>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                    {activeAlert.relatedEntities.map((ent) => (
+                      <div
+                        key={ent.id}
+                        className="p-2.5 rounded-lg bg-[#090e1a] border border-slate-800 flex items-center justify-between"
+                      >
+                        <div className="space-y-0.5">
+                          <div className="font-mono text-xs font-bold text-white">{ent.id}</div>
+                          <div className="text-[11px] text-slate-400">{ent.roleInAlert}</div>
+                        </div>
+                        <button
+                          onClick={() => handleInvestigateInNetwork(ent.id)}
+                          className="px-2.5 py-1 rounded bg-slate-800 hover:bg-blue-600 text-blue-300 hover:text-white text-xs font-semibold transition-colors"
+                        >
+                          Inspect
+                        </button>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {/* 3. Recommended Next Steps */}
+              <div className="p-3.5 rounded-lg bg-blue-950/20 border border-blue-500/30 space-y-1 text-xs">
+                <span className="font-bold text-blue-300 uppercase tracking-wider text-[11px] block">
+                  Recommended Investigative Action:
+                </span>
+                <p className="text-slate-300 leading-relaxed">
+                  {activeAlert.recommendedAction || 'Cross-examine subscriber records and subpoena bank transaction logs for involved accounts.'}
+                </p>
+              </div>
+
+              {/* 4. Collapsible Detection Methodology */}
+              <div className="p-3 rounded-lg bg-[#090e1a] border border-slate-800 space-y-2">
+                <button
+                  onClick={() => setShowMethodology(!showMethodology)}
+                  className="w-full flex items-center justify-between text-xs font-semibold text-slate-300 uppercase tracking-wider"
+                >
+                  <span>How the system detected this pattern</span>
+                  <ChevronDown className={`w-3.5 h-3.5 transition-transform ${showMethodology ? 'rotate-180' : ''}`} />
+                </button>
+
+                {showMethodology && (
+                  <div className="pt-2 border-t border-slate-800 text-xs font-mono space-y-2 text-slate-300">
+                    <p>• <strong>Detection Rule:</strong> Algorithmic Graph Anomaly & Modularity Partitioning</p>
+                    {activeAlert.analyticalMetrics?.map((m, idx) => (
+                      <div key={idx} className="flex justify-between text-xs">
+                        <span className="text-slate-400">{m.metricName}:</span>
+                        <span>Observed <strong>{m.observedValue}</strong> (Baseline {m.baselineValue})</span>
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </div>
+
+              {/* Review Action Toolbar */}
+              <div className="pt-3 border-t border-slate-800 flex flex-wrap items-center justify-between gap-3">
+                <div className="flex items-center gap-2">
+                  <span className="text-xs text-slate-400">Update Status:</span>
+                  <button
+                    onClick={() => handleStatusChange(activeAlert.id, 'INVESTIGATING')}
+                    className="px-3 py-1.5 rounded-lg bg-amber-600/20 hover:bg-amber-600 text-amber-300 hover:text-white border border-amber-500/40 text-xs font-semibold transition-colors"
+                  >
+                    Investigating
+                  </button>
+                  <button
+                    onClick={() => handleStatusChange(activeAlert.id, 'REVIEWED')}
+                    className="px-3 py-1.5 rounded-lg bg-emerald-600/20 hover:bg-emerald-600 text-emerald-300 hover:text-white border border-emerald-500/40 text-xs font-semibold transition-colors"
+                  >
+                    Mark Reviewed
+                  </button>
+                </div>
+
+                <div className="flex items-center gap-2">
+                  <button
+                    onClick={() => handleInvestigateInNetwork(activeAlert.relatedEntities?.[0]?.id || 'Person_044')}
+                    className="px-4 py-2 rounded-lg bg-blue-600 hover:bg-blue-500 text-white text-xs font-semibold transition-colors flex items-center gap-1.5"
+                  >
+                    <Search className="w-3.5 h-3.5" />
+                    <span>View in Network</span>
+                  </button>
+                </div>
               </div>
             </div>
           ) : (
-            <div className="intel-card p-12 text-center text-xs font-mono text-slate-400 rounded-xl border border-slate-800">
-              Select an alert from the queue to review explainability diagnostics.
+            <div className="p-12 text-center text-xs text-slate-500 intel-card border border-slate-800">
+              Select an alert from the left to review explainable findings.
             </div>
           )}
         </div>
