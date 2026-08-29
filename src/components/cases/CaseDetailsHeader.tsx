@@ -1,17 +1,19 @@
 import React from 'react';
 import { 
-  Briefcase, 
-  Search, 
-  AlertTriangle, 
-  FileSpreadsheet, 
+  ArrowLeft,
+  LayoutDashboard,
+  Network,
+  Users,
+  Clock,
+  AlertTriangle,
+  FileSpreadsheet,
   FileText,
-  UploadCloud, 
-  Sparkles,
-  Layers,
-  RotateCcw
+  StickyNote,
+  UploadCloud,
+  ShieldAlert,
+  User
 } from 'lucide-react';
 import { Case } from '../../types';
-import { PriorityBadge, StatusBadge } from '../common/Badge';
 import { useInvestigation, CaseWorkspaceTab } from '../../context/InvestigationContext';
 import { useAuth } from '../../context/AuthContext';
 
@@ -23,109 +25,91 @@ export const CaseDetailsHeader: React.FC<CaseDetailsHeaderProps> = ({ caseData }
   const { activeCaseTab, setActiveCaseTab, setIsIngestionModalOpen, navigateTo } = useInvestigation();
   const { canIngest } = useAuth();
 
-  // Simplified 5 Focused Tabs
-  const tabs: { id: CaseWorkspaceTab; label: string; icon: React.ElementType; count?: number }[] = [
-    { id: 'overview', label: 'Case Overview', icon: FileText },
-    { id: 'investigation', label: 'Investigation & Graph', icon: Search, count: caseData.entityCount },
-    { id: 'alerts', label: 'Alerts', icon: AlertTriangle, count: caseData.flaggedAlertsCount },
-    { id: 'evidence', label: 'Source Evidence', icon: FileSpreadsheet },
+  const tabs: { id: CaseWorkspaceTab; label: string; icon: React.ElementType }[] = [
+    { id: 'overview', label: 'Overview', icon: LayoutDashboard },
+    { id: 'network', label: 'Network', icon: Network },
+    { id: 'entities', label: 'Entities', icon: Users },
+    { id: 'timeline', label: 'Timeline', icon: Clock },
+    { id: 'alerts', label: 'Alerts', icon: AlertTriangle },
+    { id: 'evidence', label: 'Evidence', icon: FileSpreadsheet },
+    { id: 'notes', label: 'Notes', icon: StickyNote },
     { id: 'reports', label: 'Report', icon: FileText }
   ];
 
   return (
-    <div className="intel-card border border-slate-800 space-y-4 select-none">
-      {/* Top Header Information & Actions */}
-      <div className="p-6 pb-0 flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
-        <div className="space-y-2">
-          <div className="flex flex-wrap items-center gap-3">
-            <span className="font-mono text-xl font-bold text-white tracking-wide">
-              {caseData.id} — {caseData.name}
-            </span>
-            <PriorityBadge priority={caseData.priority} size="md" />
-            <StatusBadge status={caseData.status} size="md" />
+    <div className="space-y-4 select-none">
+      {/* Back to Cases link */}
+      <div className="flex items-center justify-between">
+        <button
+          onClick={() => navigateTo('cases')}
+          className="inline-flex items-center gap-1.5 text-xs font-semibold text-slate-400 hover:text-white transition-colors"
+        >
+          <ArrowLeft className="w-3.5 h-3.5" />
+          <span>Back to Cases Directory</span>
+        </button>
+
+        {canIngest && (
+          <button
+            onClick={() => setIsIngestionModalOpen(true)}
+            className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-blue-600 hover:bg-blue-500 text-white text-xs font-semibold tracking-wide transition-colors shadow-sm"
+          >
+            <UploadCloud className="w-3.5 h-3.5" />
+            <span>Add Case Data</span>
+          </button>
+        )}
+      </div>
+
+      {/* Case Header Card */}
+      <div className="intel-card p-5 border border-slate-800 space-y-3 bg-[#0d1527]">
+        <div className="flex flex-col md:flex-row md:items-center justify-between gap-3 border-b border-slate-800/80 pb-3">
+          <div className="space-y-0.5">
+            <div className="flex items-center gap-2">
+              <span className="font-mono text-xs font-bold text-blue-400">
+                {caseData.id}
+              </span>
+              <span className="text-slate-600">•</span>
+              <span className="px-2 py-0.2 rounded text-[10px] font-bold bg-emerald-500/20 text-emerald-300 border border-emerald-500/30">
+                STATUS: {caseData.status || 'ACTIVE'}
+              </span>
+              <span className="px-2 py-0.2 rounded text-[10px] font-bold bg-rose-500/20 text-rose-300 border border-rose-500/30">
+                PRIORITY: {caseData.priority || 'HIGH'}
+              </span>
+            </div>
+            <h1 className="text-xl font-bold text-white tracking-tight">
+              {caseData.name}
+            </h1>
           </div>
-          <p className="text-sm text-slate-300 max-w-3xl leading-relaxed">
-            {caseData.description}
-          </p>
+
+          <div className="flex items-center gap-2 text-xs text-slate-300 bg-[#090e1a] px-3 py-1.5 rounded-lg border border-slate-800 font-medium">
+            <User className="w-3.5 h-3.5 text-blue-400" />
+            <span>Assigned Officer: <strong className="text-white">{caseData.leadInvestigator || 'Inspector Rajesh Verma'}</strong></span>
+          </div>
         </div>
 
-        {/* 3 Main Action Buttons */}
-        <div className="flex items-center gap-2.5">
-          <button
-            onClick={() => setActiveCaseTab('investigation')}
-            className="flex items-center gap-2 px-4 py-2 rounded-lg bg-blue-600 hover:bg-blue-500 text-white text-xs font-semibold tracking-wide transition-colors shadow-sm"
-          >
-            <Search className="w-4 h-4" />
-            <span>Investigate</span>
-          </button>
-
-          {canIngest && (
-            <button
-              onClick={() => setIsIngestionModalOpen(true)}
-              className="flex items-center gap-2 px-3.5 py-2 rounded-lg bg-slate-800 hover:bg-slate-700 border border-slate-700 text-slate-200 text-xs font-semibold transition-colors"
-            >
-              <UploadCloud className="w-4 h-4 text-blue-400" />
-              <span>Add Data</span>
-            </button>
-          )}
-
-          <button
-            onClick={() => setActiveCaseTab('reports')}
-            className="flex items-center gap-2 px-3.5 py-2 rounded-lg bg-slate-800 hover:bg-slate-700 border border-slate-700 text-slate-200 text-xs font-semibold transition-colors"
-          >
-            <FileText className="w-4 h-4 text-emerald-400" />
-            <span>Generate Report</span>
-          </button>
-        </div>
+        <p className="text-xs text-slate-300 leading-relaxed font-sans">
+          {caseData.description || 'Cross-source investigation involving communication, financial and location records.'}
+        </p>
       </div>
 
-      {/* Case Key Metadata Bar */}
-      <div className="px-6 py-3 border-y border-slate-800 bg-[#090e1a] grid grid-cols-2 sm:grid-cols-4 gap-4 text-xs">
-        <div>
-          <span className="text-[11px] text-slate-400 uppercase tracking-wider block">Lead Investigator</span>
-          <span className="font-semibold text-slate-200">{caseData.leadInvestigator} ({caseData.badgeNumber || 'MHA-INT-8902'})</span>
-        </div>
-        <div>
-          <span className="text-[11px] text-slate-400 uppercase tracking-wider block">Date Opened</span>
-          <span className="font-medium text-slate-300">{caseData.dateOpened}</span>
-        </div>
-        <div>
-          <span className="text-[11px] text-slate-400 uppercase tracking-wider block">Entities Discovered</span>
-          <span className="font-bold text-blue-400">{caseData.entityCount} Entities</span>
-        </div>
-        <div>
-          <span className="text-[11px] text-slate-400 uppercase tracking-wider block">Network Groups</span>
-          <span className="font-bold text-amber-400">{caseData.clustersIdentified || 4} Identified Groups</span>
-        </div>
-      </div>
-
-      {/* 5 Focused Navigation Tabs */}
-      <div className="px-6 flex items-center gap-2 overflow-x-auto">
-        {tabs.map((tab) => {
-          const Icon = tab.icon;
-          const isActive = activeCaseTab === tab.id || 
-            (tab.id === 'investigation' && (activeCaseTab === 'network' || activeCaseTab === 'entities')) ||
-            (tab.id === 'overview' && activeCaseTab === 'activity');
+      {/* 8-Tab Navigation Bar */}
+      <div className="border-b border-slate-800 bg-[#090e1a] rounded-lg p-1 flex items-center gap-1 overflow-x-auto">
+        {tabs.map((t) => {
+          const Icon = t.icon;
+          const isActive = activeCaseTab === t.id ||
+            (t.id === 'network' && (activeCaseTab === 'investigation' as any));
 
           return (
             <button
-              key={tab.id}
-              onClick={() => setActiveCaseTab(tab.id)}
-              className={`flex items-center gap-2 py-3 px-4 border-b-2 text-xs font-semibold uppercase tracking-wider transition-colors whitespace-nowrap ${
+              key={t.id}
+              onClick={() => setActiveCaseTab(t.id)}
+              className={`flex items-center gap-2 px-3.5 py-2 rounded-md text-xs font-semibold transition-colors whitespace-nowrap ${
                 isActive
-                  ? 'border-blue-500 text-blue-400 bg-blue-500/5'
-                  : 'border-transparent text-slate-400 hover:text-slate-200 hover:border-slate-700'
+                  ? 'bg-blue-600 text-white shadow-sm'
+                  : 'text-slate-400 hover:text-slate-200 hover:bg-slate-800/80'
               }`}
             >
-              <Icon className={`w-4 h-4 ${isActive ? 'text-blue-400' : 'text-slate-500'}`} />
-              <span>{tab.label}</span>
-              {tab.count !== undefined && (
-                <span className={`text-[10px] font-mono px-1.5 py-0.2 rounded-full ${
-                  isActive ? 'bg-blue-500/20 text-blue-300' : 'bg-slate-800 text-slate-400'
-                }`}>
-                  {tab.count}
-                </span>
-              )}
+              <Icon className={`w-3.5 h-3.5 ${isActive ? 'text-white' : 'text-slate-400'}`} />
+              <span>{t.label}</span>
             </button>
           );
         })}
@@ -133,3 +117,4 @@ export const CaseDetailsHeader: React.FC<CaseDetailsHeaderProps> = ({ caseData }
     </div>
   );
 };
+

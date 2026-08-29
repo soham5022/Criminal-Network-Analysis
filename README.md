@@ -1,8 +1,9 @@
-# NEXUS INTEL — AI-Powered Investigation Intelligence Platform
+# TraceNet — AI-Powered Criminal Network Analysis System
 
 **Smart India Hackathon (SIH) — Prototype Release**  
 **Problem Statement ID:** `SIH26189`  
 **Title:** AI-Powered Criminal Network Analysis System  
+**Tagline:** Connecting the dots in complex investigations.  
 **Organization:** Ministry of Home Affairs (MHA)  
 **Category:** Software  
 **Theme:** Blockchain & Cybersecurity  
@@ -13,7 +14,7 @@
 
 Law enforcement intelligence units routinely intercept massive, disconnected streams of surveillance data—telecommunication Call Detail Records (CDRs), inter-bank financial ledgers, ANPR vehicle cameras, and textual First Information Reports (FIRs). Manually correlating these multi-modal records across operational syndicates is slow and error-prone.
 
-**NEXUS INTEL** solves this challenge by ingesting heterogeneous unstructured and tabular data, running deterministic NLP entity and relationship extraction, building a high-performance knowledge graph (with dual Neo4j Bolt / NetworkX support), and executing graph analytics algorithms (Brandes Betweenness Centrality, Modularity Community Partitioning, Smurfing Velocity Anomaly Detection) to surface explainable intelligence leads with transparent **Analytical Attention Scores (0–100)** without replacing investigator judgment.
+**TraceNet** solves this challenge by ingesting heterogeneous unstructured and tabular data, running deterministic NLP entity and relationship extraction, building a high-performance knowledge graph (with dual Neo4j Bolt / NetworkX support), and executing graph analytics algorithms (Brandes Betweenness Centrality, Modularity Community Partitioning, Smurfing Velocity Anomaly Detection) to surface explainable intelligence leads with transparent **Analytical Attention Scores (0–100)** without replacing investigator judgment.
 
 ```
 FRAGMENTED DATA (CDR / Banking / FIRs / ANPR)
@@ -37,7 +38,8 @@ EVIDENCE PROVENANCE & PRINTABLE INTELLIGENCE DOSSIER
 
 > [!IMPORTANT]
 > **Ethical AI & LEA Compliance Disclaimer:**  
-> NEXUS INTEL provides analytical leads by identifying topological relationships, temporal correlations, and transaction anomalies within available data. Findings are intended solely to assist human investigators in prioritizing review. The system does not determine legal guilt or make automated criminal declarations.
+> TraceNet provides analytical leads by identifying topological relationships, temporal correlations, and transaction anomalies within available data. Findings are intended solely to assist human investigators in prioritizing review. The system does not determine legal guilt or make automated criminal declarations.
+
 
 ---
 

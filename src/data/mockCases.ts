@@ -18,12 +18,12 @@ export const mockCases: Case[] = [
     clustersIdentified: 4,
     tags: ['Financial Smurfing', 'Multi-Cluster Bridge', 'Cross-Border Shells', 'Encrypted CDR'],
     description: 'Multi-jurisdictional intelligence probe analyzing coordinated financial structuring and physical transshipment anomalies linked to synthetic enterprise accounts.',
-    objective: 'Map the complete hierarchy connecting shell account Account_103 with transport hubs (Location_A) and pinpoint the bridge coordinators between Cluster 01 and Cluster 03.',
+    objective: 'Map the complete hierarchy connecting shell account Account ending 4821 with transport hubs (Thane West Logistics Hub) and pinpoint the bridge coordinators between Cluster 01 and Cluster 03.',
     keyFindings: [
-      'Person_044 identified as primary multi-cluster bridge (betweenness centrality: 0.61).',
-      'Account_103 disbursed ₹48,000 sub-threshold transfers within 22 minutes of deposit.',
-      'Physical rendezvous verified via CCTV at Location_A between Person_044 and Person_078.',
-      'Organization_X acts as front aggregator holding lease contracts on transshipment hubs.'
+      'Rahul Sharma identified as primary multi-cluster bridge (betweenness centrality: 0.61).',
+      'Account ending 4821 disbursed ₹48,000 sub-threshold transfers within 22 minutes of deposit.',
+      'Physical rendezvous verified via CCTV at Thane West Logistics Hub between Rahul Sharma and Amit Patil.',
+      'Meridian Logistics Pvt. Ltd. acts as front aggregator holding lease contracts on transshipment hubs.'
     ],
     evidencePointers: {
       firCount: 6,
@@ -51,8 +51,8 @@ export const mockCases: Case[] = [
     description: 'Investigation into coordinated short-burst communication rings using dynamic IMEI rotation across northern metropolitan corridors.',
     objective: 'Trace hardware signatures and identify common procurement channels for burner SIM clusters.',
     keyFindings: [
-      'High temporal correlation between Phone_021 and four rotating burner SIMs.',
-      'Geographic overlap detected near Terminal 2 logistics perimeter.'
+      'High temporal correlation between +91 XXXXX 28471 and four rotating burner SIMs.',
+      'Geographic overlap detected near Vashi Safehouse Facility perimeter.'
     ],
     evidencePointers: {
       firCount: 3,
@@ -80,8 +80,8 @@ export const mockCases: Case[] = [
     description: 'Surveillance analysis focused on vehicle fleet movements between transit checkpoints and unlisted private logistics yards.',
     objective: 'Correlate automatic number-plate recognition (ANPR) timestamp logs with telecommunication tower co-locations.',
     keyFindings: [
-      'Vehicle_017 logged recurring nocturnal route patterns along State Highway 4.',
-      'Direct linkage confirmed to Location_B staging facility.'
+      'Vehicle MH-04-XX-2847 logged recurring nocturnal route patterns along State Highway 4.',
+      'Direct linkage confirmed to Vashi Safehouse Facility staging yard.'
     ],
     evidencePointers: {
       firCount: 4,
@@ -109,7 +109,7 @@ export const mockCases: Case[] = [
     description: 'Corporate registry cross-matching and multi-layer beneficial ownership analysis across 12 newly incorporated shell entities.',
     objective: 'Expose the underlying beneficial owners utilizing common proxy directors across corporate holdings.',
     keyFindings: [
-      'Organization_X shares registered office coordinates with 3 previously blacklisted entities.',
+      'Meridian Logistics Pvt. Ltd. shares registered office coordinates with 3 previously blacklisted entities.',
       'Beneficial capital traced through multiple commercial banking gateways.'
     ],
     evidencePointers: {

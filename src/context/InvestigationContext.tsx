@@ -2,27 +2,33 @@ import React, { createContext, useContext, useState, ReactNode } from 'react';
 import { EntityType, AnalyticalPriority } from '../types';
 
 export type AppPage = 
+  | 'landing'
+  | 'login'
   | 'dashboard' 
   | 'overview' 
   | 'cases' 
+  | 'case-records'
   | 'case-details' 
-  | 'investigate' 
-  | 'network' 
   | 'entities' 
-  | 'timeline' 
+  | 'network' 
   | 'alerts' 
+  | 'timeline' 
+  | 'evidence' 
   | 'reports'
-  | 'audit';
+  | 'settings'
+  | 'audit'
+  | 'investigate';
 
 export type CaseWorkspaceTab = 
   | 'overview' 
-  | 'investigation' 
   | 'network'
   | 'entities'
   | 'timeline'
   | 'alerts' 
   | 'evidence' 
-  | 'reports' 
+  | 'notes'
+  | 'reports'
+  | 'investigation' 
   | 'activity';
 
 interface InvestigationContextType {
@@ -37,6 +43,7 @@ interface InvestigationContextType {
   isCreateCaseModalOpen: boolean;
   isLoginModalOpen: boolean;
   isPresentationMode: boolean;
+  isEntityProfileOpen: boolean;
   activeEntityFilter: {
     type?: EntityType;
     priority?: AnalyticalPriority;
@@ -46,7 +53,8 @@ interface InvestigationContextType {
     caseId?: string; 
     entityId?: string; 
     alertId?: string; 
-    tab?: CaseWorkspaceTab 
+    tab?: CaseWorkspaceTab;
+    openProfile?: boolean;
   }) => void;
   setActiveCaseId: (caseId: string) => void;
   setSelectedEntityId: (entityId: string | null) => void;
@@ -57,6 +65,9 @@ interface InvestigationContextType {
   setIsIngestionModalOpen: (open: boolean) => void;
   setIsCreateCaseModalOpen: (open: boolean) => void;
   setIsLoginModalOpen: (open: boolean) => void;
+  setIsEntityProfileOpen: (open: boolean) => void;
+  openEntityProfile: (entityId: string) => void;
+  closeEntityProfile: () => void;
   togglePresentationMode: () => void;
   setEntityFilter: (filter: { type?: EntityType; priority?: AnalyticalPriority; community?: string }) => void;
 }
@@ -75,28 +86,45 @@ export const InvestigationProvider: React.FC<{ children: ReactNode }> = ({ child
   const [isCreateCaseModalOpen, setIsCreateCaseModalOpen] = useState<boolean>(false);
   const [isLoginModalOpen, setIsLoginModalOpen] = useState<boolean>(false);
   const [isPresentationMode, setIsPresentationMode] = useState<boolean>(false);
+  const [isEntityProfileOpen, setIsEntityProfileOpen] = useState<boolean>(false);
   const [activeEntityFilter, setActiveEntityFilter] = useState<{
     type?: EntityType;
     priority?: AnalyticalPriority;
     community?: string;
   }>({});
 
+  const openEntityProfile = (entityId: string) => {
+    setSelectedEntityId(entityId);
+    setIsEntityProfileOpen(true);
+    setCurrentPage('case-details');
+    setActiveCaseTab('entities');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
+  const closeEntityProfile = () => {
+    setIsEntityProfileOpen(false);
+  };
+
   const navigateTo = (page: AppPage, options?: { 
     caseId?: string; 
     entityId?: string; 
     alertId?: string;
     tab?: CaseWorkspaceTab;
+    openProfile?: boolean;
   }) => {
     if (options?.caseId) setActiveCaseId(options.caseId);
-    if (options?.entityId !== undefined) setSelectedEntityId(options.entityId);
+    if (options?.entityId !== undefined) {
+      setSelectedEntityId(options.entityId);
+      if (options.openProfile) {
+        setIsEntityProfileOpen(true);
+      }
+    }
     if (options?.alertId !== undefined) setSelectedAlertId(options.alertId);
     if (options?.tab) setActiveCaseTab(options.tab);
     
     // Normalize aliases
     if (page === 'overview') {
       setCurrentPage('dashboard');
-    } else if (page === 'network') {
-      setCurrentPage('investigate');
     } else {
       setCurrentPage(page);
     }
@@ -121,6 +149,7 @@ export const InvestigationProvider: React.FC<{ children: ReactNode }> = ({ child
         isCreateCaseModalOpen,
         isLoginModalOpen,
         isPresentationMode,
+        isEntityProfileOpen,
         activeEntityFilter,
         navigateTo,
         setActiveCaseId,
@@ -132,6 +161,9 @@ export const InvestigationProvider: React.FC<{ children: ReactNode }> = ({ child
         setIsIngestionModalOpen,
         setIsCreateCaseModalOpen,
         setIsLoginModalOpen,
+        setIsEntityProfileOpen,
+        openEntityProfile,
+        closeEntityProfile,
         togglePresentationMode,
         setEntityFilter: setActiveEntityFilter
       }}

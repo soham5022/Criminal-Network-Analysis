@@ -17,12 +17,17 @@ export interface AttentionScoreFactor {
 export interface Entity {
   id: string; // e.g. "Person_044"
   label: string; // Fictional display name or code
+  name?: string;
   type: EntityType;
-  community: string; // e.g. "Cluster 03"
+  community: string | number; // e.g. "Cluster 01" or 1
   analyticalPriority: AnalyticalPriority;
   attentionScore?: number; // 0 - 100
   degreeCentrality: number; // 0.00 - 1.00
   betweennessCentrality: number; // 0.00 - 1.00
+  degree?: number;
+  betweenness?: number;
+  risk_score?: number;
+  caseId?: string;
   closenessCentrality?: number;
   eigenvectorCentrality?: number;
   pagerank?: number;
@@ -41,6 +46,8 @@ export interface Entity {
   keyConnections: string[]; // IDs of top linked entities
   attentionFactors?: AttentionScoreFactor[];
   relatedAlertsCount?: number;
+  phone?: string;
+  accountNumber?: string;
   metadata: {
     description?: string;
     alias?: string;
@@ -52,11 +59,14 @@ export interface Entity {
   };
 }
 
+
 export type RelationshipType = 
   | 'CALLED' 
   | 'TRANSFERRED' 
   | 'VISITED' 
   | 'ASSOCIATED_WITH' 
+  | 'OWNS_DEVICE'
+  | 'TRAVELS_IN'
   | 'OWNED' 
   | 'MET'
   | 'CO_LOCATED'
@@ -123,7 +133,8 @@ export type PatternType =
   | 'RAPID_RELATIONSHIP_EXPANSION'
   | 'TRANSACTION_ANOMALY'
   | 'TEMPORAL_CORRELATION'
-  | 'HIGH_BETWEENNESS_ENTITY';
+  | 'HIGH_BETWEENNESS_ENTITY'
+  | 'MULTI_MODAL_CONVERGENCE';
 
 export interface AlertMetric {
   metricName: string;
@@ -146,6 +157,7 @@ export interface Alert {
   status: AlertStatus;
   timestamp: string;
   reason: string;
+  evidenceRef?: string;
   explanation: string;
   analyticalMetrics: AlertMetric[];
   relatedEntities: AlertRelatedEntity[];
@@ -175,13 +187,22 @@ export interface TimelineEvent {
   sourceCategory?: string;
   importance?: string;
   summary?: string;
+  description?: string;
   details?: string;
   confidence: number;
   category?: 'COMMUNICATION' | 'FINANCIAL' | 'PHYSICAL_SURVEILLANCE' | 'INTELLIGENCE_REPORT' | string;
   associatedCaseId: string;
   flaggedAnomaly?: boolean;
   notes?: string;
+  metadata?: {
+    duration?: string;
+    amount?: string;
+    location?: string;
+    tower?: string;
+    [key: string]: any;
+  };
 }
+
 
 export interface IntelligenceReport {
   id: string;
@@ -227,3 +248,4 @@ export interface IngestionDataset {
   status: 'READY' | 'INGESTING' | 'INDEXED' | 'FLAGGED_ERRORS' | 'COMPLETED' | 'PENDING';
   description?: string;
 }
+

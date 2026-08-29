@@ -6,7 +6,7 @@ import { mockCases } from '../../data/mockCases';
 import { EntityTypeBadge, PriorityBadge } from '../common/Badge';
 
 export const GlobalSearchModal: React.FC = () => {
-  const { isOmniSearchOpen, setIsOmniSearchOpen, navigateTo } = useInvestigation();
+  const { isOmniSearchOpen, setIsOmniSearchOpen, navigateTo, setActiveCaseId } = useInvestigation();
   const [query, setQuery] = useState('');
   const [selectedFilter, setSelectedFilter] = useState<string>('ALL');
 
@@ -34,10 +34,11 @@ export const GlobalSearchModal: React.FC = () => {
     return (
       e.id.toLowerCase().includes(q) ||
       e.label.toLowerCase().includes(q) ||
-      e.community.toLowerCase().includes(q) ||
+      String(e.community).toLowerCase().includes(q) ||
       (e.metadata.alias && e.metadata.alias.toLowerCase().includes(q)) ||
       (e.metadata.description && e.metadata.description.toLowerCase().includes(q))
     );
+
   });
 
   const filteredCases = (selectedFilter === 'ALL' || selectedFilter === 'CASE') 
@@ -58,26 +59,27 @@ export const GlobalSearchModal: React.FC = () => {
   };
 
   const handleSelectCase = (caseId: string) => {
+    setActiveCaseId(caseId);
     setIsOmniSearchOpen(false);
     navigateTo('case-details', { caseId });
   };
 
   return (
-    <div className="fixed inset-0 z-50 bg-black/80 backdrop-blur-md flex items-start justify-center pt-20 p-4 animate-in fade-in duration-150">
+    <div className="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex items-start justify-center pt-20 p-4 animate-in fade-in duration-150 select-none">
       <div 
-        className="w-full max-w-2xl intel-card rounded-2xl border border-slate-700/80 shadow-2xl overflow-hidden flex flex-col max-h-[80vh]"
+        className="w-full max-w-2xl intel-card rounded-xl border border-slate-700 bg-[#0c1322] shadow-2xl overflow-hidden flex flex-col max-h-[80vh]"
         onClick={(e) => e.stopPropagation()}
       >
         {/* Search Input Bar */}
-        <div className="p-4 border-b border-slate-800 flex items-center gap-3 bg-slate-950/60">
-          <Search className="w-5 h-5 text-cyan-400 flex-shrink-0" />
+        <div className="p-4 border-b border-slate-800 flex items-center gap-3 bg-[#090e1a]">
+          <Search className="w-5 h-5 text-blue-400 flex-shrink-0" />
           <input
             type="text"
             autoFocus
             value={query}
             onChange={(e) => setQuery(e.target.value)}
             placeholder="Search Persons, Phones, Accounts, Locations, Vehicles, Organizations, or Cases..."
-            className="w-full bg-transparent text-white placeholder-slate-500 text-sm focus:outline-none font-mono"
+            className="w-full bg-transparent text-white placeholder-slate-400 text-sm focus:outline-none font-sans"
           />
           {query && (
             <button 
@@ -87,13 +89,13 @@ export const GlobalSearchModal: React.FC = () => {
               <X className="w-4 h-4" />
             </button>
           )}
-          <span className="text-[11px] font-mono px-2 py-0.5 rounded bg-slate-800 text-slate-400 border border-slate-700">
+          <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-slate-800 text-slate-400 border border-slate-700">
             ESC
           </span>
         </div>
 
         {/* Filter Categories Bar */}
-        <div className="px-4 py-2 bg-slate-900/90 border-b border-slate-800 flex items-center gap-1.5 overflow-x-auto text-xs">
+        <div className="px-4 py-2 bg-slate-900 border-b border-slate-800 flex items-center gap-1.5 overflow-x-auto text-xs">
           {[
             { id: 'ALL', label: 'All Items' },
             { id: 'PERSON', label: 'Persons' },
@@ -103,138 +105,81 @@ export const GlobalSearchModal: React.FC = () => {
             { id: 'ORGANIZATION', label: 'Organizations' },
             { id: 'VEHICLE', label: 'Vehicles' },
             { id: 'CASE', label: 'Cases' }
-          ].map(f => (
+          ].map(tab => (
             <button
-              key={f.id}
-              onClick={() => setSelectedFilter(f.id)}
-              className={`px-2.5 py-1 rounded-md text-[11px] font-medium transition-colors whitespace-nowrap ${
-                selectedFilter === f.id
-                  ? 'bg-cyan-500/20 text-cyan-300 border border-cyan-500/40'
+              key={tab.id}
+              onClick={() => setSelectedFilter(tab.id)}
+              className={`px-2.5 py-1 rounded-md text-[11px] font-semibold transition-colors whitespace-nowrap ${
+                selectedFilter === tab.id
+                  ? 'bg-blue-600 text-white'
                   : 'text-slate-400 hover:text-white hover:bg-slate-800'
               }`}
             >
-              {f.label}
+              {tab.label}
             </button>
           ))}
         </div>
 
         {/* Search Results List */}
-        <div className="flex-1 overflow-y-auto p-3 space-y-4">
-          {/* Active Cases Section */}
+        <div className="p-3 overflow-y-auto max-h-[60vh] space-y-4 text-xs">
+          
+          {/* Cases Results */}
           {filteredCases.length > 0 && (
-            <div>
-              <div className="text-[10px] font-semibold uppercase tracking-wider text-slate-400 px-3 py-1 flex items-center gap-1.5">
-                <Briefcase className="w-3 h-3 text-cyan-400" />
-                <span>Investigations ({filteredCases.length})</span>
-              </div>
-              <div className="space-y-1 mt-1">
+            <div className="space-y-1.5">
+              <span className="text-[10px] font-bold uppercase tracking-wider text-slate-400 block px-2">
+                Cases ({filteredCases.length})
+              </span>
+              <div className="space-y-1">
                 {filteredCases.map(c => (
                   <div
                     key={c.id}
                     onClick={() => handleSelectCase(c.id)}
-                    className="flex items-center justify-between p-2.5 rounded-lg hover:bg-slate-800/70 border border-transparent hover:border-slate-700 cursor-pointer transition-all group"
+                    className="p-2.5 rounded-lg bg-slate-900 hover:bg-slate-800 border border-slate-800 cursor-pointer flex items-center justify-between transition-colors"
                   >
-                    <div className="flex items-center gap-3">
-                      <div className="p-2 rounded-lg bg-indigo-500/10 text-indigo-400 border border-indigo-500/20">
-                        <Briefcase className="w-4 h-4" />
-                      </div>
-                      <div>
-                        <div className="flex items-center gap-2">
-                          <span className="font-mono text-xs font-bold text-white group-hover:text-cyan-300 transition-colors">
-                            {c.id}
-                          </span>
-                          <span className="text-xs text-slate-300 font-medium">
-                            {c.name}
-                          </span>
-                        </div>
-                        <p className="text-[11px] text-slate-400">
-                          {c.leadInvestigator} • {c.entityCount} Entities • {c.relationshipCount} Links
-                        </p>
-                      </div>
+                    <div>
+                      <div className="font-mono font-bold text-blue-400">{c.id}: {c.name}</div>
+                      <div className="text-[11px] text-slate-400 truncate">{c.description}</div>
                     </div>
-                    <div className="flex items-center gap-2">
-                      <PriorityBadge priority={c.priority} size="sm" />
-                      <ArrowRight className="w-4 h-4 text-slate-500 group-hover:text-cyan-400 group-hover:translate-x-0.5 transition-all" />
-                    </div>
+                    <ArrowRight className="w-3.5 h-3.5 text-slate-500" />
                   </div>
                 ))}
               </div>
             </div>
           )}
 
-          {/* Entities Section */}
+          {/* Entities Results */}
           {filteredEntities.length > 0 && (
-            <div>
-              <div className="text-[10px] font-semibold uppercase tracking-wider text-slate-400 px-3 py-1 flex items-center gap-1.5">
-                <Users className="w-3 h-3 text-cyan-400" />
-                <span>Extracted Entities ({filteredEntities.length})</span>
-              </div>
-              <div className="space-y-1 mt-1">
-                {filteredEntities.map(e => {
-                  const getIcon = () => {
-                    switch (e.type) {
-                      case 'PERSON': return Users;
-                      case 'PHONE': return Phone;
-                      case 'ACCOUNT': return CreditCard;
-                      case 'LOCATION': return MapPin;
-                      case 'ORGANIZATION': return Building2;
-                      case 'VEHICLE': return Car;
-                    }
-                  };
-                  const Icon = getIcon();
-
-                  return (
-                    <div
-                      key={e.id}
-                      onClick={() => handleSelectEntity(e.id)}
-                      className="flex items-center justify-between p-2.5 rounded-lg hover:bg-slate-800/70 border border-transparent hover:border-slate-700 cursor-pointer transition-all group"
-                    >
-                      <div className="flex items-center gap-3">
-                        <div className="p-2 rounded-lg bg-slate-800/80 text-cyan-400 border border-slate-700">
-                          <Icon className="w-4 h-4" />
-                        </div>
-                        <div>
-                          <div className="flex items-center gap-2">
-                            <span className="font-mono text-xs font-bold text-white group-hover:text-cyan-300 transition-colors">
-                              {e.id}
-                            </span>
-                            {e.label !== e.id && (
-                              <span className="text-xs text-slate-400">
-                                ({e.label})
-                              </span>
-                            )}
-                          </div>
-                          <p className="text-[11px] text-slate-400 truncate max-w-sm">
-                            {e.community} • {e.connectionsCount} Connections • Betweenness: {e.betweennessCentrality}
-                          </p>
-                        </div>
-                      </div>
-
-                      <div className="flex items-center gap-2">
-                        <EntityTypeBadge type={e.type} />
-                        <PriorityBadge priority={e.analyticalPriority} />
-                        <ArrowRight className="w-4 h-4 text-slate-500 group-hover:text-cyan-400 group-hover:translate-x-0.5 transition-all" />
+            <div className="space-y-1.5">
+              <span className="text-[10px] font-bold uppercase tracking-wider text-slate-400 block px-2">
+                Entities ({filteredEntities.length})
+              </span>
+              <div className="space-y-1">
+                {filteredEntities.slice(0, 15).map(ent => (
+                  <div
+                    key={ent.id}
+                    onClick={() => handleSelectEntity(ent.id)}
+                    className="p-2.5 rounded-lg bg-slate-900 hover:bg-slate-800 border border-slate-800 cursor-pointer flex items-center justify-between transition-colors"
+                  >
+                    <div className="flex items-center gap-2.5">
+                      <EntityTypeBadge type={ent.type} />
+                      <div>
+                        <div className="font-mono font-bold text-white text-xs">{ent.label || ent.name || ent.id}</div>
+                        <div className="text-[10px] text-slate-400 font-mono">ID: {ent.id} {ent.metadata?.alias ? `• ${ent.metadata.alias}` : ''}</div>
                       </div>
                     </div>
-                  );
-                })}
+                    <span className="text-[10px] font-mono text-slate-500">{ent.connectionsCount} links</span>
+                  </div>
+                ))}
               </div>
             </div>
           )}
 
-          {filteredEntities.length === 0 && filteredCases.length === 0 && (
-            <div className="py-12 text-center text-slate-400 space-y-2">
-              <ShieldAlert className="w-8 h-8 mx-auto text-slate-500" />
-              <p className="text-sm font-medium text-slate-300">No matching investigation entities or cases found</p>
-              <p className="text-xs text-slate-400">Try searching by ID (e.g., Person_044, Account_103, CASE-1024) or alias.</p>
+          {filteredCases.length === 0 && filteredEntities.length === 0 && (
+            <div className="p-8 text-center text-slate-400 text-xs">
+              No matching cases or entities found for "{query}".
             </div>
           )}
-        </div>
 
-        {/* Footer info */}
-        <div className="p-3 bg-slate-950/80 border-t border-slate-800 flex items-center justify-between text-[11px] text-slate-400 font-mono">
-          <span>Tip: Press <strong className="text-slate-300">Ctrl + K</strong> anytime to trigger omni-search</span>
-          <span>Press Enter to select</span>
         </div>
       </div>
     </div>

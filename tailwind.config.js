@@ -8,37 +8,26 @@ export default {
   theme: {
     extend: {
       colors: {
-        background: '#070b14',
+        background: '#090e17',
         surface: {
-          DEFAULT: '#0d1527',
+          DEFAULT: '#0f172a',
           card: '#111c34',
           muted: '#182442',
-          border: '#1e2e50',
-          hover: '#243761'
+          border: '#1e293b',
+          hover: '#1e2d4d'
         },
         primary: {
-          50: '#eef2ff',
-          100: '#e0e7ff',
-          200: '#c7d2fe',
-          300: '#a5b4fc',
-          400: '#818cf8',
-          500: '#6366f1',
-          600: '#4f46e5',
-          700: '#4338ca',
-          800: '#3730a3',
-          900: '#312e81',
-          DEFAULT: '#4f46e5'
-        },
-        cyan: {
-          glow: '#00f0ff',
-          DEFAULT: '#06b6d4'
-        },
-        accent: {
-          cyan: '#06b6d4',
-          emerald: '#10b981',
-          amber: '#f59e0b',
-          rose: '#f43f5e',
-          purple: '#a855f7'
+          50: '#eff6ff',
+          100: '#dbeafe',
+          200: '#bfdbfe',
+          300: '#93c5fd',
+          400: '#60a5fa',
+          500: '#3b82f6',
+          600: '#2563eb',
+          700: '#1d4ed8',
+          800: '#1e40af',
+          900: '#1e3a8a',
+          DEFAULT: '#2563eb'
         }
       },
       fontFamily: {
@@ -46,22 +35,11 @@ export default {
         mono: ['JetBrains Mono', 'Fira Code', 'Cascadia Code', 'Consolas', 'monospace']
       },
       boxShadow: {
-        'intel-subtle': '0 4px 20px -2px rgba(0, 0, 0, 0.5), 0 2px 6px -1px rgba(0, 0, 0, 0.4)',
-        'intel-glow': '0 0 25px -5px rgba(99, 102, 241, 0.25)',
-        'cyan-glow': '0 0 25px -5px rgba(6, 182, 212, 0.3)',
-        'card-border': 'inset 0 1px 0 0 rgba(255, 255, 255, 0.05)'
-      },
-      animation: {
-        'pulse-subtle': 'pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite',
-        'radar-sweep': 'radarSweep 4s linear infinite',
-      },
-      keyframes: {
-        radarSweep: {
-          '0%': { transform: 'rotate(0deg)' },
-          '100%': { transform: 'rotate(360deg)' }
-        }
+        'intel-card': '0 1px 3px 0 rgba(0, 0, 0, 0.3), 0 1px 2px -1px rgba(0, 0, 0, 0.3)',
+        'intel-modal': '0 20px 25px -5px rgba(0, 0, 0, 0.6), 0 8px 10px -6px rgba(0, 0, 0, 0.5)',
       }
     },
   },
   plugins: [],
 }
+

@@ -13,7 +13,9 @@ export interface EvidenceRecord {
   summary: string;
   confidence: number;
   sha256_hash: string;
+  raw_payload?: any;
 }
+
 
 interface BackendCase {
   id: string;

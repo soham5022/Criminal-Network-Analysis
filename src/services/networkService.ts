@@ -7,13 +7,14 @@ export interface CytoscapeNodeData {
   id: string;
   label: string;
   type: EntityType;
-  community: string;
+  community: string | number;
   priority: string;
   centrality: number;
   betweenness: number;
   connectionsCount: number;
   isFlagged?: boolean;
 }
+
 
 export interface CytoscapeEdgeData {
   id: string;
@@ -108,8 +109,8 @@ export const networkService = {
       const nodes = entities.map(e => ({
         data: {
           id: e.id,
-          label: e.id,
-          fullLabel: e.label,
+          label: e.label || e.name || e.id,
+          fullLabel: e.label || e.name || e.id,
           type: e.type,
           community: e.community,
           priority: e.analyticalPriority,

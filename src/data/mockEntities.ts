@@ -3,7 +3,8 @@ import { Entity } from '../types';
 export const mockEntities: Entity[] = [
   {
     id: 'Person_044',
-    label: 'Person_044',
+    label: 'Rahul Sharma',
+    name: 'Rahul Sharma',
     type: 'PERSON',
     community: 'Cluster 03',
     analyticalPriority: 'HIGH',
@@ -22,18 +23,19 @@ export const mockEntities: Entity[] = [
     associatedCaseIds: ['CASE-1024', 'CASE-1031'],
     keyConnections: ['Person_001', 'Person_078', 'Account_103', 'Phone_021'],
     metadata: {
-      description: 'Key bridge entity connecting Cluster 03 (Logistics) with Cluster 01 (Financial Routing). High betweenness centrality indicates significant multi-cluster relay activity.',
-      alias: 'Subject-44 (Delta Lead)',
-      carrierOrBank: 'Encrypted VOIP / Matrix Relay',
-      jurisdiction: 'Northern Industrial Corridor',
-      ipOrCoordinates: '28.6139° N, 77.2090° E',
+      description: 'Key bridge coordinator connecting Cluster 03 (Logistics / Thane Hub) with Cluster 01 (Financial Routing). High betweenness centrality indicates significant multi-cluster relay activity.',
+      alias: 'Ravi (R. Sharma)',
+      carrierOrBank: 'Primary Mobile (+91 XXXXX 28471)',
+      jurisdiction: 'Thane West Industrial Corridor, Maharashtra',
+      ipOrCoordinates: '19.2183° N, 72.9781° E',
       confidenceScore: 0.94,
       flags: ['Cross-Cluster Bridge', 'High Betweenness', 'Multi-Device Relay']
     }
   },
   {
     id: 'Person_001',
-    label: 'Person_001',
+    label: 'Vikram Singh',
+    name: 'Vikram Singh',
     type: 'PERSON',
     community: 'Cluster 01',
     analyticalPriority: 'HIGH',
@@ -49,20 +51,21 @@ export const mockEntities: Entity[] = [
     vehiclesCount: 2,
     lastActivity: '45 mins ago (ATM Geo-Ping)',
     firstSeen: '2026-05-02',
-    associatedCaseIds: ['CASE-1024'],
+    associatedCaseIds: ['CASE-1024', 'CASE-1057'],
     keyConnections: ['Person_044', 'Account_103', 'Phone_021', 'Organization_X'],
     metadata: {
-      description: 'High-volume financial transaction controller and frequent contact of Person_044.',
-      alias: 'Subject-01 (Apex)',
-      jurisdiction: 'Metro Financial District',
-      ipOrCoordinates: '28.5355° N, 77.3910° E',
+      description: 'Commercial Finance Director and frequent contact of Rahul Sharma, managing commercial account flows.',
+      alias: 'Apex (V. Singh)',
+      jurisdiction: 'Financial District, Mumbai',
+      ipOrCoordinates: '18.9220° N, 72.8347° E',
       confidenceScore: 0.91,
       flags: ['High Value Transactions', 'Recurring Meeting Site']
     }
   },
   {
     id: 'Person_014',
-    label: 'Person_014',
+    label: 'Neha Verma',
+    name: 'Neha Verma',
     type: 'PERSON',
     community: 'Cluster 01',
     analyticalPriority: 'MEDIUM',
@@ -76,19 +79,20 @@ export const mockEntities: Entity[] = [
     vehiclesCount: 1,
     lastActivity: '2 hours ago',
     firstSeen: '2026-06-20',
-    associatedCaseIds: ['CASE-1024'],
+    associatedCaseIds: ['CASE-1024', 'CASE-1031'],
     keyConnections: ['Person_001', 'Phone_045', 'Account_221'],
     metadata: {
-      description: 'Intermediary courier node operating between Northstar hubs.',
-      alias: 'Subject-14',
-      jurisdiction: 'Western Port Transit',
+      description: 'Western corridor logistics dispatch coordinator facilitating freight forwarding documents.',
+      alias: 'N. Verma',
+      jurisdiction: 'Western Port Transit, Navi Mumbai',
       confidenceScore: 0.86,
       flags: ['Secondary Node']
     }
   },
   {
     id: 'Person_027',
-    label: 'Person_027',
+    label: 'Rohan Deshmukh',
+    name: 'Rohan Deshmukh',
     type: 'PERSON',
     community: 'Cluster 02',
     analyticalPriority: 'MEDIUM',
@@ -105,16 +109,17 @@ export const mockEntities: Entity[] = [
     associatedCaseIds: ['CASE-1024', 'CASE-1042'],
     keyConnections: ['Person_078', 'Location_B', 'Vehicle_017'],
     metadata: {
-      description: 'Fleet and transit coordinator with frequent co-location logs at Location_B.',
-      alias: 'Subject-27',
-      jurisdiction: 'Suburban Transit Hub',
+      description: 'Transport fleet operator with frequent co-location logs at Vashi Safehouse Facility.',
+      alias: 'Fleet Lead (R. Deshmukh)',
+      jurisdiction: 'Vashi Transit Hub, Navi Mumbai',
       confidenceScore: 0.88,
       flags: ['Fleet Coordinator', 'Co-Location Hotspot']
     }
   },
   {
     id: 'Person_078',
-    label: 'Person_078',
+    label: 'Amit Patil',
+    name: 'Amit Patil',
     type: 'PERSON',
     community: 'Cluster 02',
     analyticalPriority: 'HIGH',
@@ -131,17 +136,18 @@ export const mockEntities: Entity[] = [
     associatedCaseIds: ['CASE-1024', 'CASE-1057'],
     keyConnections: ['Person_044', 'Person_027', 'Organization_X', 'Location_A'],
     metadata: {
-      description: 'Operational lead for Cluster 02. Direct links with Person_044 and executive board of Organization_X.',
-      alias: 'Subject-78 (Vanguard)',
-      jurisdiction: 'Eastern Port Terminal',
-      ipOrCoordinates: '28.7041° N, 77.1025° E',
+      description: 'Operational lead for Cluster 02 (Eastern Terminal). Direct link with Rahul Sharma and executive board of Meridian Logistics.',
+      alias: 'Vanguard (A. Patil)',
+      jurisdiction: 'Eastern Port Terminal, Mumbai',
+      ipOrCoordinates: '18.9500° N, 72.8400° E',
       confidenceScore: 0.92,
       flags: ['Cluster Head', 'Corporate Affiliation']
     }
   },
   {
     id: 'Phone_021',
-    label: '+91-98700-00021',
+    label: 'Primary Mobile (+91 XXXXX 28471)',
+    name: '+91 XXXXX 28471',
     type: 'PHONE',
     community: 'Cluster 03',
     analyticalPriority: 'HIGH',
@@ -155,19 +161,20 @@ export const mockEntities: Entity[] = [
     vehiclesCount: 0,
     lastActivity: '15 mins ago',
     firstSeen: '2026-06-01',
-    associatedCaseIds: ['CASE-1024'],
+    associatedCaseIds: ['CASE-1024', 'CASE-1031'],
     keyConnections: ['Person_044', 'Person_001', 'Phone_045'],
     metadata: {
-      description: 'Burner SIM card operating in burst-mode communications. High frequency short-duration calls.',
+      description: 'Primary active mobile line utilized by Rahul Sharma operating in burst-mode communications.',
       carrierOrBank: 'Telecom Sentinel Grid (VoLTE)',
-      jurisdiction: 'Roaming National',
+      jurisdiction: 'Roaming National / Maharashtra Circle',
       confidenceScore: 0.95,
       flags: ['Burner SIM Pattern', 'Burst Encrypted Call']
     }
   },
   {
     id: 'Phone_045',
-    label: '+91-98700-00045',
+    label: 'Secondary Mobile (+91 XXXXX 73142)',
+    name: '+91 XXXXX 73142',
     type: 'PHONE',
     community: 'Cluster 01',
     analyticalPriority: 'MEDIUM',
@@ -181,10 +188,10 @@ export const mockEntities: Entity[] = [
     vehiclesCount: 0,
     lastActivity: '3 hours ago',
     firstSeen: '2026-06-18',
-    associatedCaseIds: ['CASE-1024'],
+    associatedCaseIds: ['CASE-1024', 'CASE-1031'],
     keyConnections: ['Person_014', 'Phone_021'],
     metadata: {
-      description: 'Secondary communication device observed during transit hours.',
+      description: 'Secondary communication device observed during transit hours used by Neha Verma.',
       carrierOrBank: 'AeroConnect Telecom',
       confidenceScore: 0.87,
       flags: ['SMS Relay']
@@ -192,7 +199,8 @@ export const mockEntities: Entity[] = [
   },
   {
     id: 'Account_103',
-    label: 'ACCT-8849-103',
+    label: 'Account ending 4821',
+    name: 'Demo National Bank (XXXX 4821)',
     type: 'ACCOUNT',
     community: 'Cluster 01',
     analyticalPriority: 'CRITICAL',
@@ -206,11 +214,11 @@ export const mockEntities: Entity[] = [
     vehiclesCount: 0,
     lastActivity: '1 hour ago (Rapid Wire Transfer)',
     firstSeen: '2026-05-10',
-    associatedCaseIds: ['CASE-1024'],
+    associatedCaseIds: ['CASE-1024', 'CASE-1057'],
     keyConnections: ['Person_001', 'Person_044', 'Account_221', 'Organization_X'],
     metadata: {
-      description: 'High-velocity intermediary ledger showing layered structured transfers under ₹50,000 threshold within minutes.',
-      carrierOrBank: 'National Mercantile Bank (IFSC: NMBL0004)',
+      description: 'High-velocity commercial intermediary ledger showing layered structured transfers under ₹50,000 threshold within minutes.',
+      carrierOrBank: 'Demo National Bank (IFSC: DNBL0004)',
       jurisdiction: 'Offshore Escrow Relay',
       confidenceScore: 0.97,
       flags: ['Layering Pattern', 'Structuring Smurfing', 'High Outflow']
@@ -218,7 +226,8 @@ export const mockEntities: Entity[] = [
   },
   {
     id: 'Account_221',
-    label: 'ACCT-9921-221',
+    label: 'Account ending 7316',
+    name: 'Metro Cooperative Bank (XXXX 7316)',
     type: 'ACCOUNT',
     community: 'Cluster 01',
     analyticalPriority: 'HIGH',
@@ -232,18 +241,19 @@ export const mockEntities: Entity[] = [
     vehiclesCount: 0,
     lastActivity: '1 hour ago',
     firstSeen: '2026-06-12',
-    associatedCaseIds: ['CASE-1024'],
+    associatedCaseIds: ['CASE-1024', 'CASE-1057'],
     keyConnections: ['Account_103', 'Person_014'],
     metadata: {
-      description: 'Destination account receiving layered disbursements from Account_103.',
-      carrierOrBank: 'Apex Commercial Bank',
+      description: 'Destination settlement account receiving layered disbursements from Account ending 4821.',
+      carrierOrBank: 'Metro Cooperative Bank (IFSC: MCBL0091)',
       confidenceScore: 0.93,
       flags: ['Rapid Inflow', 'Immediate Withdrawal']
     }
   },
   {
     id: 'Location_A',
-    label: 'Sector 4 Logistics Warehouse',
+    label: 'Thane West Logistics Hub',
+    name: 'Thane West Logistics Hub',
     type: 'LOCATION',
     community: 'Cluster 03',
     analyticalPriority: 'HIGH',
@@ -257,19 +267,20 @@ export const mockEntities: Entity[] = [
     vehiclesCount: 4,
     lastActivity: '25 mins ago (ANPR Capture)',
     firstSeen: '2026-04-10',
-    associatedCaseIds: ['CASE-1024'],
+    associatedCaseIds: ['CASE-1024', 'CASE-1042'],
     keyConnections: ['Person_044', 'Person_078', 'Vehicle_017', 'Organization_X'],
     metadata: {
-      description: 'Primary transshipment yard with multiple nighttime ANPR hits and co-located mobile pings.',
-      jurisdiction: 'Special Economic Zone',
-      ipOrCoordinates: '28.6328° N, 77.2197° E',
+      description: 'Primary transshipment depot in Thane West with multiple nighttime ANPR hits and co-located mobile pings between Rahul Sharma and Amit Patil.',
+      jurisdiction: 'Thane Industrial Zone, Maharashtra',
+      ipOrCoordinates: '19.2183° N, 72.9781° E',
       confidenceScore: 0.96,
       flags: ['Meeting Site', 'ANPR Cluster', 'Off-Hours Activity']
     }
   },
   {
     id: 'Location_B',
-    label: 'Terminal 2 Safehouse Facility',
+    label: 'Vashi Safehouse Facility',
+    name: 'Vashi Safehouse Facility',
     type: 'LOCATION',
     community: 'Cluster 02',
     analyticalPriority: 'MEDIUM',
@@ -286,16 +297,17 @@ export const mockEntities: Entity[] = [
     associatedCaseIds: ['CASE-1024', 'CASE-1042'],
     keyConnections: ['Person_027', 'Vehicle_017'],
     metadata: {
-      description: 'Secondary staging location identified through recurring surveillance logs.',
-      jurisdiction: 'Airport Transit District',
-      ipOrCoordinates: '28.5562° N, 77.1000° E',
+      description: 'Secondary staging and rendezvous location in Vashi identified through recurring surveillance logs.',
+      jurisdiction: 'Navi Mumbai Transit District',
+      ipOrCoordinates: '19.0771° N, 72.9986° E',
       confidenceScore: 0.89,
       flags: ['Surveillance Hotspot']
     }
   },
   {
     id: 'Organization_X',
-    label: 'Apex Maritime Holdings Ltd.',
+    label: 'Meridian Logistics Pvt. Ltd.',
+    name: 'Meridian Logistics Pvt. Ltd.',
     type: 'ORGANIZATION',
     community: 'Cluster 02',
     analyticalPriority: 'HIGH',
@@ -309,19 +321,20 @@ export const mockEntities: Entity[] = [
     vehiclesCount: 3,
     lastActivity: 'Yesterday (Audit Log)',
     firstSeen: '2026-03-01',
-    associatedCaseIds: ['CASE-1024'],
+    associatedCaseIds: ['CASE-1024', 'CASE-1057'],
     keyConnections: ['Person_001', 'Person_078', 'Account_103', 'Location_A'],
     metadata: {
-      description: 'Front company facilitating freight forwarding contracts and commercial bank accounts.',
-      carrierOrBank: 'CIN: U61100DL2024PTC98124',
-      jurisdiction: 'Registrar of Companies - NCR',
+      description: 'Front logistics company holding warehouse lease contracts and commercial bank accounts connecting Vikram Singh and Amit Patil.',
+      carrierOrBank: 'CIN: U61100MH2024PTC4821',
+      jurisdiction: 'Registrar of Companies - Mumbai',
       confidenceScore: 0.95,
       flags: ['Shell Company Indicators', 'Shared Director Network']
     }
   },
   {
     id: 'Vehicle_017',
-    label: 'Armored SUV [DL-08-CC-9017]',
+    label: 'Maruti Swift (MH-04-XX-2847)',
+    name: 'Maruti Swift [MH-04-XX-2847]',
     type: 'VEHICLE',
     community: 'Cluster 02',
     analyticalPriority: 'MEDIUM',
@@ -335,11 +348,11 @@ export const mockEntities: Entity[] = [
     vehiclesCount: 0,
     lastActivity: '2 hours ago (Toll Plaza 4B)',
     firstSeen: '2026-06-08',
-    associatedCaseIds: ['CASE-1024'],
+    associatedCaseIds: ['CASE-1024', 'CASE-1042'],
     keyConnections: ['Person_027', 'Location_A', 'Location_B'],
     metadata: {
-      description: 'Transport asset linking Location_A and Location_B during scheduled courier runs.',
-      jurisdiction: 'State Transport Authority',
+      description: 'Transport vehicle operated by Rohan Deshmukh linking Thane West Hub and Vashi Safehouse during scheduled courier runs.',
+      jurisdiction: 'State Transport Authority, Maharashtra',
       confidenceScore: 0.91,
       flags: ['Frequent Border Crossing', 'Toll Match']
     }
