@@ -4,11 +4,13 @@ import { caseService } from '../services/caseService';
 import { Case } from '../types';
 import { CaseDetailsHeader } from '../components/cases/CaseDetailsHeader';
 import { CaseSummaryTab } from '../components/cases/CaseSummaryTab';
+import { WitnessManagementTab } from '../components/cases/WitnessManagementTab';
+import { CaseActionsAndObservationsTab } from '../components/cases/CaseActionsAndObservationsTab';
+import { UnifiedCaseTimelineTab } from '../components/cases/UnifiedCaseTimelineTab';
 import { CaseEvidenceTab } from '../components/cases/CaseEvidenceTab';
 import { NetworkAnalysis } from './NetworkAnalysis';
 import { EntitiesTable } from '../components/entities/EntitiesTable';
 import { EntityProfileView } from '../components/entities/EntityProfileView';
-import { InvestigationTimeline } from '../components/timeline/InvestigationTimeline';
 import { AlertsList } from '../components/alerts/AlertsList';
 import { InvestigationNotesView } from '../components/notes/InvestigationNotesView';
 import { ReportGenerator } from '../components/reports/ReportGenerator';
@@ -44,20 +46,30 @@ export const CaseDetails: React.FC = () => {
 
   return (
     <div className="space-y-5 select-none animate-in fade-in max-w-6xl mx-auto py-1">
-      {/* Case Dossier Header with 8-tab switcher */}
+      {/* Case Dossier Header with 10-tab switcher */}
       <CaseDetailsHeader caseData={caseData} />
 
-      {/* Tab 1: Case Overview */}
+      {/* Tab 1: Case Overview & Incident Dossier */}
       {(activeCaseTab === 'overview' || activeCaseTab === 'activity') && (
         <CaseSummaryTab caseData={caseData} />
       )}
 
-      {/* Tab 2: Network Link Analysis */}
+      {/* Tab 2: Witnesses & Recorded Statements */}
+      {activeCaseTab === 'witnesses' && (
+        <WitnessManagementTab caseId={activeCaseId} />
+      )}
+
+      {/* Tab 3: Investigation Directives & Officer Field Observations */}
+      {activeCaseTab === 'actions' && (
+        <CaseActionsAndObservationsTab caseId={activeCaseId} />
+      )}
+
+      {/* Tab 4: Network Link Analysis */}
       {(activeCaseTab === 'network' || activeCaseTab === 'investigation') && (
         <NetworkAnalysis />
       )}
 
-      {/* Tab 3: Entities Directory OR 360° Profile */}
+      {/* Tab 5: Entities Directory OR 360° Profile */}
       {activeCaseTab === 'entities' && (
         isEntityProfileOpen && selectedEntityId ? (
           <EntityProfileView 
@@ -69,27 +81,27 @@ export const CaseDetails: React.FC = () => {
         )
       )}
 
-      {/* Tab 4: Chronological Timeline */}
+      {/* Tab 6: Unified Chronological Timeline */}
       {activeCaseTab === 'timeline' && (
-        <InvestigationTimeline />
+        <UnifiedCaseTimelineTab caseId={activeCaseId} />
       )}
 
-      {/* Tab 5: Investigation Alerts Queue */}
+      {/* Tab 7: Investigation Alerts Queue */}
       {activeCaseTab === 'alerts' && (
         <AlertsList />
       )}
 
-      {/* Tab 6: Source Evidence Ledger */}
+      {/* Tab 8: Digital Evidence Registry */}
       {activeCaseTab === 'evidence' && (
         <CaseEvidenceTab caseId={activeCaseId} />
       )}
 
-      {/* Tab 7: Investigator Collaboration Notes */}
+      {/* Tab 9: Investigator Collaboration Notes */}
       {activeCaseTab === 'notes' && (
         <InvestigationNotesView caseId={activeCaseId} />
       )}
 
-      {/* Tab 8: Intelligence Report Generator */}
+      {/* Tab 10: Intelligence Report Generator */}
       {activeCaseTab === 'reports' && (
         <ReportGenerator />
       )}

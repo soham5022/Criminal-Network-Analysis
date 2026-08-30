@@ -21,6 +21,8 @@ export type AppPage =
 
 export type CaseWorkspaceTab = 
   | 'overview' 
+  | 'witnesses'
+  | 'actions'
   | 'network'
   | 'entities'
   | 'timeline'
@@ -28,6 +30,7 @@ export type CaseWorkspaceTab =
   | 'evidence' 
   | 'notes'
   | 'reports'
+  | 'history'
   | 'investigation' 
   | 'activity';
 

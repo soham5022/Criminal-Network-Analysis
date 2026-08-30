@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { 
   AlertTriangle, 
   PhoneCall, 
@@ -7,13 +7,29 @@ import {
   FileText, 
   Database, 
   ShieldCheck, 
-  ArrowRight
+  ArrowRight,
+  User,
+  Clock,
+  Calendar,
+  Building2,
+  FolderArchive,
+  UserCheck,
+  ExternalLink,
+  Info,
+  CheckCircle2,
+  AlertCircle
 } from 'lucide-react';
 import { Case } from '../../types';
 import { useInvestigation } from '../../context/InvestigationContext';
+import { caseHistoryService, CaseParticipant, IncidentDetails } from '../../services/caseHistoryService';
 
 export const CaseSummaryTab: React.FC<{ caseData: Case }> = ({ caseData }) => {
-  const { setActiveCaseTab, setSelectedEntityId, setSelectedAlertId } = useInvestigation();
+  const { setActiveCaseTab, setSelectedEntityId, setSelectedAlertId, openEntityProfile } = useInvestigation();
+
+  const incident = caseHistoryService.getIncidentDetails(caseData.id);
+  const participants = caseHistoryService.getParticipants(caseData.id);
+  const witnesses = caseHistoryService.getWitnesses(caseData.id);
+  const totalStatements = witnesses.reduce((acc, w) => acc + w.statements.length, 0);
 
   const handleReviewLead = (entityId?: string, alertId?: string, targetTab: 'network' | 'timeline' | 'evidence' = 'network') => {
     if (entityId) setSelectedEntityId(entityId);
@@ -21,193 +37,227 @@ export const CaseSummaryTab: React.FC<{ caseData: Case }> = ({ caseData }) => {
     setActiveCaseTab(targetTab);
   };
 
-  const findingsList = caseData.keyFindings && caseData.keyFindings.length > 0
-    ? caseData.keyFindings.map((findingText, idx) => {
-        const entMatch = findingText.match(/(Person_\d+|Account_\d+|Phone_\d+|Location_[A-Z]|Organization_[A-Z]|Vehicle_\d+)/);
-        const entityId = entMatch ? entMatch[0] : 'Entity';
-        return {
-          id: `LEAD-0${idx + 1}`,
-          title: findingText,
-          whyItMatters: `Analytical pattern flagged during multi-source graph resolution for ${caseData.name}.`,
-          evidence: `Verified across case source records (${caseData.id}).`,
-          entityId: entityId,
-          targetTab: (findingText.includes('transfer') || findingText.includes('call') ? 'timeline' : 'network') as 'network' | 'timeline'
-        };
-      })
-    : [
-        {
-          id: 'LEAD-01',
-          title: `Primary network interactions established in ${caseData.name}.`,
-          whyItMatters: 'Graph topology analysis highlights key central entities linking communication and operational records.',
-          evidence: `Verified across ingested records for ${caseData.id}.`,
-          entityId: 'Person_001',
-          targetTab: 'network' as const
-        }
-      ];
-
-  const firCount = caseData.evidencePointers?.firCount || 6;
-  const cdrCount = caseData.evidencePointers?.cdrLogsCount || 2410;
-  const bankCount = caseData.evidencePointers?.bankTransactionsCount || 1820;
-  const incidentCount = caseData.evidencePointers?.incidentReportsCount || 14;
+  const getParticipantBadge = (role: string) => {
+    switch (role) {
+      case 'INVESTIGATOR':
+        return 'bg-blue-500/20 text-blue-300 border-blue-500/30';
+      case 'COMPLAINANT':
+        return 'bg-emerald-500/20 text-emerald-300 border-emerald-500/30';
+      case 'VICTIM':
+        return 'bg-purple-500/20 text-purple-300 border-purple-500/30';
+      case 'PERSON_OF_INTEREST':
+        return 'bg-rose-500/20 text-rose-300 border-rose-500/30';
+      case 'ASSOCIATED_PERSON':
+        return 'bg-amber-500/20 text-amber-300 border-amber-500/30';
+      default:
+        return 'bg-slate-800 text-slate-300 border-slate-700';
+    }
+  };
 
   return (
     <div className="space-y-6 select-none animate-in fade-in max-w-6xl">
       
-      {/* 1. Case Summary Card */}
-      <div className="intel-card p-5 border border-slate-800 space-y-2">
-        <h2 className="text-xs font-bold uppercase tracking-wider text-slate-400">
-          Case Summary & Investigative Scope
-        </h2>
-        <p className="text-xs text-slate-200 leading-relaxed font-sans">
-          {caseData.description || 'Cross-source investigation involving communication, financial and location records. Algorithmic analysis extracted entity interactions across multi-source law enforcement data dumps.'}
-        </p>
-        {caseData.objective && (
-          <div className="pt-2 border-t border-slate-800/80 text-xs">
-            <span className="font-bold text-slate-400 uppercase text-[10px] block">Investigation Objective:</span>
-            <p className="text-slate-300 italic pt-0.5">{caseData.objective}</p>
-          </div>
-        )}
-      </div>
-
-      {/* 2. Data Sources & Investigation Statistics Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-12 gap-4">
-        {/* Data Sources (5 cols) */}
-        <div className="md:col-span-5 intel-card p-5 border border-slate-800 space-y-3">
-          <h3 className="text-xs font-bold uppercase tracking-wider text-slate-400 flex items-center gap-1.5">
-            <Database className="w-3.5 h-3.5 text-blue-400" />
-            <span>Ingested Data Sources</span>
-          </h3>
-
-          <div className="space-y-2 text-xs">
-            <div className="p-2.5 rounded-lg bg-[#090e1a] border border-slate-800 flex items-center justify-between">
-              <div className="flex items-center gap-2">
-                <PhoneCall className="w-3.5 h-3.5 text-blue-400" />
-                <span className="text-white font-medium">CDR Records</span>
-              </div>
-              <span className="font-mono text-slate-400 text-[11px]">{cdrCount.toLocaleString()} records</span>
-            </div>
-
-            <div className="p-2.5 rounded-lg bg-[#090e1a] border border-slate-800 flex items-center justify-between">
-              <div className="flex items-center gap-2">
-                <CreditCard className="w-3.5 h-3.5 text-amber-400" />
-                <span className="text-white font-medium">Transaction Records</span>
-              </div>
-              <span className="font-mono text-slate-400 text-[11px]">{bankCount.toLocaleString()} records</span>
-            </div>
-
-            <div className="p-2.5 rounded-lg bg-[#090e1a] border border-slate-800 flex items-center justify-between">
-              <div className="flex items-center gap-2">
-                <MapPin className="w-3.5 h-3.5 text-purple-400" />
-                <span className="text-white font-medium">Location Records (ANPR/CCTV)</span>
-              </div>
-              <span className="font-mono text-slate-400 text-[11px]">{incidentCount} intercepts</span>
-            </div>
-
-            <div className="p-2.5 rounded-lg bg-[#090e1a] border border-slate-800 flex items-center justify-between">
-              <div className="flex items-center gap-2">
-                <FileText className="w-3.5 h-3.5 text-indigo-400" />
-                <span className="text-white font-medium">Incident & FIR Reports</span>
-              </div>
-              <span className="font-mono text-slate-400 text-[11px]">{firCount} filings</span>
-            </div>
-          </div>
+      {/* 1. Dynamic Case Summary Statistics Bar */}
+      <div className="grid grid-cols-3 sm:grid-cols-5 lg:grid-cols-9 gap-2 font-mono">
+        <div className="intel-card p-3 rounded-xl border border-slate-800 bg-[#0c1322] text-center space-y-0.5">
+          <div className="text-base sm:text-lg font-bold text-blue-400">{caseData.entityCount || 48}</div>
+          <div className="text-[9px] text-slate-400 uppercase font-sans">Persons</div>
         </div>
 
-        {/* Investigation Statistics (7 cols) */}
-        <div className="md:col-span-7 intel-card p-5 border border-slate-800 space-y-3">
-          <h3 className="text-xs font-bold uppercase tracking-wider text-slate-400 flex items-center gap-1.5">
-            <ShieldCheck className="w-3.5 h-3.5 text-emerald-400" />
-            <span>Investigation Statistics</span>
-          </h3>
+        <div className="intel-card p-3 rounded-xl border border-slate-800 bg-[#0c1322] text-center space-y-0.5">
+          <div className="text-base sm:text-lg font-bold text-emerald-400">{witnesses.length}</div>
+          <div className="text-[9px] text-slate-400 uppercase font-sans">Witnesses</div>
+        </div>
 
-          <div className="grid grid-cols-2 sm:grid-cols-3 gap-2.5 font-mono">
-            <div className="p-3 rounded-lg bg-[#090e1a] border border-slate-800 space-y-0.5">
-              <div className="text-lg font-bold text-white">{(cdrCount + bankCount).toLocaleString()}</div>
-              <div className="text-[10px] text-slate-400 uppercase font-sans">Records Processed</div>
-            </div>
+        <div className="intel-card p-3 rounded-xl border border-slate-800 bg-[#0c1322] text-center space-y-0.5">
+          <div className="text-base sm:text-lg font-bold text-cyan-400">{totalStatements}</div>
+          <div className="text-[9px] text-slate-400 uppercase font-sans">Statements</div>
+        </div>
 
-            <div className="p-3 rounded-lg bg-[#090e1a] border border-slate-800 space-y-0.5">
-              <div className="text-lg font-bold text-blue-400">{caseData.entityCount || 36}</div>
-              <div className="text-[10px] text-slate-400 uppercase font-sans">Entities Detected</div>
-            </div>
+        <div className="intel-card p-3 rounded-xl border border-slate-800 bg-[#0c1322] text-center space-y-0.5">
+          <div className="text-base sm:text-lg font-bold text-indigo-400">{caseData.evidencePointers?.firCount || 6}</div>
+          <div className="text-[9px] text-slate-400 uppercase font-sans">Documents</div>
+        </div>
 
-            <div className="p-3 rounded-lg bg-[#090e1a] border border-slate-800 space-y-0.5">
-              <div className="text-lg font-bold text-emerald-400">{caseData.relationshipCount || 118}</div>
-              <div className="text-[10px] text-slate-400 uppercase font-sans">Relationships</div>
-            </div>
+        <div className="intel-card p-3 rounded-xl border border-slate-800 bg-[#0c1322] text-center space-y-0.5">
+          <div className="text-base sm:text-lg font-bold text-purple-400">14</div>
+          <div className="text-[9px] text-slate-400 uppercase font-sans">Evidence</div>
+        </div>
 
-            <div className="p-3 rounded-lg bg-[#090e1a] border border-slate-800 space-y-0.5">
-              <div className="text-lg font-bold text-amber-400">{caseData.flaggedAlertsCount || 6}</div>
-              <div className="text-[10px] text-slate-400 uppercase font-sans">Alerts Requiring Review</div>
-            </div>
+        <div className="intel-card p-3 rounded-xl border border-slate-800 bg-[#0c1322] text-center space-y-0.5">
+          <div className="text-base sm:text-lg font-bold text-amber-400">7</div>
+          <div className="text-[9px] text-slate-400 uppercase font-sans">Locations</div>
+        </div>
 
-            <div className="p-3 rounded-lg bg-[#090e1a] border border-slate-800 space-y-0.5">
-              <div className="text-lg font-bold text-indigo-400">{caseData.clustersIdentified || 3}</div>
-              <div className="text-[10px] text-slate-400 uppercase font-sans">Communities Detected</div>
-            </div>
+        <div className="intel-card p-3 rounded-xl border border-slate-800 bg-[#0c1322] text-center space-y-0.5">
+          <div className="text-base sm:text-lg font-bold text-rose-400">4</div>
+          <div className="text-[9px] text-slate-400 uppercase font-sans">Vehicles</div>
+        </div>
 
-            <div className="p-3 rounded-lg bg-[#090e1a] border border-slate-800 space-y-0.5">
-              <div className="text-lg font-bold text-purple-400">100%</div>
-              <div className="text-[10px] text-slate-400 uppercase font-sans">SHA-256 Verified</div>
-            </div>
-          </div>
+        <div className="intel-card p-3 rounded-xl border border-slate-800 bg-[#0c1322] text-center space-y-0.5">
+          <div className="text-base sm:text-lg font-bold text-teal-400">{caseData.relationshipCount || 164}</div>
+          <div className="text-[9px] text-slate-400 uppercase font-sans">Events</div>
+        </div>
+
+        <div className="intel-card p-3 rounded-xl border border-slate-800 bg-[#0c1322] text-center space-y-0.5">
+          <div className="text-base sm:text-lg font-bold text-amber-400">{caseData.flaggedAlertsCount || 12}</div>
+          <div className="text-[9px] text-slate-400 uppercase font-sans">Alerts</div>
         </div>
       </div>
 
-      {/* 3. Key Findings (Investigative Leads) */}
+      {/* 2. Structured Incident Dossier */}
+      {incident && (
+        <div className="intel-card p-5 border border-slate-800 rounded-xl bg-[#0c1322] space-y-4 shadow-xl">
+          <div className="flex flex-wrap items-center justify-between gap-3 border-b border-slate-800 pb-3">
+            <div className="space-y-0.5">
+              <div className="flex items-center gap-2">
+                <span className="font-mono text-xs font-bold text-blue-400">{incident.incidentId}</span>
+                <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-slate-900 text-slate-300 border border-slate-700">
+                  {incident.firNumber}
+                </span>
+                <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 font-bold">
+                  {incident.currentStatus}
+                </span>
+              </div>
+              <h3 className="text-sm sm:text-base font-bold text-white">
+                Incident Dossier: {incident.incidentType}
+              </h3>
+            </div>
+
+            <div className="font-mono text-xs text-slate-400 flex items-center gap-1.5">
+              <Calendar className="w-3.5 h-3.5 text-slate-500" />
+              <span>{incident.date} • {incident.time}</span>
+            </div>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-3 text-xs">
+            <div className="p-3 rounded-lg bg-slate-950 border border-slate-800 space-y-1">
+              <span className="text-[10px] text-slate-500 uppercase font-bold block">Incident Location</span>
+              <span className="text-slate-200">{incident.location}</span>
+            </div>
+
+            <div className="p-3 rounded-lg bg-slate-950 border border-slate-800 space-y-1">
+              <span className="text-[10px] text-slate-500 uppercase font-bold block">Reporting Officer & Station</span>
+              <span className="text-slate-200">{incident.reportingOfficer} • {incident.policeStation}</span>
+            </div>
+          </div>
+
+          <div className="p-3.5 rounded-lg bg-[#090e1a] border border-slate-800 space-y-1.5 text-xs">
+            <span className="text-[10px] text-slate-400 uppercase font-bold block">Incident Narrative:</span>
+            <p className="text-slate-200 leading-relaxed font-sans">{incident.description}</p>
+            <p className="text-[11px] text-slate-400 italic pt-1 border-t border-slate-800/60 font-sans">
+              Initial Information: {incident.initialInformation}
+            </p>
+          </div>
+
+          {/* Chronological Incident Updates Ledger */}
+          <div className="space-y-2 pt-1">
+            <span className="text-[10px] font-bold uppercase tracking-wider text-slate-400 block">
+              Incident Investigation Chronology ({incident.chronologicalUpdates.length} Milestone Updates)
+            </span>
+            <div className="space-y-1.5 text-xs">
+              {incident.chronologicalUpdates.map((upd, idx) => (
+                <div key={idx} className="p-2.5 rounded-lg bg-slate-950 border border-slate-800/80 flex items-center justify-between gap-3 font-sans">
+                  <div className="flex items-center gap-2">
+                    <span className="w-1.5 h-1.5 rounded-full bg-blue-400 shrink-0" />
+                    <span className="text-slate-200 font-medium">{upd.note}</span>
+                  </div>
+                  <span className="font-mono text-[10px] text-slate-500 shrink-0">
+                    {upd.date} • {upd.time}
+                  </span>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* 3. Case Participants Grid (Neutral Classifications) */}
+      <div className="intel-card p-5 border border-slate-800 rounded-xl bg-[#0c1322] space-y-4 shadow-xl">
+        <div className="flex items-center justify-between border-b border-slate-800 pb-3">
+          <div className="space-y-0.5">
+            <div className="flex items-center gap-2 text-xs font-mono font-semibold text-purple-400">
+              <User className="w-4 h-4" />
+              <span>CASE PARTICIPANTS DIRECTORY</span>
+            </div>
+            <h3 className="text-sm sm:text-base font-bold text-white">
+              Identified Case Participants ({participants.length})
+            </h3>
+          </div>
+          <span className="text-[11px] text-slate-400 font-sans">
+            Neutral Classification Standards
+          </span>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
+          {participants.map((p) => (
+            <div
+              key={p.id}
+              onClick={() => {
+                if (p.linkedEntityId) openEntityProfile(p.linkedEntityId);
+              }}
+              className={`p-3.5 rounded-xl bg-[#090e1a] border border-slate-800 space-y-2 text-xs transition-all ${
+                p.linkedEntityId ? 'hover:border-blue-500/60 cursor-pointer group' : ''
+              }`}
+            >
+              <div className="flex items-center justify-between">
+                <span className={`px-2 py-0.5 rounded text-[9px] font-mono font-bold uppercase border ${getParticipantBadge(p.role)}`}>
+                  {p.role.replace(/_/g, ' ')}
+                </span>
+                {p.linkedEntityId && (
+                  <span className="text-[10px] font-mono text-blue-400 group-hover:underline flex items-center gap-1">
+                    <span>{p.linkedEntityId}</span>
+                    <ExternalLink className="w-2.5 h-2.5" />
+                  </span>
+                )}
+              </div>
+
+              <div>
+                <div className="font-bold text-white text-sm group-hover:text-blue-300 transition-colors">
+                  {p.name}
+                </div>
+                <div className="text-[11px] text-slate-400 font-medium mt-0.5">{p.roleDescription}</div>
+              </div>
+
+              <div className="text-[11px] text-slate-300 font-sans leading-tight bg-slate-950 p-2 rounded border border-slate-800/80">
+                {p.relevance}
+              </div>
+
+              <div className="text-[10px] text-slate-500 font-mono pt-1 border-t border-slate-800/60 flex items-center justify-between">
+                <span>{p.contact}</span>
+                {p.badgeNumber && <span>Badge: {p.badgeNumber}</span>}
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {/* 4. Key Findings (Investigative Leads) */}
       <div className="space-y-3">
         <div className="flex items-center justify-between">
           <h2 className="text-xs font-bold uppercase tracking-wider text-slate-300 flex items-center gap-2">
             <AlertTriangle className="w-4 h-4 text-amber-400" />
-            <span>Key Findings & Investigative Leads</span>
+            <span>Key Findings & Analytical Leads</span>
           </h2>
-          <span className="text-[11px] text-slate-400 font-medium">
-            {findingsList.length} priority pattern{findingsList.length > 1 ? 's' : ''} identified
-          </span>
         </div>
 
         <div className="space-y-3">
-          {findingsList.map((finding) => (
+          {caseData.keyFindings?.map((findingText, idx) => (
             <div 
-              key={finding.id}
-              className="intel-card p-5 border border-slate-800 hover:border-slate-700 transition-colors space-y-3 bg-[#0d1527]"
+              key={idx}
+              className="intel-card p-4 border border-slate-800 hover:border-slate-700 transition-colors space-y-2 bg-[#0c1322] text-xs"
             >
-              <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-3 border-b border-slate-800/80 pb-2.5">
-                <div className="space-y-0.5">
-                  <span className="font-mono text-[10px] font-bold text-amber-400">{finding.id}</span>
-                  <h3 className="text-sm font-bold text-white">
-                    {finding.title}
-                  </h3>
-                </div>
-
+              <div className="flex items-center justify-between">
+                <span className="font-mono text-[10px] font-bold text-amber-400">LEAD-0{idx + 1}</span>
                 <button
-                  onClick={() => handleReviewLead(finding.entityId, finding.id, finding.targetTab)}
-                  className="px-4 py-1.5 rounded-lg bg-blue-600 hover:bg-blue-500 text-white text-xs font-semibold tracking-wide transition-colors self-start sm:self-auto flex items-center gap-1.5 shadow-sm"
+                  onClick={() => handleReviewLead(undefined, undefined, 'network')}
+                  className="text-xs font-semibold text-blue-400 hover:underline flex items-center gap-1"
                 >
-                  <span>Review Lead</span>
-                  <ArrowRight className="w-3.5 h-3.5" />
+                  <span>Review Graph Lead</span>
+                  <ArrowRight className="w-3 h-3" />
                 </button>
               </div>
-
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-3 text-xs">
-                <div className="space-y-1 p-3 rounded-lg bg-[#090e1a] border border-slate-800">
-                  <span className="text-[10px] font-bold uppercase tracking-wider text-slate-400 block">
-                    Why It Matters
-                  </span>
-                  <p className="text-slate-200 leading-relaxed font-medium">
-                    {finding.whyItMatters}
-                  </p>
-                </div>
-
-                <div className="space-y-1 p-3 rounded-lg bg-[#090e1a] border border-slate-800">
-                  <span className="text-[10px] font-bold uppercase tracking-wider text-slate-400 block">
-                    Source Evidence Reference
-                  </span>
-                  <p className="text-slate-300 leading-relaxed font-mono text-[11px]">
-                    {finding.evidence}
-                  </p>
-                </div>
-              </div>
+              <p className="text-slate-200 leading-relaxed font-sans">{findingText}</p>
             </div>
           ))}
         </div>

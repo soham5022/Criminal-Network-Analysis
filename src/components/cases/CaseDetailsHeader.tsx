@@ -11,7 +11,9 @@ import {
   StickyNote,
   UploadCloud,
   ShieldAlert,
-  User
+  User,
+  UserCheck,
+  ClipboardList
 } from 'lucide-react';
 import { Case } from '../../types';
 import { useInvestigation, CaseWorkspaceTab } from '../../context/InvestigationContext';
@@ -26,14 +28,16 @@ export const CaseDetailsHeader: React.FC<CaseDetailsHeaderProps> = ({ caseData }
   const { canIngest } = useAuth();
 
   const tabs: { id: CaseWorkspaceTab; label: string; icon: React.ElementType }[] = [
-    { id: 'overview', label: 'Overview', icon: LayoutDashboard },
-    { id: 'network', label: 'Network', icon: Network },
-    { id: 'entities', label: 'Entities', icon: Users },
-    { id: 'timeline', label: 'Timeline', icon: Clock },
-    { id: 'alerts', label: 'Alerts', icon: AlertTriangle },
-    { id: 'evidence', label: 'Evidence', icon: FileSpreadsheet },
-    { id: 'notes', label: 'Notes', icon: StickyNote },
-    { id: 'reports', label: 'Report', icon: FileText }
+    { id: 'overview', label: '1. Overview & Incident', icon: LayoutDashboard },
+    { id: 'witnesses', label: '2. Witnesses & Statements', icon: UserCheck },
+    { id: 'actions', label: '3. Actions & Observations', icon: ClipboardList },
+    { id: 'network', label: '4. Network Graph', icon: Network },
+    { id: 'entities', label: '5. Entities Directory', icon: Users },
+    { id: 'timeline', label: '6. Unified Timeline', icon: Clock },
+    { id: 'alerts', label: '7. Investigation Alerts', icon: AlertTriangle },
+    { id: 'evidence', label: '8. Evidence Registry', icon: FileSpreadsheet },
+    { id: 'notes', label: '9. Notes', icon: StickyNote },
+    { id: 'reports', label: '10. Reports', icon: FileText }
   ];
 
   return (
@@ -60,7 +64,7 @@ export const CaseDetailsHeader: React.FC<CaseDetailsHeaderProps> = ({ caseData }
       </div>
 
       {/* Case Header Card */}
-      <div className="intel-card p-5 border border-slate-800 space-y-3 bg-[#0d1527]">
+      <div className="intel-card p-5 border border-slate-800 space-y-3 bg-[#0d1527] rounded-xl shadow-xl">
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-3 border-b border-slate-800/80 pb-3">
           <div className="space-y-0.5">
             <div className="flex items-center gap-2">
@@ -82,7 +86,7 @@ export const CaseDetailsHeader: React.FC<CaseDetailsHeaderProps> = ({ caseData }
 
           <div className="flex items-center gap-2 text-xs text-slate-300 bg-[#090e1a] px-3 py-1.5 rounded-lg border border-slate-800 font-medium">
             <User className="w-3.5 h-3.5 text-blue-400" />
-            <span>Assigned Officer: <strong className="text-white">{caseData.leadInvestigator || 'Inspector Rajesh Verma'}</strong></span>
+            <span>Lead IO: <strong className="text-white">{caseData.leadInvestigator || 'Inspector Rajesh Verma'}</strong></span>
           </div>
         </div>
 
@@ -91,18 +95,19 @@ export const CaseDetailsHeader: React.FC<CaseDetailsHeaderProps> = ({ caseData }
         </p>
       </div>
 
-      {/* 8-Tab Navigation Bar */}
+      {/* Complete Tabs Navigation Bar */}
       <div className="border-b border-slate-800 bg-[#090e1a] rounded-lg p-1 flex items-center gap-1 overflow-x-auto">
         {tabs.map((t) => {
           const Icon = t.icon;
           const isActive = activeCaseTab === t.id ||
-            (t.id === 'network' && (activeCaseTab === 'investigation' as any));
+            (t.id === 'network' && (activeCaseTab === 'investigation' as any)) ||
+            (t.id === 'overview' && (activeCaseTab === 'activity' as any));
 
           return (
             <button
               key={t.id}
               onClick={() => setActiveCaseTab(t.id)}
-              className={`flex items-center gap-2 px-3.5 py-2 rounded-md text-xs font-semibold transition-colors whitespace-nowrap ${
+              className={`flex items-center gap-1.5 px-3 py-2 rounded-md text-xs font-semibold transition-colors whitespace-nowrap ${
                 isActive
                   ? 'bg-blue-600 text-white shadow-sm'
                   : 'text-slate-400 hover:text-slate-200 hover:bg-slate-800/80'
@@ -117,4 +122,3 @@ export const CaseDetailsHeader: React.FC<CaseDetailsHeaderProps> = ({ caseData }
     </div>
   );
 };
-
