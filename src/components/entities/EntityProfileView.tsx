@@ -715,9 +715,18 @@ export const EntityProfileView: React.FC<EntityProfileViewProps> = ({ entityId, 
         <div className="space-y-6 animate-in fade-in">
           {/* Verified Evidence Records */}
           <div className="space-y-3">
-            <span className="text-[10px] font-mono font-bold uppercase tracking-wider text-slate-400">
-              Verified Source Records & SHA-256 Hashes
-            </span>
+            <div className="flex items-center justify-between">
+              <span className="text-[10px] font-mono font-bold uppercase tracking-wider text-slate-400">
+                Verified Source Records & SHA-256 Hashes
+              </span>
+              <button
+                onClick={() => navigateTo('evidence')}
+                className="text-[11px] font-semibold text-blue-400 hover:underline flex items-center gap-1"
+              >
+                <span>Open Digital Evidence Registry</span>
+                <ExternalLink className="w-3 h-3" />
+              </button>
+            </div>
             <div className="space-y-2">
               {dossier.evidenceRecords.map((ev) => (
                 <div key={ev.id} className="p-3.5 rounded-xl bg-[#090f1e] border border-slate-800 flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-xs">

@@ -28,6 +28,7 @@ import {
   CaseDocument, 
   RelatedCaseReference 
 } from '../../services/caseRecordsService';
+import { evidenceRegistryService } from '../../services/evidenceRegistryService';
 import { useInvestigation } from '../../context/InvestigationContext';
 import { DocumentViewerModal } from './DocumentViewerModal';
 import { DocumentUploadModal } from './DocumentUploadModal';
@@ -439,27 +440,57 @@ export const CaseRecordDetailView: React.FC<CaseRecordDetailViewProps> = ({ case
       {/* TAB 5: SOURCE EVIDENCE LEDGER */}
       {activeTab === 'evidence' && (
         <div className="space-y-4 animate-in fade-in">
+          <div className="flex items-center justify-between">
+            <span className="text-xs font-bold uppercase tracking-wider text-slate-400">
+              Registered Evidence for {caseRecord.id}
+            </span>
+            <button
+              onClick={() => navigateTo('evidence')}
+              className="text-xs font-semibold text-blue-400 hover:underline flex items-center gap-1"
+            >
+              <span>Open Full Evidence Registry</span>
+              <ExternalLink className="w-3.5 h-3.5" />
+            </button>
+          </div>
+
           <div className="intel-card border border-slate-800 overflow-hidden shadow-lg font-mono text-xs">
             <table className="w-full text-left">
               <thead className="bg-[#090e1a] text-[10px] text-slate-400 uppercase tracking-wider border-b border-slate-800">
                 <tr>
                   <th className="py-3 px-4">Evidence ID</th>
-                  <th className="py-3 px-4">Source Category</th>
-                  <th className="py-3 px-4">Description</th>
+                  <th className="py-3 px-4">Type</th>
+                  <th className="py-3 px-4">Title & Evidentiary Value</th>
                   <th className="py-3 px-4">SHA-256 Hash</th>
                   <th className="py-3 px-4 text-right">Verification</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-slate-800/80">
-                {['CDR_00441', 'BANK_00192', 'ANPR_00881', 'FIR_0019'].map((evId, i) => (
-                  <tr key={evId} className="hover:bg-slate-800/60 transition-colors">
-                    <td className="py-3 px-4 font-bold text-white">{evId}</td>
-                    <td className="py-3 px-4 text-blue-300">{i % 2 === 0 ? 'CDR Intercept Log' : 'Bank Swift Ledger'}</td>
-                    <td className="py-3 px-4 text-slate-300 font-sans text-xs">Verified digital capture matching case records.</td>
-                    <td className="py-3 px-4 text-slate-400 text-[11px]">e3b0c44298fc...</td>
+                {evidenceRegistryService.getEvidenceByCase(caseRecord.id).map((ev) => (
+                  <tr 
+                    key={ev.id} 
+                    onClick={() => navigateTo('evidence')}
+                    className="hover:bg-slate-800/60 cursor-pointer transition-colors"
+                  >
+                    <td className="py-3 px-4 font-bold text-blue-400">{ev.id}</td>
+                    <td className="py-3 px-4 text-slate-300">
+                      <span className="px-2 py-0.5 rounded text-[10px] font-bold uppercase bg-slate-900 text-slate-300 border border-slate-700">
+                        {ev.evidenceType.replace(/_/g, ' ')}
+                      </span>
+                    </td>
+                    <td className="py-3 px-4 font-sans text-xs">
+                      <div className="font-semibold text-white">{ev.title}</div>
+                      <div className="text-[11px] text-slate-400 truncate max-w-sm">{ev.description}</div>
+                    </td>
+                    <td className="py-3 px-4 text-slate-400 text-[11px]">
+                      {ev.digitalDocument?.integrityHash ? `${ev.digitalDocument.integrityHash.slice(0, 10)}...` : 'Pending'}
+                    </td>
                     <td className="py-3 px-4 text-right">
-                      <span className="px-2 py-0.5 rounded text-[10px] font-bold bg-emerald-500/20 text-emerald-300 border border-emerald-500/30">
-                        VERIFIED
+                      <span className={`px-2 py-0.5 rounded text-[10px] font-bold ${
+                        ev.status === 'VERIFIED' 
+                          ? 'bg-emerald-500/20 text-emerald-300 border border-emerald-500/30'
+                          : 'bg-blue-500/20 text-blue-300 border border-blue-500/30'
+                      }`}>
+                        {ev.status.replace(/_/g, ' ')}
                       </span>
                     </td>
                   </tr>

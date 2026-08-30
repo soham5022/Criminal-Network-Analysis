@@ -67,7 +67,7 @@ export const Header: React.FC = () => {
     network: { title: 'Network Link Analysis', subtitle: 'Interactive multi-source knowledge graph and cluster inspection.' },
     investigate: { title: 'Network Link Analysis', subtitle: 'Interactive multi-source knowledge graph and cluster inspection.' },
     timeline: { title: 'Chronological Timeline', subtitle: 'Timestamped multi-source event sequence.' },
-    evidence: { title: 'Evidence Ledger', subtitle: 'Verified source records and SHA-256 cryptographic integrity verification.' },
+    evidence: { title: 'Digital Evidence Registry', subtitle: 'Centralized digital evidence repository, soft-copy retrieval, and SHA-256 integrity verification.' },
     alerts: { title: 'Investigation Alerts Queue', subtitle: 'Algorithmic anomaly patterns requiring officer review.' },
     reports: { title: 'Intelligence Reports', subtitle: 'Formal investigation briefs and case dossiers.' },
     settings: { title: 'Administration & System Status', subtitle: 'Component diagnostics, service health, and active officer profile.' },

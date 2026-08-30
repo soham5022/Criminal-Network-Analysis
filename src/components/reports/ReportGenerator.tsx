@@ -15,6 +15,7 @@ import { useInvestigation } from '../../context/InvestigationContext';
 import { caseService } from '../../services/caseService';
 import { analyticsService, NetworkSummary, CommunityDetail } from '../../services/analyticsService';
 import { alertService } from '../../services/alertService';
+import { evidenceRegistryService } from '../../services/evidenceRegistryService';
 import { Case, Alert } from '../../types';
 
 export const ReportGenerator: React.FC = () => {
@@ -198,17 +199,21 @@ export const ReportGenerator: React.FC = () => {
           {includeOptions.evidence && (
             <div className="space-y-2">
               <h4 className="text-xs font-bold uppercase tracking-wider text-blue-400 border-b border-slate-800 pb-1">
-                Supporting Evidence & Records
+                Supporting Evidence & Registered Records
               </h4>
               <div className="space-y-1.5 text-xs text-slate-300">
-                <div className="p-2.5 rounded bg-[#090e1a] border border-slate-800 flex justify-between">
-                  <span>Call Detail Records (CDR) — 14 intercept events recorded</span>
-                  <span className="text-emerald-400 font-mono text-[11px]">SHA-256 Verified</span>
-                </div>
-                <div className="p-2.5 rounded bg-[#090e1a] border border-slate-800 flex justify-between">
-                  <span>Banking Transaction Ledgers — 6 structured payments detected</span>
-                  <span className="text-emerald-400 font-mono text-[11px]">SHA-256 Verified</span>
-                </div>
+                {evidenceRegistryService.getEvidenceByCase(selectedCaseId).map(ev => (
+                  <div key={ev.id} className="p-2.5 rounded bg-[#090e1a] border border-slate-800 flex items-center justify-between">
+                    <div>
+                      <span className="font-mono text-blue-400 font-bold">{ev.id}: </span>
+                      <span className="text-white font-medium">{ev.title}</span>
+                      <span className="text-slate-500 font-mono text-[10px] ml-2">({ev.policeStation})</span>
+                    </div>
+                    <span className="text-emerald-400 font-mono text-[11px] shrink-0">
+                      {ev.status === 'VERIFIED' ? 'SHA-256 Verified' : 'Registered in Ledger'}
+                    </span>
+                  </div>
+                ))}
               </div>
             </div>
           )}
@@ -221,16 +226,16 @@ export const ReportGenerator: React.FC = () => {
               </h4>
               <div className="space-y-1.5 text-xs text-slate-300 font-mono">
                 <div className="flex justify-between p-2 rounded bg-[#090e1a]">
-                  <span>10:30 — Call</span>
-                  <span>Person_044 → Person_078</span>
+                  <span>09:42 — Encrypted VoLTE Call</span>
+                  <span>Vikram Singh → Rahul Sharma</span>
                 </div>
                 <div className="flex justify-between p-2 rounded bg-[#090e1a]">
-                  <span>12:15 — Location visit</span>
-                  <span>Person_044 → Location A</span>
+                  <span>11:15 — Physical Rendezvous</span>
+                  <span>Rahul Sharma → Thane West Logistics Hub</span>
                 </div>
                 <div className="flex justify-between p-2 rounded bg-[#090e1a]">
-                  <span>15:40 — Transaction</span>
-                  <span>Account_103 → Account_221</span>
+                  <span>14:32 — Structured Transfer (₹48,000)</span>
+                  <span>Account ending 4821 → Account ending 7316</span>
                 </div>
               </div>
             </div>

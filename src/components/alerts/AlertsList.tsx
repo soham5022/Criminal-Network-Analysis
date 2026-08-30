@@ -243,12 +243,26 @@ export const AlertsList: React.FC = () => {
               </div>
 
               {/* Supporting Evidence */}
-              <div className="p-3.5 rounded-lg bg-[#090e1a] border border-slate-800 space-y-1.5">
-                <span className="text-[10px] font-bold uppercase tracking-wider text-slate-400 block">
-                  Supporting Evidence
-                </span>
+              <div className="p-3.5 rounded-lg bg-[#090e1a] border border-slate-800 space-y-2">
+                <div className="flex items-center justify-between">
+                  <span className="text-[10px] font-bold uppercase tracking-wider text-slate-400 block">
+                    Supporting Evidence
+                  </span>
+                  <button
+                    onClick={() => {
+                      if (activeReviewAlert.associatedCaseId) {
+                        setActiveCaseId(activeReviewAlert.associatedCaseId);
+                      }
+                      navigateTo('evidence');
+                    }}
+                    className="text-[10px] font-semibold text-blue-400 hover:text-blue-300 flex items-center gap-1 transition-colors"
+                  >
+                    <span>Open Evidence Registry</span>
+                    <ExternalLink className="w-3 h-3" />
+                  </button>
+                </div>
                 <p className="text-slate-300 leading-relaxed font-mono text-[11px]">
-                  {activeReviewAlert.evidenceRef || 'CDR tower logs and banking switch records verify 7 edge handshakes between Community 1, 2, and 3.'}
+                  {activeReviewAlert.evidenceRef || 'CDR tower logs, ANPR toll hits, and banking SWIFT transmission records verify cross-cluster coordination.'}
                 </p>
               </div>
 
