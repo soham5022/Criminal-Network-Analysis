@@ -56,12 +56,11 @@ export const ReportGenerator: React.FC = () => {
   const loadReports = () => {
     const list = reportService.getReportsByCase(activeCaseId);
     setReports(list);
-    if (list.length > 0 && !activeReport) {
-      setActiveReport(list[0]);
-    }
+    setActiveReport(list[0] || null);
   };
 
   useEffect(() => {
+    setViewMode('list');
     loadReports();
   }, [activeCaseId]);
 
