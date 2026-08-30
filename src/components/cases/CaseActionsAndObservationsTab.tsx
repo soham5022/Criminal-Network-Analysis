@@ -1,20 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { 
   ClipboardList, 
-  PlusCircle, 
   CheckCircle2, 
   Clock, 
-  UserCheck, 
-  ShieldCheck, 
   MapPin, 
-  Eye, 
   Plus, 
-  User, 
-  AlertCircle,
-  ExternalLink,
-  Sparkles,
-  Search,
-  Filter
+  ExternalLink 
 } from 'lucide-react';
 import { 
   InvestigationAction, 
@@ -28,7 +19,7 @@ interface CaseActionsAndObservationsTabProps {
 }
 
 export const CaseActionsAndObservationsTab: React.FC<CaseActionsAndObservationsTabProps> = ({ caseId }) => {
-  const { openEntityProfile, navigateTo } = useInvestigation();
+  const { openEntityProfile } = useInvestigation();
   const [actions, setActions] = useState<InvestigationAction[]>([]);
   const [observations, setObservations] = useState<OfficerObservation[]>([]);
 
@@ -104,232 +95,201 @@ export const CaseActionsAndObservationsTab: React.FC<CaseActionsAndObservationsT
   };
 
   return (
-    <div className="space-y-6 animate-in fade-in select-none">
+    <div className="space-y-6 select-none animate-in fade-in max-w-6xl">
       
-      {/* 1. SECTION: INVESTIGATION ACTIONS */}
-      <div className="intel-card p-5 border border-slate-800 rounded-xl bg-[#0c1322] space-y-4 shadow-xl">
-        <div className="flex flex-wrap items-center justify-between gap-3 border-b border-slate-800 pb-3">
+      {/* 1. Top Section: Investigation Actions Ledger */}
+      <div className="p-6 border border-[#E2E8F0] rounded-lg bg-[#FFFFFF] shadow-sm space-y-4">
+        <div className="flex flex-wrap items-center justify-between gap-3 border-b border-[#E2E8F0] pb-3">
           <div className="space-y-0.5">
-            <div className="flex items-center gap-2 text-xs font-mono font-semibold text-blue-400">
-              <ClipboardList className="w-4 h-4" />
-              <span>INVESTIGATION DIRECTIVES & ACTIONS</span>
-            </div>
-            <h3 className="text-sm sm:text-base font-bold text-white">
-              Assigned Field Actions & Verification Tasks ({actions.length})
+            <h3 className="text-base font-bold text-[#12304A] flex items-center gap-2">
+              <ClipboardList className="w-5 h-5 text-[#087E8B]" />
+              <span>Investigation Directives & Action Tracker</span>
             </h3>
+            <p className="text-xs text-[#64748B]">
+              Operational tasks, surveillance authorizations, and court summons.
+            </p>
           </div>
 
           <button
             onClick={() => setShowAddActionModal(true)}
-            className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-blue-600 hover:bg-blue-500 text-white text-xs font-bold transition-all shadow-md"
+            className="flex items-center gap-1.5 px-3.5 py-1.5 rounded-md bg-[#087E8B] hover:bg-[#06636E] text-white text-xs font-bold transition-colors shadow-sm"
           >
-            <Plus className="w-3.5 h-3.5" />
-            <span>Add Action</span>
+            <Plus className="w-4 h-4" />
+            <span>Create Action Directive</span>
           </button>
         </div>
 
-        {actions.length === 0 ? (
-          <div className="p-6 text-center text-slate-500 font-sans text-xs">
-            No active investigation directives recorded for this case file.
-          </div>
-        ) : (
-          <div className="space-y-2.5">
-            {actions.map((act) => {
-              const isDone = act.status === 'COMPLETED';
+        <div className="space-y-2.5">
+          {actions.length === 0 ? (
+            <div className="py-6 text-center text-xs text-[#64748B]">No operational actions pending for this case.</div>
+          ) : (
+            actions.map((act) => {
+              const isCompleted = act.status === 'COMPLETED';
               return (
-                <div 
+                <div
                   key={act.id}
-                  className="p-3.5 rounded-xl bg-[#090e1a] border border-slate-800 flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-xs"
+                  className="p-3.5 rounded-lg bg-[#F8FAFC] border border-[#E2E8F0] flex flex-col sm:flex-row sm:items-center justify-between gap-3 shadow-sm"
                 >
-                  <div className="space-y-1 min-w-0">
-                    <div className="flex items-center gap-2">
-                      <span className="font-mono text-[10px] font-bold text-blue-400">{act.id}</span>
-                      <span className={`px-2 py-0.5 rounded text-[9px] font-mono font-bold uppercase border ${
-                        isDone 
-                          ? 'bg-emerald-500/20 text-emerald-300 border-emerald-500/30' 
-                          : 'bg-amber-500/20 text-amber-300 border-amber-500/30'
-                      }`}>
-                        {act.status}
-                      </span>
-                    </div>
+                  <div className="flex items-start gap-3">
+                    <button
+                      onClick={() => handleToggleActionStatus(act.id, act.status)}
+                      className={`w-5 h-5 rounded border flex items-center justify-center transition-colors shrink-0 mt-0.5 ${
+                        isCompleted ? 'bg-[#16805C] border-[#16805C] text-white' : 'border-[#CBD5E1] bg-[#FFFFFF]'
+                      }`}
+                    >
+                      {isCompleted && <CheckCircle2 className="w-3.5 h-3.5" />}
+                    </button>
 
-                    <div className="font-bold text-white text-xs">{act.title}</div>
-                    
-                    <div className="flex flex-wrap items-center gap-3 text-[11px] text-slate-400 font-sans">
-                      <span>Officer: <strong className="text-slate-300">{act.assignedOfficer}</strong></span>
-                      <span>Target: <strong className="text-blue-300">{act.targetSubject}</strong></span>
-                      <span>Due: <strong className="font-mono text-slate-300">{act.dueDate}</strong></span>
-                    </div>
-
-                    {act.findings && (
-                      <div className="text-[11px] text-emerald-400/90 italic pt-0.5 font-sans">
-                        Findings: {act.findings}
+                    <div className="space-y-1">
+                      <div className={`font-semibold text-xs text-[#12304A] ${isCompleted ? 'line-through opacity-70' : ''}`}>
+                        {act.title}
                       </div>
-                    )}
+                      <div className="flex flex-wrap items-center gap-3 text-[11px] text-[#64748B]">
+                        <span>Assigned: <strong className="text-[#12304A]">{act.assignedOfficer}</strong></span>
+                        <span>•</span>
+                        <span>Target: <strong className="text-[#087E8B]">{act.targetSubject}</strong></span>
+                        <span>•</span>
+                        <span>Due: <strong className="font-mono text-[#17212B]">{act.dueDate}</strong></span>
+                      </div>
+                    </div>
                   </div>
 
-                  <button
-                    onClick={() => handleToggleActionStatus(act.id, act.status)}
-                    className={`px-3 py-1.5 rounded-lg text-xs font-semibold shrink-0 transition-colors ${
-                      isDone 
-                        ? 'bg-slate-800 text-slate-400 hover:text-white' 
-                        : 'bg-emerald-600 hover:bg-emerald-500 text-white font-bold shadow-sm'
-                    }`}
-                  >
-                    {isDone ? 'Mark In Progress' : 'Mark Completed'}
-                  </button>
+                  <span className={`px-2 py-0.5 rounded text-[10px] font-mono font-bold uppercase self-start sm:self-auto border ${
+                    isCompleted
+                      ? 'bg-[#E8F7F0] text-[#16805C] border-[#A3E0C8]'
+                      : 'bg-[#FEF3C7] text-[#B7791F] border-[#FCD34D]'
+                  }`}>
+                    {act.status.replace(/_/g, ' ')}
+                  </span>
                 </div>
               );
-            })}
-          </div>
-        )}
+            })
+          )}
+        </div>
       </div>
 
-      {/* 2. SECTION: OFFICER FIELD OBSERVATIONS */}
-      <div className="intel-card p-5 border border-slate-800 rounded-xl bg-[#0c1322] space-y-4 shadow-xl">
-        <div className="flex flex-wrap items-center justify-between gap-3 border-b border-slate-800 pb-3">
+      {/* 2. Bottom Section: Officer Field Observations Log */}
+      <div className="p-6 border border-[#E2E8F0] rounded-lg bg-[#FFFFFF] shadow-sm space-y-4">
+        <div className="flex flex-wrap items-center justify-between gap-3 border-b border-[#E2E8F0] pb-3">
           <div className="space-y-0.5">
-            <div className="flex items-center gap-2 text-xs font-mono font-semibold text-emerald-400">
-              <Eye className="w-4 h-4" />
-              <span>OFFICER FIELD OBSERVATIONS (HUMAN VERIFIED)</span>
-            </div>
-            <h3 className="text-sm sm:text-base font-bold text-white">
-              Primary Investigator Field Logs ({observations.length})
+            <h3 className="text-base font-bold text-[#12304A] flex items-center gap-2">
+              <Clock className="w-5 h-5 text-[#087E8B]" />
+              <span>Officer Field Observations Log</span>
             </h3>
-            <p className="text-[11px] text-slate-400 font-sans">
-              Direct physical surveillance and tactical observations stamped with officer service credentials. Distinct from automated AI findings.
+            <p className="text-xs text-[#64748B]">
+              Field reports and human intelligence observations recorded by authorized personnel.
             </p>
           </div>
 
           <button
             onClick={() => setShowAddObsModal(true)}
-            className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-bold transition-all shadow-md"
+            className="flex items-center gap-1.5 px-3.5 py-1.5 rounded-md bg-[#FFFFFF] hover:bg-[#F8FAFC] border border-[#CBD5E1] text-[#12304A] text-xs font-semibold transition-colors shadow-sm"
           >
-            <Plus className="w-3.5 h-3.5" />
-            <span>Record Observation</span>
+            <Plus className="w-4 h-4 text-[#087E8B]" />
+            <span>Add Observation</span>
           </button>
         </div>
 
-        {observations.length === 0 ? (
-          <div className="p-6 text-center text-slate-500 font-sans text-xs">
-            No manual officer field observations recorded for this case file yet.
-          </div>
-        ) : (
-          <div className="space-y-3">
-            {observations.map((obs) => (
-              <div 
-                key={obs.id}
-                className="p-4 rounded-xl bg-[#090e1a] border border-slate-800 space-y-2.5"
-              >
-                <div className="flex flex-wrap items-center justify-between gap-2">
+        <div className="space-y-3">
+          {observations.length === 0 ? (
+            <div className="py-6 text-center text-xs text-[#64748B]">No field observations logged yet.</div>
+          ) : (
+            observations.map((obs) => (
+              <div key={obs.id} className="p-4 rounded-lg bg-[#F8FAFC] border border-[#E2E8F0] space-y-2 shadow-sm">
+                <div className="flex flex-wrap items-center justify-between gap-2 text-xs">
                   <div className="flex items-center gap-2">
-                    <span className="font-mono text-[10px] font-bold text-emerald-400">{obs.id}</span>
-                    <span className="px-2 py-0.5 rounded text-[9px] font-mono font-bold bg-emerald-500/15 text-emerald-300 border border-emerald-500/30">
-                      OFFICER OBSERVATION
-                    </span>
-                    <span className="text-[11px] text-slate-300 font-semibold">{obs.officer}</span>
-                    <span className="text-[10px] font-mono text-slate-500">({obs.badge})</span>
+                    <span className="font-bold text-[#12304A]">{obs.officer}</span>
+                    <span className="font-mono text-[10px] text-[#64748B]">({obs.badge})</span>
                   </div>
-
-                  <span className="font-mono text-[10px] text-slate-400">
+                  <div className="font-mono text-[11px] text-[#64748B]">
                     {obs.date} • {obs.time}
-                  </span>
+                  </div>
                 </div>
 
-                <div className="text-xs text-slate-200 leading-relaxed font-sans bg-slate-950 p-3 rounded-lg border border-slate-800/80">
-                  {obs.observation}
-                </div>
+                <p className="text-xs text-[#334155] leading-relaxed font-sans">{obs.observation}</p>
 
-                <div className="flex flex-wrap items-center justify-between gap-2 pt-1">
-                  <div className="flex items-center gap-1 text-[10px] text-slate-400">
-                    <MapPin className="w-3 h-3 text-purple-400" />
-                    <span>Location: {obs.location}</span>
+                <div className="pt-2 border-t border-[#E2E8F0] flex flex-wrap items-center justify-between gap-2 text-[11px] text-[#64748B]">
+                  <div className="flex items-center gap-1.5">
+                    <MapPin className="w-3.5 h-3.5 text-[#7E22CE]" />
+                    <span>{obs.location}</span>
                   </div>
 
-                  {obs.relatedEntityIds.length > 0 && (
+                  {obs.relatedEntityIds && obs.relatedEntityIds.length > 0 && (
                     <div className="flex items-center gap-1.5">
-                      <span className="text-[10px] text-slate-500">Linked:</span>
-                      {obs.relatedEntityIds.map((entId) => (
+                      {obs.relatedEntityIds.map(entId => (
                         <button
                           key={entId}
                           onClick={() => openEntityProfile(entId)}
-                          className="px-1.5 py-0.2 rounded bg-slate-900 text-blue-300 hover:text-white border border-slate-800 text-[10px] font-mono transition-colors"
+                          className="px-2 py-0.5 rounded bg-[#FFFFFF] hover:bg-[#E6F4F5] border border-[#CBD5E1] hover:border-[#A7DFE3] text-[#087E8B] text-[10px] font-mono font-bold flex items-center gap-1 transition-colors"
                         >
-                          {entId}
+                          <span>{entId}</span>
+                          <ExternalLink className="w-2.5 h-2.5" />
                         </button>
                       ))}
                     </div>
                   )}
                 </div>
               </div>
-            ))}
-          </div>
-        )}
+            ))
+          )}
+        </div>
       </div>
 
-      {/* Modal 1: Add Action Modal */}
+      {/* Modal: Add Directive */}
       {showAddActionModal && (
-        <div className="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4 select-none animate-in fade-in">
-          <div 
-            className="w-full max-w-md intel-card rounded-xl border border-slate-700 bg-[#0c1322] shadow-2xl p-5 space-y-4"
-            onClick={(e) => e.stopPropagation()}
-          >
-            <div className="flex items-center justify-between border-b border-slate-800 pb-3">
-              <h3 className="font-bold text-sm text-white">Add Investigation Directive / Action</h3>
-              <button onClick={() => setShowAddActionModal(false)} className="text-slate-400 hover:text-white">✕</button>
+        <div className="fixed inset-0 z-50 bg-black/40 backdrop-blur-sm flex items-center justify-center p-4">
+          <div className="w-full max-w-md bg-[#FFFFFF] rounded-lg border border-[#CBD5E1] shadow-2xl p-5 space-y-4 animate-in fade-in">
+            <div className="flex items-center justify-between border-b border-[#E2E8F0] pb-2">
+              <h3 className="font-bold text-sm text-[#12304A]">New Investigation Directive</h3>
+              <button onClick={() => setShowAddActionModal(false)} className="text-[#64748B] hover:text-[#12304A]">✕</button>
             </div>
+
             <form onSubmit={handleAddActionSubmit} className="space-y-3 text-xs">
-              <div className="space-y-1">
-                <label className="block text-[10px] uppercase font-bold text-slate-400">Action Directive Title</label>
+              <div>
+                <label className="block text-[10px] uppercase font-bold text-[#64748B] mb-1">Action Directive Title</label>
                 <input
                   type="text"
                   required
-                  placeholder="e.g. Conduct perimeter reconnaissance on warehouse"
+                  placeholder="e.g. Issue Section 91 CrPC notice for bank transaction records"
                   value={newActionTitle}
                   onChange={(e) => setNewActionTitle(e.target.value)}
-                  className="w-full px-3 py-2 rounded-lg bg-slate-900 border border-slate-700 text-xs text-white focus:outline-none focus:border-blue-500"
+                  className="w-full px-3 py-2 rounded-md bg-[#FFFFFF] border border-[#CBD5E1] text-xs text-[#17212B] focus:outline-none focus:border-[#087E8B]"
                 />
               </div>
-              <div className="space-y-1">
-                <label className="block text-[10px] uppercase font-bold text-slate-400">Assigned Officer</label>
+
+              <div>
+                <label className="block text-[10px] uppercase font-bold text-[#64748B] mb-1">Assigned Officer</label>
                 <input
                   type="text"
                   value={newActionOfficer}
                   onChange={(e) => setNewActionOfficer(e.target.value)}
-                  className="w-full px-3 py-2 rounded-lg bg-slate-900 border border-slate-700 text-xs text-white focus:outline-none focus:border-blue-500"
+                  className="w-full px-3 py-2 rounded-md bg-[#FFFFFF] border border-[#CBD5E1] text-xs text-[#17212B] focus:outline-none focus:border-[#087E8B]"
                 />
               </div>
-              <div className="space-y-1">
-                <label className="block text-[10px] uppercase font-bold text-slate-400">Target Subject / Entity</label>
+
+              <div>
+                <label className="block text-[10px] uppercase font-bold text-[#64748B] mb-1">Target Subject / Focus</label>
                 <input
                   type="text"
                   value={newActionSubject}
                   onChange={(e) => setNewActionSubject(e.target.value)}
-                  className="w-full px-3 py-2 rounded-lg bg-slate-900 border border-slate-700 text-xs text-white focus:outline-none focus:border-blue-500"
+                  className="w-full px-3 py-2 rounded-md bg-[#FFFFFF] border border-[#CBD5E1] text-xs text-[#17212B] focus:outline-none focus:border-[#087E8B]"
                 />
               </div>
-              <div className="space-y-1">
-                <label className="block text-[10px] uppercase font-bold text-slate-400">Target Completion Date</label>
-                <input
-                  type="date"
-                  value={newActionDueDate}
-                  onChange={(e) => setNewActionDueDate(e.target.value)}
-                  className="w-full px-3 py-2 rounded-lg bg-slate-900 border border-slate-700 text-xs font-mono text-white focus:outline-none focus:border-blue-500"
-                />
-              </div>
-              <div className="flex justify-end gap-2 pt-2 border-t border-slate-800">
+
+              <div className="flex justify-end gap-2 pt-2 border-t border-[#E2E8F0]">
                 <button
                   type="button"
                   onClick={() => setShowAddActionModal(false)}
-                  className="px-4 py-2 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs font-semibold"
+                  className="px-3.5 py-1.5 rounded-md bg-[#FFFFFF] hover:bg-[#F8FAFC] border border-[#CBD5E1] text-[#475569] text-xs font-semibold shadow-sm"
                 >
                   Cancel
                 </button>
                 <button
                   type="submit"
-                  className="px-4 py-2 rounded-lg bg-blue-600 hover:bg-blue-500 text-white text-xs font-bold shadow-md"
+                  className="px-4 py-1.5 rounded-md bg-[#087E8B] hover:bg-[#06636E] text-white text-xs font-bold shadow-sm"
                 >
-                  Save Action
+                  Save Directive
                 </button>
               </div>
             </form>
@@ -337,78 +297,49 @@ export const CaseActionsAndObservationsTab: React.FC<CaseActionsAndObservationsT
         </div>
       )}
 
-      {/* Modal 2: Add Observation Modal */}
+      {/* Modal: Add Observation */}
       {showAddObsModal && (
-        <div className="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4 select-none animate-in fade-in">
-          <div 
-            className="w-full max-w-md intel-card rounded-xl border border-slate-700 bg-[#0c1322] shadow-2xl p-5 space-y-4"
-            onClick={(e) => e.stopPropagation()}
-          >
-            <div className="flex items-center justify-between border-b border-slate-800 pb-3">
-              <h3 className="font-bold text-sm text-white">Record Officer Field Observation</h3>
-              <button onClick={() => setShowAddObsModal(false)} className="text-slate-400 hover:text-white">✕</button>
+        <div className="fixed inset-0 z-50 bg-black/40 backdrop-blur-sm flex items-center justify-center p-4">
+          <div className="w-full max-w-md bg-[#FFFFFF] rounded-lg border border-[#CBD5E1] shadow-2xl p-5 space-y-4 animate-in fade-in">
+            <div className="flex items-center justify-between border-b border-[#E2E8F0] pb-2">
+              <h3 className="font-bold text-sm text-[#12304A]">New Field Observation Entry</h3>
+              <button onClick={() => setShowAddObsModal(false)} className="text-[#64748B] hover:text-[#12304A]">✕</button>
             </div>
+
             <form onSubmit={handleAddObsSubmit} className="space-y-3 text-xs">
-              <div className="grid grid-cols-2 gap-2">
-                <div className="space-y-1">
-                  <label className="block text-[10px] uppercase font-bold text-slate-400">Officer Name</label>
-                  <input
-                    type="text"
-                    value={newObsOfficer}
-                    onChange={(e) => setNewObsOfficer(e.target.value)}
-                    className="w-full px-3 py-2 rounded-lg bg-slate-900 border border-slate-700 text-xs text-white focus:outline-none focus:border-blue-500"
-                  />
-                </div>
-                <div className="space-y-1">
-                  <label className="block text-[10px] uppercase font-bold text-slate-400">Badge Number</label>
-                  <input
-                    type="text"
-                    value={newObsBadge}
-                    onChange={(e) => setNewObsBadge(e.target.value)}
-                    className="w-full px-3 py-2 rounded-lg bg-slate-900 border border-slate-700 text-xs font-mono text-white focus:outline-none focus:border-blue-500"
-                  />
-                </div>
-              </div>
-              <div className="space-y-1">
-                <label className="block text-[10px] uppercase font-bold text-slate-400">Field Location</label>
+              <div>
+                <label className="block text-[10px] uppercase font-bold text-[#64748B] mb-1">Location / Surveillance Point</label>
                 <input
                   type="text"
                   value={newObsLocation}
                   onChange={(e) => setNewObsLocation(e.target.value)}
-                  className="w-full px-3 py-2 rounded-lg bg-slate-900 border border-slate-700 text-xs text-white focus:outline-none focus:border-blue-500"
+                  className="w-full px-3 py-2 rounded-md bg-[#FFFFFF] border border-[#CBD5E1] text-xs text-[#17212B] focus:outline-none focus:border-[#087E8B]"
                 />
               </div>
-              <div className="space-y-1">
-                <label className="block text-[10px] uppercase font-bold text-slate-400">Observation Narrative</label>
+
+              <div>
+                <label className="block text-[10px] uppercase font-bold text-[#64748B] mb-1">Observation Narrative</label>
                 <textarea
-                  rows={4}
+                  rows={3}
                   required
-                  placeholder="Record factual physical observation, movement, rendezvous, or asset sighting..."
+                  placeholder="Details of physical surveillance, spot check, or lead verification..."
                   value={newObsText}
                   onChange={(e) => setNewObsText(e.target.value)}
-                  className="w-full p-2.5 rounded-lg bg-slate-950 border border-slate-700 text-xs text-slate-200 focus:outline-none focus:border-blue-500 leading-relaxed"
+                  className="w-full px-3 py-2 rounded-md bg-[#FFFFFF] border border-[#CBD5E1] text-xs text-[#17212B] focus:outline-none focus:border-[#087E8B]"
                 />
               </div>
-              <div className="space-y-1">
-                <label className="block text-[10px] uppercase font-bold text-slate-400">Primary Linked Entity ID</label>
-                <input
-                  type="text"
-                  value={newObsEntity}
-                  onChange={(e) => setNewObsEntity(e.target.value)}
-                  className="w-full px-3 py-2 rounded-lg bg-slate-900 border border-slate-700 text-xs font-mono text-white focus:outline-none focus:border-blue-500"
-                />
-              </div>
-              <div className="flex justify-end gap-2 pt-2 border-t border-slate-800">
+
+              <div className="flex justify-end gap-2 pt-2 border-t border-[#E2E8F0]">
                 <button
                   type="button"
                   onClick={() => setShowAddObsModal(false)}
-                  className="px-4 py-2 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs font-semibold"
+                  className="px-3.5 py-1.5 rounded-md bg-[#FFFFFF] hover:bg-[#F8FAFC] border border-[#CBD5E1] text-[#475569] text-xs font-semibold shadow-sm"
                 >
                   Cancel
                 </button>
                 <button
                   type="submit"
-                  className="px-4 py-2 rounded-lg bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-bold shadow-md"
+                  className="px-4 py-1.5 rounded-md bg-[#087E8B] hover:bg-[#06636E] text-white text-xs font-bold shadow-sm"
                 >
                   Save Observation
                 </button>

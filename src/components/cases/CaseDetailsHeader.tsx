@@ -10,7 +10,6 @@ import {
   FileText,
   StickyNote,
   UploadCloud,
-  ShieldAlert,
   ShieldCheck,
   User,
   UserCheck,
@@ -47,7 +46,7 @@ export const CaseDetailsHeader: React.FC<CaseDetailsHeaderProps> = ({ caseData }
       <div className="flex items-center justify-between">
         <button
           onClick={() => navigateTo('cases')}
-          className="inline-flex items-center gap-1.5 text-xs font-semibold text-slate-400 hover:text-white transition-colors"
+          className="inline-flex items-center gap-1.5 text-xs font-semibold text-[#64748B] hover:text-[#12304A] transition-colors"
         >
           <ArrowLeft className="w-3.5 h-3.5" />
           <span>Back to Cases Directory</span>
@@ -56,7 +55,7 @@ export const CaseDetailsHeader: React.FC<CaseDetailsHeaderProps> = ({ caseData }
         {canIngest && (
           <button
             onClick={() => setIsIngestionModalOpen(true)}
-            className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-blue-600 hover:bg-blue-500 text-white text-xs font-semibold tracking-wide transition-colors shadow-sm"
+            className="flex items-center gap-1.5 px-3 py-1.5 rounded-md bg-[#087E8B] hover:bg-[#06636E] text-white text-xs font-semibold tracking-wide transition-colors shadow-sm"
           >
             <UploadCloud className="w-3.5 h-3.5" />
             <span>Add Case Data</span>
@@ -65,22 +64,22 @@ export const CaseDetailsHeader: React.FC<CaseDetailsHeaderProps> = ({ caseData }
       </div>
 
       {/* Case Header Card */}
-      <div className="intel-card p-5 border border-slate-800 space-y-3 bg-[#0d1527] rounded-xl shadow-xl">
-        <div className="flex flex-col md:flex-row md:items-center justify-between gap-3 border-b border-slate-800/80 pb-3">
+      <div className="bg-[#FFFFFF] p-5 border border-[#E2E8F0] space-y-3 rounded-lg shadow-sm">
+        <div className="flex flex-col md:flex-row md:items-center justify-between gap-3 border-b border-[#E2E8F0] pb-3">
           <div className="space-y-0.5">
             <div className="flex items-center gap-2">
-              <span className="font-mono text-xs font-bold text-blue-400">
+              <span className="font-mono text-xs font-bold text-[#087E8B]">
                 {caseData.id}
               </span>
-              <span className="text-slate-600">•</span>
-              <span className="px-2 py-0.2 rounded text-[10px] font-bold bg-emerald-500/20 text-emerald-300 border border-emerald-500/30">
+              <span className="text-[#CBD5E1]">•</span>
+              <span className="px-2 py-0.2 rounded text-[10px] font-bold bg-[#E8F7F0] text-[#16805C] border border-[#A3E0C8]">
                 STATUS: {caseData.status || 'ACTIVE'}
               </span>
-              <span className="px-2 py-0.2 rounded text-[10px] font-bold bg-rose-500/20 text-rose-300 border border-rose-500/30">
+              <span className="px-2 py-0.2 rounded text-[10px] font-bold bg-[#FEE2E2] text-[#C24141] border border-[#FCA5A5]">
                 PRIORITY: {caseData.priority || 'HIGH'}
               </span>
             </div>
-            <h1 className="text-xl font-bold text-white tracking-tight">
+            <h1 className="text-xl font-bold text-[#12304A] tracking-tight">
               {caseData.name}
             </h1>
           </div>
@@ -88,27 +87,27 @@ export const CaseDetailsHeader: React.FC<CaseDetailsHeaderProps> = ({ caseData }
           <div className="flex items-center gap-2">
             <button
               onClick={() => navigateTo('audit')}
-              className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-slate-900 hover:bg-slate-800 border border-slate-700 text-slate-300 hover:text-white text-xs font-semibold transition-colors"
+              className="flex items-center gap-1.5 px-3 py-1.5 rounded-md bg-[#FFFFFF] hover:bg-[#F8FAFC] border border-[#CBD5E1] text-[#475569] hover:text-[#12304A] text-xs font-semibold transition-colors shadow-sm"
               title="View immutable audit ledger for this case"
             >
-              <ShieldCheck className="w-3.5 h-3.5 text-cyan-400" />
+              <ShieldCheck className="w-3.5 h-3.5 text-[#087E8B]" />
               <span>View Audit Activity</span>
             </button>
 
-            <div className="flex items-center gap-2 text-xs text-slate-300 bg-[#090e1a] px-3 py-1.5 rounded-lg border border-slate-800 font-medium">
-              <User className="w-3.5 h-3.5 text-blue-400" />
-              <span>Lead IO: <strong className="text-white">{caseData.leadInvestigator || 'Inspector Rajesh Verma'}</strong></span>
+            <div className="flex items-center gap-2 text-xs text-[#475569] bg-[#F8FAFC] px-3 py-1.5 rounded-md border border-[#E2E8F0] font-medium">
+              <User className="w-3.5 h-3.5 text-[#087E8B]" />
+              <span>Lead IO: <strong className="text-[#12304A]">{caseData.leadInvestigator || 'Inspector Rajesh Verma'}</strong></span>
             </div>
           </div>
         </div>
 
-        <p className="text-xs text-slate-300 leading-relaxed font-sans">
+        <p className="text-xs text-[#475569] leading-relaxed font-sans">
           {caseData.description || 'Cross-source investigation involving communication, financial and location records.'}
         </p>
       </div>
 
       {/* Complete Tabs Navigation Bar */}
-      <div className="border-b border-slate-800 bg-[#090e1a] rounded-lg p-1 flex items-center gap-1 overflow-x-auto">
+      <div className="bg-[#FFFFFF] border border-[#E2E8F0] shadow-sm rounded-lg p-1 flex items-center gap-1 overflow-x-auto">
         {tabs.map((t) => {
           const Icon = t.icon;
           const isActive = activeCaseTab === t.id ||
@@ -121,11 +120,11 @@ export const CaseDetailsHeader: React.FC<CaseDetailsHeaderProps> = ({ caseData }
               onClick={() => setActiveCaseTab(t.id)}
               className={`flex items-center gap-1.5 px-3 py-2 rounded-md text-xs font-semibold transition-colors whitespace-nowrap ${
                 isActive
-                  ? 'bg-blue-600 text-white shadow-sm'
-                  : 'text-slate-400 hover:text-slate-200 hover:bg-slate-800/80'
+                  ? 'bg-[#E6F4F5] text-[#087E8B] border border-[#A7DFE3]'
+                  : 'text-[#64748B] hover:text-[#12304A] hover:bg-[#F8FAFC]'
               }`}
             >
-              <Icon className={`w-3.5 h-3.5 ${isActive ? 'text-white' : 'text-slate-400'}`} />
+              <Icon className={`w-3.5 h-3.5 ${isActive ? 'text-[#087E8B]' : 'text-[#64748B]'}`} />
               <span>{t.label}</span>
             </button>
           );

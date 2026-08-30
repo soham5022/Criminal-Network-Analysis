@@ -4,8 +4,6 @@ import {
   Lock, 
   Mail, 
   X, 
-  ArrowRight, 
-  UserCheck, 
   KeyRound, 
   AlertCircle
 } from 'lucide-react';
@@ -14,7 +12,7 @@ import { useInvestigation } from '../../context/InvestigationContext';
 
 export const LoginModal: React.FC = () => {
   const { isLoginModalOpen, setIsLoginModalOpen } = useInvestigation();
-  const { login, loginAsInvestigator, loginAsAdmin, loginAsViewer, user } = useAuth();
+  const { login, loginAsInvestigator, loginAsAdmin, loginAsViewer } = useAuth();
   
   const [email, setEmail] = useState<string>('rajesh.verma@mha.gov.in');
   const [password, setPassword] = useState<string>('Investigator@2026!');
@@ -51,25 +49,25 @@ export const LoginModal: React.FC = () => {
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm animate-in fade-in select-none">
-      <div className="w-full max-w-md intel-card rounded-xl border border-slate-700 bg-[#0c1322] shadow-2xl overflow-hidden animate-in zoom-in-95 duration-150">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/40 backdrop-blur-sm animate-in fade-in select-none">
+      <div className="w-full max-w-md bg-[#FFFFFF] rounded-lg border border-[#CBD5E1] shadow-2xl overflow-hidden animate-in zoom-in-95 duration-150">
         
         {/* Header */}
-        <div className="p-4 sm:p-5 border-b border-slate-800 bg-[#090e1a] flex items-center justify-between">
+        <div className="p-4 sm:p-5 border-b border-[#E2E8F0] bg-[#F8FAFC] flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <div className="p-2 rounded-lg bg-blue-500/20 border border-blue-500/30 text-blue-400">
+            <div className="p-2 rounded-md bg-[#E6F4F5] border border-[#A7DFE3] text-[#087E8B]">
               <ShieldCheck className="w-5 h-5" />
             </div>
             <div>
-              <h3 className="text-base font-bold text-white tracking-wide">TraceNet</h3>
-              <p className="text-[11px] text-slate-300 font-medium">AI-Powered Criminal Network Analysis System</p>
-              <p className="text-[10px] text-slate-400 italic">Connecting the dots in complex investigations.</p>
+              <h3 className="text-base font-bold text-[#12304A] tracking-wide">TraceNet</h3>
+              <p className="text-[11px] text-[#475569] font-medium">AI-Powered Criminal Network Analysis System</p>
+              <p className="text-[10px] text-[#64748B] italic">Connecting the dots in complex investigations.</p>
             </div>
           </div>
 
           <button
             onClick={() => setIsLoginModalOpen(false)}
-            className="p-1 rounded-md text-slate-400 hover:text-white hover:bg-slate-800 transition-colors self-start"
+            className="p-1 rounded-md text-[#64748B] hover:text-[#12304A] hover:bg-[#E2E8F0] transition-colors self-start"
           >
             <X className="w-4 h-4" />
           </button>
@@ -79,8 +77,8 @@ export const LoginModal: React.FC = () => {
         {/* Content */}
         <div className="p-5 sm:p-6 space-y-4 text-xs">
           {errorMsg && (
-            <div className="p-3 rounded-lg bg-rose-950/40 border border-rose-500/40 flex items-start gap-2 text-rose-300">
-              <AlertCircle className="w-4 h-4 text-rose-400 shrink-0 mt-0.5" />
+            <div className="p-3 rounded-md bg-[#FEE2E2] border border-[#FCA5A5] flex items-start gap-2 text-[#C24141]">
+              <AlertCircle className="w-4 h-4 text-[#C24141] shrink-0 mt-0.5" />
               <span>{errorMsg}</span>
             </div>
           )}
@@ -88,35 +86,35 @@ export const LoginModal: React.FC = () => {
           {/* Form */}
           <form onSubmit={handleSubmit} className="space-y-3.5">
             <div className="space-y-1">
-              <label className="text-[11px] font-bold text-slate-300 uppercase tracking-wider block">
+              <label className="text-[11px] font-bold text-[#64748B] uppercase tracking-wider block">
                 Officer Email / User ID
               </label>
               <div className="relative">
-                <Mail className="w-4 h-4 text-slate-500 absolute left-3 top-1/2 -translate-y-1/2" />
+                <Mail className="w-4 h-4 text-[#94A3B8] absolute left-3 top-1/2 -translate-y-1/2" />
                 <input
                   type="email"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   required
                   placeholder="name@mha.gov.in"
-                  className="w-full pl-9 pr-3 py-2 rounded-lg bg-slate-900 border border-slate-700 text-xs text-white placeholder-slate-400 focus:outline-none focus:border-blue-500"
+                  className="w-full pl-9 pr-3 py-2 rounded-md bg-[#FFFFFF] border border-[#CBD5E1] text-xs text-[#17212B] placeholder-[#94A3B8] focus:outline-none focus:border-[#087E8B]"
                 />
               </div>
             </div>
 
             <div className="space-y-1">
-              <label className="text-[11px] font-bold text-slate-300 uppercase tracking-wider block">
+              <label className="text-[11px] font-bold text-[#64748B] uppercase tracking-wider block">
                 Security Password
               </label>
               <div className="relative">
-                <Lock className="w-4 h-4 text-slate-500 absolute left-3 top-1/2 -translate-y-1/2" />
+                <Lock className="w-4 h-4 text-[#94A3B8] absolute left-3 top-1/2 -translate-y-1/2" />
                 <input
                   type="password"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   required
                   placeholder="••••••••••••"
-                  className="w-full pl-9 pr-3 py-2 rounded-lg bg-slate-900 border border-slate-700 text-xs text-white placeholder-slate-400 focus:outline-none focus:border-blue-500"
+                  className="w-full pl-9 pr-3 py-2 rounded-md bg-[#FFFFFF] border border-[#CBD5E1] text-xs text-[#17212B] placeholder-[#94A3B8] focus:outline-none focus:border-[#087E8B]"
                 />
               </div>
             </div>
@@ -124,7 +122,7 @@ export const LoginModal: React.FC = () => {
             <button
               type="submit"
               disabled={isLoading}
-              className="w-full py-2.5 rounded-lg bg-blue-600 hover:bg-blue-500 text-white text-xs font-semibold tracking-wide transition-colors shadow-sm flex items-center justify-center gap-2 disabled:opacity-50"
+              className="w-full py-2.5 rounded-md bg-[#087E8B] hover:bg-[#06636E] text-white text-xs font-semibold tracking-wide transition-colors shadow-sm flex items-center justify-center gap-2 disabled:opacity-50"
             >
               <KeyRound className="w-4 h-4" />
               <span>{isLoading ? 'Authenticating...' : 'Sign In'}</span>
@@ -132,36 +130,36 @@ export const LoginModal: React.FC = () => {
           </form>
 
           {/* Quick Role Switcher for SIH Demonstration */}
-          <div className="pt-3.5 border-t border-slate-800 space-y-2">
-            <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider block">
+          <div className="pt-3.5 border-t border-[#E2E8F0] space-y-2">
+            <span className="text-[10px] font-bold text-[#64748B] uppercase tracking-wider block">
               1-Click Demonstration Profiles:
             </span>
             <div className="grid grid-cols-3 gap-2">
               <button
                 type="button"
                 onClick={() => handleQuickRole(loginAsInvestigator)}
-                className="p-2 rounded-lg bg-slate-900 hover:bg-slate-800 border border-blue-500/40 text-left transition-colors"
+                className="p-2 rounded-md bg-[#FFFFFF] hover:bg-[#F8FAFC] border border-[#A7DFE3] text-left transition-colors shadow-sm"
               >
-                <div className="text-[11px] font-bold text-blue-300">Investigator</div>
-                <div className="text-[10px] text-slate-400 truncate">Insp. Verma</div>
+                <div className="text-[11px] font-bold text-[#087E8B]">Investigator</div>
+                <div className="text-[10px] text-[#64748B] truncate">Insp. Verma</div>
               </button>
 
               <button
                 type="button"
                 onClick={() => handleQuickRole(loginAsAdmin)}
-                className="p-2 rounded-lg bg-slate-900 hover:bg-slate-800 border border-amber-500/40 text-left transition-colors"
+                className="p-2 rounded-md bg-[#FFFFFF] hover:bg-[#F8FAFC] border border-[#FCD34D] text-left transition-colors shadow-sm"
               >
-                <div className="text-[11px] font-bold text-amber-300">Director</div>
-                <div className="text-[10px] text-slate-400 truncate">Dir. Sharma</div>
+                <div className="text-[11px] font-bold text-[#B7791F]">Director</div>
+                <div className="text-[10px] text-[#64748B] truncate">Dir. Sharma</div>
               </button>
 
               <button
                 type="button"
                 onClick={() => handleQuickRole(loginAsViewer)}
-                className="p-2 rounded-lg bg-slate-900 hover:bg-slate-800 border border-slate-700 text-left transition-colors"
+                className="p-2 rounded-md bg-[#FFFFFF] hover:bg-[#F8FAFC] border border-[#CBD5E1] text-left transition-colors shadow-sm"
               >
-                <div className="text-[11px] font-bold text-slate-300">Analyst</div>
-                <div className="text-[10px] text-slate-400 truncate">A. Patel</div>
+                <div className="text-[11px] font-bold text-[#475569]">Analyst</div>
+                <div className="text-[10px] text-[#64748B] truncate">A. Patel</div>
               </button>
             </div>
           </div>

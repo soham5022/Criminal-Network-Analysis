@@ -5,17 +5,14 @@ import {
   MapPin, 
   CreditCard, 
   Building2, 
-  Users, 
-  Search,
-  AlertTriangle,
-  ExternalLink,
-  Filter,
-  FileText,
-  FileSpreadsheet,
-  UserCheck,
-  Calendar,
-  Eye,
-  ShieldCheck
+  Search, 
+  AlertTriangle, 
+  Filter, 
+  FileText, 
+  FileSpreadsheet, 
+  UserCheck, 
+  Eye, 
+  Calendar 
 } from 'lucide-react';
 import { 
   timelineService, 
@@ -91,93 +88,95 @@ export const InvestigationTimeline: React.FC = () => {
     <div className="max-w-6xl mx-auto py-1 space-y-5 select-none animate-in fade-in">
       
       {/* 1. Header & Dynamic KPI Tiles */}
-      <div className="intel-card p-5 border border-slate-800 rounded-xl bg-[#0d1527] space-y-4 shadow-xl">
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-slate-800/80 pb-3">
+      <div className="bg-[#FFFFFF] p-5 border border-[#E2E8F0] rounded-lg shadow-sm space-y-4">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-[#E2E8F0] pb-3">
           <div className="space-y-0.5">
             <div className="flex items-center gap-2">
-              <span className="font-mono text-xs font-bold text-blue-400">{activeCaseId}</span>
-              <span className="text-slate-600">•</span>
-              <span className="text-[10px] font-mono font-bold uppercase tracking-wider text-slate-400">
+              <span className="font-mono text-xs font-bold text-[#087E8B]">{activeCaseId}</span>
+              <span className="text-[#CBD5E1]">•</span>
+              <span className="text-[10px] font-bold uppercase tracking-wider text-[#64748B]">
                 CASE INVESTIGATION TIMELINE
               </span>
             </div>
-            <h1 className="text-xl font-bold text-white tracking-tight">
+            <h1 className="text-xl font-bold text-[#12304A] tracking-tight">
               Chronological Multi-Source Event Stream
             </h1>
           </div>
 
           <div className="flex items-center gap-2">
-            <span className="text-xs text-slate-400 font-medium">Case Scope:</span>
-            <span className="px-2.5 py-1 rounded-lg bg-blue-950/80 text-blue-300 border border-blue-500/40 text-xs font-mono font-bold">
+            <span className="text-xs text-[#64748B] font-medium">Case Scope:</span>
+            <span className="px-2.5 py-1 rounded-md bg-[#E6F4F5] text-[#087E8B] border border-[#A7DFE3] text-xs font-mono font-bold">
               {activeCaseId}
             </span>
           </div>
         </div>
 
         {/* Dynamic 5 KPI Tiles */}
-        <div className="grid grid-cols-2 sm:grid-cols-5 gap-3 font-mono text-xs">
-          <div className="p-3 rounded-lg bg-[#090e1a] border border-slate-800 text-center space-y-0.5">
-            <div className="text-lg font-bold text-blue-400">{stats.totalEvents}</div>
-            <div className="text-[10px] text-slate-400 uppercase font-sans">Total Events</div>
+        <div className="grid grid-cols-2 sm:grid-cols-5 gap-3 text-xs">
+          <div className="p-3 rounded-md bg-[#F8FAFC] border border-[#E2E8F0] text-center space-y-0.5">
+            <div className="text-lg font-bold text-[#12304A] font-mono">{stats.totalEvents}</div>
+            <div className="text-[10px] text-[#64748B] uppercase">Total Events</div>
           </div>
-          <div className="p-3 rounded-lg bg-[#090e1a] border border-slate-800 text-center space-y-0.5">
-            <div className="text-lg font-bold text-purple-400">{stats.evidenceEvents}</div>
-            <div className="text-[10px] text-slate-400 uppercase font-sans">Evidence Events</div>
+          <div className="p-3 rounded-md bg-[#F8FAFC] border border-[#E2E8F0] text-center space-y-0.5">
+            <div className="text-lg font-bold text-[#087E8B] font-mono">{stats.evidenceEvents}</div>
+            <div className="text-[10px] text-[#64748B] uppercase">Evidence Events</div>
           </div>
-          <div className="p-3 rounded-lg bg-[#090e1a] border border-slate-800 text-center space-y-0.5">
-            <div className="text-lg font-bold text-emerald-400">{stats.witnessEvents}</div>
-            <div className="text-[10px] text-slate-400 uppercase font-sans">Witness Events</div>
+          <div className="p-3 rounded-md bg-[#F8FAFC] border border-[#E2E8F0] text-center space-y-0.5">
+            <div className="text-lg font-bold text-[#16805C] font-mono">{stats.witnessEvents}</div>
+            <div className="text-[10px] text-[#64748B] uppercase">Witness Events</div>
           </div>
-          <div className="p-3 rounded-lg bg-[#090e1a] border border-slate-800 text-center space-y-0.5">
-            <div className="text-lg font-bold text-indigo-400">{stats.investigationEvents}</div>
-            <div className="text-[10px] text-slate-400 uppercase font-sans">Investigation Actions</div>
+          <div className="p-3 rounded-md bg-[#F8FAFC] border border-[#E2E8F0] text-center space-y-0.5">
+            <div className="text-lg font-bold text-[#2563A6] font-mono">{stats.investigationEvents}</div>
+            <div className="text-[10px] text-[#64748B] uppercase">Investigation Actions</div>
           </div>
-          <div className="p-3 rounded-lg bg-[#090e1a] border border-slate-800 text-center space-y-0.5">
-            <div className="text-lg font-bold text-amber-400">{stats.alertEvents}</div>
-            <div className="text-[10px] text-slate-400 uppercase font-sans">Alerts</div>
+          <div className="p-3 rounded-md bg-[#F8FAFC] border border-[#E2E8F0] text-center space-y-0.5">
+            <div className="text-lg font-bold text-[#B7791F] font-mono">{stats.alertEvents}</div>
+            <div className="text-[10px] text-[#64748B] uppercase">Alerts</div>
           </div>
         </div>
       </div>
 
-      {/* 2. Filters & Search Bar */}
-      <div className="intel-card p-4 border border-slate-800 rounded-xl bg-[#0c1322] space-y-3">
-        <div className="flex flex-col md:flex-row md:items-center justify-between gap-3">
-          {/* Search */}
-          <div className="relative flex-1 min-w-[240px]">
-            <Search className="w-3.5 h-3.5 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
+      {/* 2. Filter Toolbar */}
+      <div className="bg-[#FFFFFF] p-4 rounded-lg border border-[#E2E8F0] shadow-sm space-y-3">
+        <div className="flex flex-wrap items-center justify-between gap-3">
+          <div className="relative flex-1 min-w-[240px] max-w-md">
+            <Search className="w-4 h-4 text-[#64748B] absolute left-3 top-1/2 -translate-y-1/2" />
             <input
               type="text"
               value={search}
               onChange={(e) => setSearch(e.target.value)}
-              placeholder="Search timeline by entity, witness, evidence ID, location, or keyword..."
-              className="w-full pl-8 pr-3 py-1.5 rounded-lg bg-slate-900 border border-slate-700 text-xs text-white placeholder-slate-400 focus:outline-none focus:border-blue-500 font-sans"
+              placeholder="Search timeline events, subjects, locations..."
+              className="w-full pl-9 pr-3 py-2 rounded-md bg-[#FFFFFF] border border-[#CBD5E1] text-xs text-[#17212B] placeholder-[#94A3B8] focus:outline-none focus:border-[#087E8B]"
             />
           </div>
 
-          {/* Date Pickers */}
           <div className="flex items-center gap-2 text-xs">
-            <span className="text-slate-400 text-[11px] font-semibold">From:</span>
-            <input
-              type="date"
-              value={startDate}
-              onChange={(e) => setStartDate(e.target.value)}
-              className="px-2.5 py-1 rounded-lg bg-slate-900 border border-slate-700 text-xs font-mono text-white focus:outline-none focus:border-blue-500"
-            />
-            <span className="text-slate-400 text-[11px] font-semibold">To:</span>
-            <input
-              type="date"
-              value={endDate}
-              onChange={(e) => setEndDate(e.target.value)}
-              className="px-2.5 py-1 rounded-lg bg-slate-900 border border-slate-700 text-xs font-mono text-white focus:outline-none focus:border-blue-500"
-            />
-            {(startDate || endDate || search) && (
+            <div className="flex items-center gap-1.5">
+              <Calendar className="w-3.5 h-3.5 text-[#64748B]" />
+              <input
+                type="date"
+                value={startDate}
+                onChange={(e) => setStartDate(e.target.value)}
+                className="px-2 py-1.5 rounded-md bg-[#FFFFFF] border border-[#CBD5E1] text-xs text-[#17212B]"
+              />
+              <span className="text-[#64748B]">to</span>
+              <input
+                type="date"
+                value={endDate}
+                onChange={(e) => setEndDate(e.target.value)}
+                className="px-2 py-1.5 rounded-md bg-[#FFFFFF] border border-[#CBD5E1] text-xs text-[#17212B]"
+              />
+            </div>
+
+            {(startDate || endDate || search || selectedCategory !== 'ALL') && (
               <button
                 onClick={() => {
                   setStartDate('');
                   setEndDate('');
                   setSearch('');
+                  setSelectedCategory('ALL');
                 }}
-                className="px-2.5 py-1 text-slate-400 hover:text-white text-xs underline"
+                className="text-[11px] text-[#087E8B] hover:text-[#06636E] font-semibold"
               >
                 Reset
               </button>
@@ -185,115 +184,91 @@ export const InvestigationTimeline: React.FC = () => {
           </div>
         </div>
 
-        {/* Category Pills */}
-        <div className="flex items-center gap-1.5 overflow-x-auto pt-1 pb-0.5">
-          {categories.map((cat) => {
-            const isSelected = selectedCategory === cat.id;
-            return (
-              <button
-                key={cat.id}
-                onClick={() => setSelectedCategory(cat.id)}
-                className={`px-3 py-1 rounded-lg text-xs font-semibold whitespace-nowrap transition-colors border ${
-                  isSelected
-                    ? 'bg-blue-600 text-white border-blue-500 shadow-sm'
-                    : 'bg-slate-900 text-slate-400 hover:text-slate-200 border-slate-800'
-                }`}
-              >
-                {cat.label}
-              </button>
-            );
-          })}
+        {/* Category Pills Bar */}
+        <div className="flex items-center gap-1.5 overflow-x-auto pt-1 border-t border-[#E2E8F0]">
+          {categories.map((cat) => (
+            <button
+              key={cat.id}
+              onClick={() => setSelectedCategory(cat.id)}
+              className={`px-3 py-1 rounded-md text-xs font-semibold whitespace-nowrap transition-colors ${
+                selectedCategory === cat.id
+                  ? 'bg-[#E6F4F5] text-[#087E8B] border border-[#A7DFE3]'
+                  : 'bg-[#FFFFFF] text-[#64748B] hover:text-[#12304A] hover:bg-[#F8FAFC] border border-[#E2E8F0]'
+              }`}
+            >
+              {cat.label}
+            </button>
+          ))}
         </div>
       </div>
 
-      {/* 3. Chronological Event Feed */}
-      {events.length === 0 ? (
-        <div className="intel-card p-12 border border-slate-800 rounded-xl bg-[#0c1322] text-center space-y-2">
-          <Clock className="w-8 h-8 text-slate-600 mx-auto" />
-          <h3 className="text-sm font-bold text-white">No Investigation Events Recorded</h3>
-          <p className="text-xs text-slate-400 max-w-md mx-auto">
-            No events match your current filter parameters for {activeCaseId}.
-          </p>
-        </div>
-      ) : (
-        <div className="space-y-3">
-          {events.map((ev) => {
-            const Icon = getCategoryIcon(ev.category);
+      {/* 3. Chronological Events Stream */}
+      <div className="bg-[#FFFFFF] p-6 rounded-lg border border-[#E2E8F0] shadow-sm relative space-y-6">
+        {/* Continuous Center Timeline Spine */}
+        <div className="absolute left-9 top-8 bottom-8 w-0.5 bg-[#CBD5E1]" />
+
+        {events.length === 0 ? (
+          <div className="py-12 text-center text-[#64748B] text-xs">
+            No chronological records found matching selected filters for {activeCaseId}.
+          </div>
+        ) : (
+          events.map((evt) => {
+            const Icon = getCategoryIcon(evt.category);
             return (
-              <div 
-                key={ev.id}
-                onClick={() => setSelectedEvent(ev)}
-                className="intel-card p-4 border border-slate-800 rounded-xl bg-[#0c1322] hover:bg-slate-800/40 hover:border-slate-700 cursor-pointer transition-all space-y-2.5 text-xs shadow-lg group"
+              <div
+                key={evt.id}
+                onClick={() => setSelectedEvent(evt)}
+                className="relative flex items-start gap-5 cursor-pointer group"
               >
-                <div className="flex flex-wrap items-center justify-between gap-2">
-                  <div className="flex items-center gap-2.5">
-                    <div className="p-2 rounded-lg bg-slate-900 border border-slate-700 text-blue-400 group-hover:text-white transition-colors">
-                      <Icon className="w-4 h-4" />
-                    </div>
-
-                    <div className="space-y-0.5">
-                      <div className="flex items-center gap-2">
-                        <span className="font-mono text-[10px] font-bold text-blue-400">{ev.id}</span>
-                        <span className="px-2 py-0.2 rounded text-[9px] font-mono font-bold bg-slate-900 text-slate-300 border border-slate-700 uppercase">
-                          {ev.category}
-                        </span>
-                        {ev.isAnomaly && (
-                          <span className="px-2 py-0.2 rounded text-[9px] font-mono font-bold bg-rose-500/20 text-rose-300 border border-rose-500/30">
-                            ANOMALY
-                          </span>
-                        )}
-                      </div>
-                      <h4 className="font-bold text-white text-xs sm:text-sm group-hover:text-blue-300 transition-colors">
-                        {ev.title}
-                      </h4>
-                    </div>
-                  </div>
-
-                  <div className="flex items-center gap-2 text-slate-400 font-mono text-[10px]">
-                    <Calendar className="w-3 h-3 text-slate-500" />
-                    <span>{ev.dateFormatted} • {ev.timeFormatted}</span>
-                  </div>
+                {/* Event Icon Pin on Timeline Spine */}
+                <div className="w-8 h-8 rounded-full bg-[#FFFFFF] border-2 border-[#087E8B] flex items-center justify-center text-[#087E8B] shrink-0 z-10 shadow-sm group-hover:scale-110 transition-transform">
+                  <Icon className="w-4 h-4" />
                 </div>
 
-                <p className="text-xs text-slate-300 leading-relaxed font-sans bg-slate-950 p-3 rounded-lg border border-slate-800/80">
-                  {ev.description}
-                </p>
+                {/* Event Details Card */}
+                <div className="flex-1 p-4 rounded-lg bg-[#F8FAFC] group-hover:bg-[#E6F4F5] border border-[#E2E8F0] group-hover:border-[#A7DFE3] transition-all shadow-sm space-y-1.5">
+                  <div className="flex flex-wrap items-center justify-between gap-2 text-xs">
+                    <div className="flex items-center gap-2">
+                      <span className="font-bold text-[#12304A] text-sm">{evt.title}</span>
+                      <span className="px-2 py-0.2 rounded text-[9px] font-bold bg-[#FFFFFF] text-[#087E8B] border border-[#CBD5E1] uppercase">
+                        {evt.category}
+                      </span>
+                    </div>
 
-                {/* Footer Bar */}
-                <div className="flex flex-wrap items-center justify-between gap-2 pt-1 border-t border-slate-800/60 text-[11px]">
-                  <div className="flex items-center gap-3 text-slate-400">
-                    {ev.location && (
-                      <div className="flex items-center gap-1">
-                        <MapPin className="w-3 h-3 text-purple-400 shrink-0" />
-                        <span className="truncate max-w-xs">{ev.location}</span>
-                      </div>
-                    )}
-                    {ev.primaryEntityLabel && (
-                      <div className="flex items-center gap-1 font-semibold text-slate-300">
-                        <Users className="w-3 h-3 text-blue-400" />
-                        <span>{ev.primaryEntityLabel}</span>
-                      </div>
-                    )}
+                    <div className="flex items-center gap-2 font-mono text-[11px] text-[#64748B]">
+                      <span>{evt.dateFormatted}</span>
+                      <span>•</span>
+                      <span>{evt.timeFormatted}</span>
+                    </div>
                   </div>
 
-                  <div className="flex items-center gap-2">
-                    <span className="text-[10px] text-slate-500 font-mono">Source:</span>
-                    <span className="px-2 py-0.5 rounded bg-blue-950/40 text-blue-300 border border-blue-500/20 text-[10px] font-mono font-bold">
-                      {ev.sourceType}: {ev.sourceId}
-                    </span>
-                    <button className="px-2 py-0.5 rounded bg-slate-800 group-hover:bg-blue-600 text-slate-300 group-hover:text-white text-[10px] font-semibold flex items-center gap-1 transition-colors">
-                      <Eye className="w-2.5 h-2.5" />
-                      <span>Inspect</span>
+                  <p className="text-xs text-[#475569] leading-relaxed font-sans">{evt.description}</p>
+
+                  <div className="pt-2 border-t border-[#E2E8F0] flex flex-wrap items-center justify-between gap-2 text-[11px] text-[#64748B]">
+                    <div className="flex items-center gap-3">
+                      <span>Source: <strong className="text-[#12304A]">{evt.sourceType || evt.sourceId}</strong></span>
+                      {evt.location && <span>Location: <strong className="text-[#12304A]">{evt.location}</strong></span>}
+                    </div>
+
+                    <button
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        setSelectedEvent(evt);
+                      }}
+                      className="text-[#087E8B] hover:text-[#06636E] font-semibold inline-flex items-center gap-1"
+                    >
+                      <Eye className="w-3.5 h-3.5" />
+                      <span>Inspect Event</span>
                     </button>
                   </div>
                 </div>
               </div>
             );
-          })}
-        </div>
-      )}
+          })
+        )}
+      </div>
 
-      {/* 4. Event Details Modal */}
+      {/* Event Details Modal */}
       {selectedEvent && (
         <TimelineEventDetailsModal
           event={selectedEvent}

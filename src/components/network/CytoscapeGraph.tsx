@@ -85,28 +85,28 @@ export const CytoscapeGraph: React.FC<CytoscapeGraphProps> = ({
       maxZoom: 2.5,
       style: [
         // ==========================================
-        // 1. BASE NODE STYLES
+        // 1. BASE NODE STYLES (Clean White / Professional Theme)
         // ==========================================
         {
           selector: 'node',
           style: {
-            'background-color': '#1e293b',
+            'background-color': '#12304A',
             'border-width': 2,
-            'border-color': '#475569',
+            'border-color': '#CBD5E1',
             'label': 'data(label)',
-            'color': '#f8fafc',
+            'color': '#17212B',
             'font-size': '11px',
             'font-family': 'Inter, system-ui, sans-serif',
             'font-weight': 600,
             'text-valign': 'bottom',
             'text-margin-y': 6,
-            'text-background-opacity': 0.88,
-            'text-background-color': '#070d18',
+            'text-background-opacity': 0.95,
+            'text-background-color': '#FFFFFF',
             'text-background-padding': '3px',
             'text-background-shape': 'roundrectangle',
-            'text-border-opacity': 0.7,
+            'text-border-opacity': 0.9,
             'text-border-width': 1,
-            'text-border-color': '#1e293b',
+            'text-border-color': '#E2E8F0',
             'width': 34,
             'height': 34,
             'transition-property': 'background-color, border-color, border-width, opacity, width, height',
@@ -115,21 +115,21 @@ export const CytoscapeGraph: React.FC<CytoscapeGraphProps> = ({
         },
 
         // ==========================================
-        // 2. ENTITY TYPE DISTINCT SHAPES & MUTED PALETTES
+        // 2. ENTITY TYPE DISTINCT SHAPES & PALETTE
         // ==========================================
         {
           selector: 'node[type = "PERSON"]',
           style: {
-            'background-color': '#1e40af', // Deep Slate Blue
-            'border-color': '#60a5fa',
+            'background-color': '#12304A', // Primary Navy
+            'border-color': '#234E70',
             'shape': 'ellipse'
           }
         },
         {
           selector: 'node[type = "PHONE"]',
           style: {
-            'background-color': '#065f46', // Muted Emerald
-            'border-color': '#34d399',
+            'background-color': '#087E8B', // Teal
+            'border-color': '#06636E',
             'shape': 'round-rectangle',
             'width': 38,
             'height': 32
@@ -138,8 +138,8 @@ export const CytoscapeGraph: React.FC<CytoscapeGraphProps> = ({
         {
           selector: 'node[type = "ACCOUNT"]',
           style: {
-            'background-color': '#92400e', // Muted Amber / Bronze
-            'border-color': '#fbbf24',
+            'background-color': '#2563A6', // Muted Blue
+            'border-color': '#1D4ED8',
             'shape': 'hexagon',
             'width': 38,
             'height': 34
@@ -148,8 +148,8 @@ export const CytoscapeGraph: React.FC<CytoscapeGraphProps> = ({
         {
           selector: 'node[type = "LOCATION"]',
           style: {
-            'background-color': '#5b21b6', // Muted Violet
-            'border-color': '#a78bfa',
+            'background-color': '#7E22CE', // Soft Purple
+            'border-color': '#6B21A8',
             'shape': 'rectangle',
             'width': 34,
             'height': 34
@@ -158,8 +158,8 @@ export const CytoscapeGraph: React.FC<CytoscapeGraphProps> = ({
         {
           selector: 'node[type = "ORGANIZATION"]',
           style: {
-            'background-color': '#3730a3', // Muted Indigo
-            'border-color': '#818cf8',
+            'background-color': '#234E70', // Steel Blue
+            'border-color': '#12304A',
             'shape': 'diamond',
             'width': 40,
             'height': 40
@@ -168,8 +168,8 @@ export const CytoscapeGraph: React.FC<CytoscapeGraphProps> = ({
         {
           selector: 'node[type = "VEHICLE"]',
           style: {
-            'background-color': '#9f1239', // Muted Rose / Crimson
-            'border-color': '#fb7185',
+            'background-color': '#B7791F', // Muted Orange
+            'border-color': '#92400E',
             'shape': 'round-diamond',
             'width': 36,
             'height': 36
@@ -185,15 +185,15 @@ export const CytoscapeGraph: React.FC<CytoscapeGraphProps> = ({
             'width': 46,
             'height': 46,
             'border-width': 3.5,
-            'border-color': '#38bdf8',
+            'border-color': '#087E8B',
             'border-style': 'solid',
-            'background-color': '#1e3a8a',
-            'label': 'Person_044 [BRIDGE]',
+            'background-color': '#12304A',
+            'label': 'Rahul Sharma [BRIDGE]',
             'font-weight': 700,
-            'color': '#ffffff',
-            'text-background-color': '#0369a1',
+            'color': '#087E8B',
+            'text-background-color': '#E6F4F5',
             'text-background-opacity': 0.95,
-            'text-border-color': '#38bdf8',
+            'text-border-color': '#A7DFE3',
             'z-index': 900
           }
         },
@@ -205,25 +205,24 @@ export const CytoscapeGraph: React.FC<CytoscapeGraphProps> = ({
           selector: 'edge',
           style: {
             'width': 1.6,
-            'line-color': '#334155',
-            'target-arrow-color': '#334155',
+            'line-color': '#94A3B8',
+            'target-arrow-color': '#94A3B8',
             'target-arrow-shape': 'triangle',
             'arrow-scale': 0.75,
             'curve-style': 'bezier',
-            'opacity': 0.7,
+            'opacity': 0.8,
             'font-size': '9px',
             'font-family': 'Inter, system-ui, sans-serif',
             'font-weight': 600,
             'text-rotation': 'autorotate',
-            'text-background-opacity': 0.9,
-            'text-background-color': '#070d18',
+            'text-background-opacity': 0.95,
+            'text-background-color': '#FFFFFF',
             'text-background-padding': '2.5px',
             'text-background-shape': 'roundrectangle',
-            'text-border-opacity': 0.7,
+            'text-border-opacity': 0.9,
             'text-border-width': 1,
-            'text-border-color': '#1e293b',
-            'color': '#cbd5e1',
-            // Default: do NOT show edge labels on every edge simultaneously to avoid noise
+            'text-border-color': '#E2E8F0',
+            'color': '#475569',
             'label': ''
           }
         },
@@ -232,8 +231,8 @@ export const CytoscapeGraph: React.FC<CytoscapeGraphProps> = ({
         {
           selector: 'edge[type = "CALLED"]',
           style: {
-            'line-color': '#0284c7',
-            'target-arrow-color': '#0284c7',
+            'line-color': '#087E8B',
+            'target-arrow-color': '#087E8B',
             'line-style': 'dashed',
             'line-dash-pattern': [5, 3]
           }
@@ -241,45 +240,45 @@ export const CytoscapeGraph: React.FC<CytoscapeGraphProps> = ({
         {
           selector: 'edge[type = "TRANSFERRED"]',
           style: {
-            'line-color': '#d97706',
-            'target-arrow-color': '#d97706',
+            'line-color': '#B7791F',
+            'target-arrow-color': '#B7791F',
             'width': 2.2
           }
         },
         {
           selector: 'edge[type = "VISITED"]',
           style: {
-            'line-color': '#7c3aed',
-            'target-arrow-color': '#7c3aed'
+            'line-color': '#7E22CE',
+            'target-arrow-color': '#7E22CE'
           }
         },
         {
           selector: 'edge[type = "ASSOCIATED_WITH"]',
           style: {
-            'line-color': '#4f46e5',
-            'target-arrow-color': '#4f46e5'
+            'line-color': '#234E70',
+            'target-arrow-color': '#234E70'
           }
         },
         {
           selector: 'edge[type = "OWNED"]',
           style: {
-            'line-color': '#059669',
-            'target-arrow-color': '#059669'
+            'line-color': '#16805C',
+            'target-arrow-color': '#16805C'
           }
         },
         {
           selector: 'edge[type = "MET"]',
           style: {
-            'line-color': '#e11d48',
-            'target-arrow-color': '#e11d48',
+            'line-color': '#C24141',
+            'target-arrow-color': '#C24141',
             'width': 2.0
           }
         },
         {
           selector: 'edge[type = "CO_LOCATED"]',
           style: {
-            'line-color': '#9333ea',
-            'target-arrow-color': '#9333ea',
+            'line-color': '#7E22CE',
+            'target-arrow-color': '#7E22CE',
             'line-style': 'dotted'
           }
         },
@@ -290,11 +289,11 @@ export const CytoscapeGraph: React.FC<CytoscapeGraphProps> = ({
         {
           selector: 'node:selected',
           style: {
-            'border-width': 4,
-            'border-color': '#38bdf8',
-            'underlay-color': '#0284c7',
-            'underlay-padding': '5px',
-            'underlay-opacity': 0.35,
+            'border-width': 3.5,
+            'border-color': '#087E8B',
+            'underlay-color': '#087E8B',
+            'underlay-padding': '4px',
+            'underlay-opacity': 0.25,
             'opacity': 1.0,
             'z-index': 999
           }
@@ -641,11 +640,11 @@ export const CytoscapeGraph: React.FC<CytoscapeGraphProps> = ({
       
       {/* Subtle Tactical Grid Pattern Overlay */}
       <div 
-        className="absolute inset-0 pointer-events-none opacity-20"
+        className="absolute inset-0 pointer-events-none opacity-40"
         style={{
           backgroundImage: `
-            linear-gradient(to right, #1e293b 1px, transparent 1px),
-            linear-gradient(to bottom, #1e293b 1px, transparent 1px)
+            linear-gradient(to right, #E2E8F0 1px, transparent 1px),
+            linear-gradient(to bottom, #E2E8F0 1px, transparent 1px)
           `,
           backgroundSize: '40px 40px'
         }}
@@ -653,17 +652,17 @@ export const CytoscapeGraph: React.FC<CytoscapeGraphProps> = ({
 
       {/* Top Explanatory Banner in Bridge View */}
       {isBridgeView && (
-        <div className="absolute top-3 left-1/2 -translate-x-1/2 z-20 px-4 py-1.5 rounded-full bg-amber-950/80 border border-amber-500/50 backdrop-blur-md text-amber-200 text-xs font-medium flex items-center gap-2 shadow-lg animate-in fade-in">
-          <Sparkles className="w-3.5 h-3.5 text-amber-400" />
+        <div className="absolute top-3 left-1/2 -translate-x-1/2 z-20 px-4 py-1.5 rounded-full bg-[#FEF3C7] border border-[#FCD34D] text-[#B7791F] text-xs font-semibold flex items-center gap-2 shadow-md animate-in fade-in">
+          <Sparkles className="w-3.5 h-3.5 text-[#B7791F]" />
           <span>Bridge View shows relationships connecting otherwise separate groups.</span>
         </div>
       )}
 
       {/* Top Explanatory Banner in Story Mode */}
       {isStoryMode && (
-        <div className="absolute top-3 left-1/2 -translate-x-1/2 z-20 px-4 py-1.5 rounded-full bg-blue-950/80 border border-blue-500/50 backdrop-blur-md text-blue-200 text-xs font-medium flex items-center gap-2 shadow-lg animate-in fade-in">
-          <Eye className="w-3.5 h-3.5 text-blue-400" />
-          <span>Investigation View: Key suspect-asset triangle around Person_044.</span>
+        <div className="absolute top-3 left-1/2 -translate-x-1/2 z-20 px-4 py-1.5 rounded-full bg-[#E6F4F5] border border-[#A7DFE3] text-[#087E8B] text-xs font-semibold flex items-center gap-2 shadow-md animate-in fade-in">
+          <Eye className="w-3.5 h-3.5 text-[#087E8B]" />
+          <span>Investigation View: Key suspect-asset triangle around Rahul Sharma.</span>
         </div>
       )}
 
@@ -680,14 +679,14 @@ export const CytoscapeGraph: React.FC<CytoscapeGraphProps> = ({
         {/* Path Finder Button */}
         <button
           onClick={() => setShowPathFinder(!showPathFinder)}
-          className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold backdrop-blur-md border transition-all ${
+          className={`flex items-center gap-1.5 px-3 py-1.5 rounded-md text-xs font-semibold border shadow-sm transition-all ${
             showPathFinder || activePathSteps
-              ? 'bg-blue-600/90 text-white border-blue-400 shadow-md shadow-blue-900/30'
-              : 'bg-[#0b1326]/85 hover:bg-slate-800 text-slate-200 border-slate-700'
+              ? 'bg-[#087E8B] text-white border-[#06636E]'
+              : 'bg-[#FFFFFF] hover:bg-[#F8FAFC] text-[#12304A] border-[#CBD5E1]'
           }`}
           title="Find shortest connection path between entities"
         >
-          <Route className="w-3.5 h-3.5 text-blue-400" />
+          <Route className="w-3.5 h-3.5 text-[#087E8B]" />
           <span>Path Finder</span>
         </button>
 
@@ -697,17 +696,17 @@ export const CytoscapeGraph: React.FC<CytoscapeGraphProps> = ({
             setTempFilters(activeFilterTypes);
             setShowFilterModal(true);
           }}
-          className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-[#0b1326]/85 hover:bg-slate-800 border border-slate-700 text-slate-200 text-xs font-semibold backdrop-blur-md shadow-sm transition-colors"
+          className="flex items-center gap-1.5 px-3 py-1.5 rounded-md bg-[#FFFFFF] hover:bg-[#F8FAFC] border border-[#CBD5E1] text-[#12304A] text-xs font-semibold shadow-sm transition-colors"
           title="Filter visible entity types"
         >
-          <Filter className="w-3.5 h-3.5 text-slate-400" />
+          <Filter className="w-3.5 h-3.5 text-[#64748B]" />
           <span>Types ({activeFilterTypes.length})</span>
         </button>
 
         {/* Fit Network View */}
         <button
           onClick={handleFitNetwork}
-          className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg bg-[#0b1326]/85 hover:bg-slate-800 border border-slate-700 text-slate-300 text-xs font-semibold backdrop-blur-md shadow-sm transition-colors"
+          className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-md bg-[#FFFFFF] hover:bg-[#F8FAFC] border border-[#CBD5E1] text-[#64748B] hover:text-[#12304A] text-xs font-semibold shadow-sm transition-colors"
           title="Fit Network to Viewport"
         >
           <Maximize2 className="w-3.5 h-3.5" />
@@ -716,7 +715,7 @@ export const CytoscapeGraph: React.FC<CytoscapeGraphProps> = ({
       </div>
 
       {/* Main Cytoscape Canvas */}
-      <div ref={containerRef} className="w-full h-full flex-1 z-0 cursor-grab active:cursor-grabbing" />
+      <div ref={containerRef} className="w-full h-full flex-1 z-0 cursor-grab active:cursor-grabbing bg-[#FAFCFD]" />
 
       {/* Floating Relationship Detail Card (Edge Inspector) */}
       <RelationshipDetailCard
@@ -747,22 +746,22 @@ export const CytoscapeGraph: React.FC<CytoscapeGraphProps> = ({
 
       {/* Filter Modal Dialog */}
       {showFilterModal && (
-        <div className="absolute inset-0 z-50 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4">
-          <div className="intel-card w-full max-w-sm border border-slate-700 bg-[#0b1326] p-5 rounded-xl shadow-2xl space-y-4 animate-in fade-in">
-            <div className="flex items-center justify-between border-b border-slate-800 pb-3">
-              <h3 className="text-sm font-bold text-white flex items-center gap-2">
-                <Filter className="w-4 h-4 text-blue-400" />
+        <div className="absolute inset-0 z-50 bg-black/40 backdrop-blur-sm flex items-center justify-center p-4">
+          <div className="w-full max-w-sm border border-[#CBD5E1] bg-[#FFFFFF] p-5 rounded-lg shadow-xl space-y-4 animate-in fade-in">
+            <div className="flex items-center justify-between border-b border-[#E2E8F0] pb-3">
+              <h3 className="text-sm font-bold text-[#12304A] flex items-center gap-2">
+                <Filter className="w-4 h-4 text-[#087E8B]" />
                 <span>Show Entity Types</span>
               </h3>
               <button 
                 onClick={() => setShowFilterModal(false)}
-                className="text-slate-400 hover:text-white"
+                className="text-[#64748B] hover:text-[#12304A]"
               >
                 <X className="w-4 h-4" />
               </button>
             </div>
 
-            <div className="space-y-2.5 text-xs text-slate-200">
+            <div className="space-y-2.5 text-xs text-[#17212B]">
               {[
                 { type: 'PERSON' as EntityType, label: 'Persons (Suspects & Leads)' },
                 { type: 'PHONE' as EntityType, label: 'Phones (Burner SIMs & Devices)' },
@@ -776,10 +775,10 @@ export const CytoscapeGraph: React.FC<CytoscapeGraphProps> = ({
                   <label 
                     key={type}
                     onClick={() => toggleTypeCheckbox(type)}
-                    className="flex items-center gap-2.5 cursor-pointer py-1 hover:text-white"
+                    className="flex items-center gap-2.5 cursor-pointer py-1 hover:text-[#087E8B]"
                   >
                     <div className={`w-4 h-4 rounded border flex items-center justify-center transition-colors ${
-                      checked ? 'bg-blue-600 border-blue-500 text-white' : 'border-slate-600 bg-slate-900'
+                      checked ? 'bg-[#087E8B] border-[#087E8B] text-white' : 'border-[#CBD5E1] bg-[#FFFFFF]'
                     }`}>
                       {checked && <Check className="w-3 h-3" />}
                     </div>
@@ -789,16 +788,16 @@ export const CytoscapeGraph: React.FC<CytoscapeGraphProps> = ({
               })}
             </div>
 
-            <div className="pt-2 border-t border-slate-800 flex justify-end gap-2">
+            <div className="pt-2 border-t border-[#E2E8F0] flex justify-end gap-2">
               <button
                 onClick={() => setShowFilterModal(false)}
-                className="px-3.5 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-xs font-semibold text-slate-300"
+                className="px-3.5 py-1.5 rounded-md bg-[#FFFFFF] hover:bg-[#F8FAFC] border border-[#CBD5E1] text-xs font-semibold text-[#475569]"
               >
                 Cancel
               </button>
               <button
                 onClick={handleApplyFilter}
-                className="px-4 py-1.5 rounded-lg bg-blue-600 hover:bg-blue-500 text-xs font-semibold text-white shadow-sm"
+                className="px-4 py-1.5 rounded-md bg-[#087E8B] hover:bg-[#06636E] text-xs font-semibold text-white shadow-sm"
               >
                 Apply Filters
               </button>

@@ -2,20 +2,9 @@ import React, { useState, useEffect } from 'react';
 import { 
   ShieldCheck, 
   Search, 
-  Filter, 
-  Clock, 
-  User, 
-  Activity, 
-  RefreshCw,
-  FileText,
-  FileSpreadsheet,
-  Folder,
-  CheckCircle2,
-  AlertCircle,
-  Eye,
-  ExternalLink,
-  ChevronLeft,
-  ChevronRight
+  Eye, 
+  ChevronLeft, 
+  ChevronRight 
 } from 'lucide-react';
 import { 
   auditService, 
@@ -108,317 +97,215 @@ export const AuditLogTable: React.FC = () => {
     <div className="max-w-6xl mx-auto py-1 space-y-5 select-none animate-in fade-in">
       
       {/* 1. Header & Dynamic 4-KPI Tiles */}
-      <div className="intel-card p-5 border border-slate-800 rounded-xl bg-[#0d1527] space-y-4 shadow-xl">
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-slate-800/80 pb-3">
+      <div className="bg-[#FFFFFF] p-5 border border-[#E2E8F0] rounded-lg shadow-sm space-y-4">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-[#E2E8F0] pb-3">
           <div className="space-y-0.5">
-            <div className="flex items-center gap-2 text-xs font-mono font-semibold text-blue-400">
+            <div className="flex items-center gap-2 text-xs font-semibold text-[#087E8B]">
               <ShieldCheck className="w-4 h-4" />
               <span>IMMUTABLE LAW ENFORCEMENT AUDIT SYSTEM</span>
             </div>
-            <h1 className="text-xl font-bold text-white tracking-tight">
+            <h1 className="text-xl font-bold text-[#12304A] tracking-tight">
               Audit Log & Activity Ledger
             </h1>
-            <p className="text-xs text-slate-400">
+            <p className="text-xs text-[#64748B]">
               Cryptographically timestamped compliance ledger tracking all user access, case inquiries, and evidentiary actions.
             </p>
           </div>
 
           <div className="flex items-center gap-2">
-            <span className="px-2.5 py-1 rounded-lg bg-blue-950/80 text-blue-300 border border-blue-500/40 text-xs font-mono font-bold">
+            <span className="px-2.5 py-1 rounded-md bg-[#E8F7F0] text-[#16805C] border border-[#A3E0C8] text-xs font-mono font-bold">
               REAL-TIME LOGGING ACTIVE
             </span>
           </div>
         </div>
 
         {/* Dynamic 4 KPI Summary Tiles */}
-        <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 font-mono text-xs">
-          <div className="p-3 rounded-lg bg-[#090e1a] border border-slate-800 text-center space-y-0.5">
-            <div className="text-lg font-bold text-blue-400">{stats.totalEvents}</div>
-            <div className="text-[10px] text-slate-400 uppercase font-sans">Total Recorded Events</div>
+        <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 text-xs">
+          <div className="p-3 rounded-md bg-[#F8FAFC] border border-[#E2E8F0] text-center space-y-0.5">
+            <div className="text-lg font-bold text-[#12304A] font-mono">{stats.totalEvents}</div>
+            <div className="text-[10px] text-[#64748B] uppercase">Total Recorded Events</div>
           </div>
 
-          <div className="p-3 rounded-lg bg-[#090e1a] border border-slate-800 text-center space-y-0.5">
-            <div className="text-lg font-bold text-emerald-400">{stats.todayEvents}</div>
-            <div className="text-[10px] text-slate-400 uppercase font-sans">Today's Activity</div>
+          <div className="p-3 rounded-md bg-[#F8FAFC] border border-[#E2E8F0] text-center space-y-0.5">
+            <div className="text-lg font-bold text-[#087E8B] font-mono">{stats.todayEvents}</div>
+            <div className="text-[10px] text-[#64748B] uppercase">Activity Logged Today</div>
           </div>
 
-          <div className="p-3 rounded-lg bg-[#090e1a] border border-slate-800 text-center space-y-0.5">
-            <div className="text-lg font-bold text-indigo-400">{stats.caseActivityCount}</div>
-            <div className="text-[10px] text-slate-400 uppercase font-sans">Case File Actions</div>
+          <div className="p-3 rounded-md bg-[#F8FAFC] border border-[#E2E8F0] text-center space-y-0.5">
+            <div className="text-lg font-bold text-[#2563A6] font-mono">{stats.caseActivityCount}</div>
+            <div className="text-[10px] text-[#64748B] uppercase">Case Investigations</div>
           </div>
 
-          <div className="p-3 rounded-lg bg-[#090e1a] border border-slate-800 text-center space-y-0.5">
-            <div className="text-lg font-bold text-purple-400">{stats.evidenceActivityCount}</div>
-            <div className="text-[10px] text-slate-400 uppercase font-sans">Evidence Operations</div>
+          <div className="p-3 rounded-md bg-[#F8FAFC] border border-[#E2E8F0] text-center space-y-0.5">
+            <div className="text-lg font-bold text-[#16805C] font-mono">{stats.evidenceActivityCount}</div>
+            <div className="text-[10px] text-[#64748B] uppercase">Evidentiary Actions</div>
           </div>
         </div>
       </div>
 
-      {/* 2. Filter and Search Bar */}
-      <div className="intel-card p-4 border border-slate-800 rounded-xl bg-[#0c1322] space-y-3 shadow-lg">
+      {/* 2. Filter Toolbar */}
+      <div className="bg-[#FFFFFF] p-4 rounded-lg border border-[#E2E8F0] shadow-sm space-y-3">
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-2.5 text-xs">
-          {/* Main Search Input */}
-          <div className="sm:col-span-2 relative">
-            <Search className="w-3.5 h-3.5 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
+          {/* Free Search */}
+          <div className="relative">
+            <Search className="w-3.5 h-3.5 text-[#64748B] absolute left-3 top-1/2 -translate-y-1/2" />
             <input
               type="text"
               value={search}
-              onChange={(e) => {
-                setSearch(e.target.value);
-                setCurrentPageNum(1);
-              }}
-              placeholder="Search by officer, action, module, case ID, or record..."
-              className="w-full pl-8 pr-3 py-1.5 rounded-lg bg-slate-900 border border-slate-700 text-xs text-white placeholder-slate-400 focus:outline-none focus:border-blue-500 font-sans"
+              onChange={(e) => setSearch(e.target.value)}
+              placeholder="Search action details..."
+              className="w-full pl-8 pr-3 py-1.5 rounded-md bg-[#FFFFFF] border border-[#CBD5E1] text-xs text-[#17212B] placeholder-[#94A3B8] focus:outline-none focus:border-[#087E8B]"
             />
           </div>
 
           {/* Module Filter */}
           <select
             value={moduleFilter}
-            onChange={(e) => {
-              setModuleFilter(e.target.value);
-              setCurrentPageNum(1);
-            }}
-            className="px-3 py-1.5 rounded-lg bg-slate-900 border border-slate-700 text-xs text-white focus:outline-none focus:border-blue-500"
+            onChange={(e) => setModuleFilter(e.target.value)}
+            className="px-2.5 py-1.5 rounded-md bg-[#FFFFFF] border border-[#CBD5E1] text-xs text-[#17212B] focus:outline-none focus:border-[#087E8B]"
           >
             <option value="ALL">All Modules</option>
-            <option value="Cases">Cases</option>
-            <option value="Entities">Entities</option>
-            <option value="Evidence">Evidence</option>
-            <option value="Witnesses">Witnesses</option>
-            <option value="Network">Network Graph</option>
-            <option value="Alerts">Alerts</option>
-            <option value="Timeline">Timeline</option>
-            <option value="Reports">Reports</option>
-            <option value="Authentication">Authentication</option>
-            <option value="Notes">Notes</option>
+            <option value="CASES">Cases</option>
+            <option value="CASE_RECORDS">Case Records</option>
+            <option value="EVIDENCE">Evidence</option>
+            <option value="ENTITIES">Entities</option>
+            <option value="NETWORK">Network Graph</option>
+            <option value="TIMELINE">Timeline</option>
+            <option value="ALERTS">Alerts</option>
+            <option value="REPORTS">Reports</option>
+            <option value="AUTH">Authentication</option>
           </select>
 
           {/* Status Filter */}
           <select
             value={statusFilter}
-            onChange={(e) => {
-              setStatusFilter(e.target.value);
-              setCurrentPageNum(1);
-            }}
-            className="px-3 py-1.5 rounded-lg bg-slate-900 border border-slate-700 text-xs text-white focus:outline-none focus:border-blue-500"
+            onChange={(e) => setStatusFilter(e.target.value)}
+            className="px-2.5 py-1.5 rounded-md bg-[#FFFFFF] border border-[#CBD5E1] text-xs text-[#17212B] focus:outline-none focus:border-[#087E8B]"
           >
-            <option value="ALL">All Statuses</option>
+            <option value="ALL">All Outcomes</option>
             <option value="SUCCESS">SUCCESS</option>
-            <option value="FAILED">FAILED</option>
+            <option value="FAILURE">FAILURE / DENIED</option>
           </select>
-        </div>
 
-        {/* Secondary Filters Bar */}
-        <div className="flex flex-wrap items-center justify-between gap-2.5 pt-2 border-t border-slate-800 text-xs">
-          <div className="flex flex-wrap items-center gap-2">
-            <span className="text-slate-400 text-[11px] font-semibold">Case:</span>
-            <select
-              value={caseFilter}
-              onChange={(e) => {
-                setCaseFilter(e.target.value);
-                setCurrentPageNum(1);
-              }}
-              className="px-2.5 py-1 rounded bg-slate-900 border border-slate-700 text-xs text-white font-mono"
-            >
-              <option value="ALL">All Cases</option>
-              <option value="CASE-1024">CASE-1024 (Operation Meridian)</option>
-              <option value="CASE-1031">CASE-1031 (Shadowline)</option>
-              <option value="CASE-1042">CASE-1042 (Transit Network)</option>
-              <option value="CASE-1057">CASE-1057 (Shell Companies)</option>
-            </select>
-
-            <span className="text-slate-400 text-[11px] font-semibold ml-2">From:</span>
-            <input
-              type="date"
-              value={startDate}
-              onChange={(e) => {
-                setStartDate(e.target.value);
-                setCurrentPageNum(1);
-              }}
-              className="px-2 py-1 rounded bg-slate-900 border border-slate-700 text-xs font-mono text-white"
-            />
-            <span className="text-slate-400 text-[11px] font-semibold">To:</span>
-            <input
-              type="date"
-              value={endDate}
-              onChange={(e) => {
-                setEndDate(e.target.value);
-                setCurrentPageNum(1);
-              }}
-              className="px-2 py-1 rounded bg-slate-900 border border-slate-700 text-xs font-mono text-white"
-            />
-          </div>
-
-          {(search || moduleFilter !== 'ALL' || caseFilter !== 'ALL' || statusFilter !== 'ALL' || startDate || endDate) && (
+          {/* Reset Filters */}
+          {(search || userFilter || moduleFilter !== 'ALL' || caseFilter !== 'ALL' || statusFilter !== 'ALL' || startDate || endDate) && (
             <button
               onClick={handleResetFilters}
-              className="text-xs text-blue-400 hover:underline font-semibold"
+              className="px-3 py-1.5 rounded-md bg-[#FFFFFF] hover:bg-[#F8FAFC] border border-[#CBD5E1] text-[#087E8B] text-xs font-semibold"
             >
-              Clear All Filters
+              Reset Filters
             </button>
           )}
         </div>
       </div>
 
-      {/* 3. Master Audit Ledger Table */}
-      <div className="intel-card rounded-xl border border-slate-800 overflow-hidden shadow-xl">
-        {logs.length === 0 ? (
-          <div className="p-12 text-center text-xs text-slate-400 space-y-2">
-            <ShieldCheck className="w-8 h-8 text-slate-600 mx-auto" />
-            <h3 className="text-sm font-bold text-white">No Audit Activity Recorded</h3>
-            <p className="text-slate-400 max-w-sm mx-auto">
-              No events match the selected filters. Actions performed inside TraceNet are logged automatically.
-            </p>
-          </div>
-        ) : (
-          <div className="overflow-x-auto">
-            <table className="w-full text-left text-xs">
-              <thead className="bg-[#090e1a] text-[10px] text-slate-400 uppercase tracking-wider border-b border-slate-800 font-semibold">
+      {/* 3. Main Audit Ledger Table */}
+      <div className="bg-[#FFFFFF] rounded-lg border border-[#E2E8F0] shadow-sm overflow-hidden space-y-0">
+        <div className="overflow-x-auto">
+          <table className="w-full text-left text-xs">
+            <thead className="bg-[#F8FAFC] text-[10px] text-[#64748B] uppercase tracking-wider border-b border-[#E2E8F0] font-semibold">
+              <tr>
+                <th className="py-3 px-4">Timestamp</th>
+                <th className="py-3 px-4">User & Role</th>
+                <th className="py-3 px-4">Action Performed</th>
+                <th className="py-3 px-4">Case Scope</th>
+                <th className="py-3 px-4">Target Record</th>
+                <th className="py-3 px-4">Status</th>
+                <th className="py-3 px-4 text-right">Details</th>
+              </tr>
+            </thead>
+            <tbody className="divide-y divide-[#E2E8F0]">
+              {paginatedLogs.length === 0 ? (
                 <tr>
-                  <th className="py-3 px-4">Timestamp (IST)</th>
-                  <th className="py-3 px-4">Officer / User</th>
-                  <th className="py-3 px-4">Action & Module</th>
-                  <th className="py-3 px-4">Case Association</th>
-                  <th className="py-3 px-4">Referenced Record</th>
-                  <th className="py-3 px-4">Status</th>
-                  <th className="py-3 px-4 text-right">Inspect</th>
+                  <td colSpan={7} className="py-8 text-center text-[#64748B]">
+                    No audit records match the selected filter criteria.
+                  </td>
                 </tr>
-              </thead>
-              <tbody className="divide-y divide-slate-800/80">
-                {paginatedLogs.map((ev) => (
-                  <tr 
+              ) : (
+                paginatedLogs.map((ev) => (
+                  <tr
                     key={ev.id}
                     onClick={() => setSelectedEvent(ev)}
-                    className="hover:bg-slate-800/60 cursor-pointer transition-colors"
+                    className="hover:bg-[#F8FAFC] cursor-pointer transition-colors bg-[#FFFFFF]"
                   >
-                    {/* Timestamp */}
-                    <td className="py-3.5 px-4 font-mono text-slate-300 whitespace-nowrap text-[11px]">
+                    <td className="py-3 px-4 font-mono text-[11px] text-[#64748B] whitespace-nowrap">
                       <div>{ev.dateFormatted}</div>
-                      <div className="text-[10px] text-slate-500">{ev.timeFormatted}</div>
+                      <div className="text-[10px] text-[#94A3B8]">{ev.timeFormatted}</div>
                     </td>
 
-                    {/* Officer & Badge */}
-                    <td className="py-3.5 px-4 whitespace-nowrap">
-                      <div className="font-bold text-white">{ev.userName}</div>
-                      <div className="text-[10px] text-slate-400 font-mono">
-                        Badge: {ev.userBadge}
-                      </div>
+                    <td className="py-3 px-4 whitespace-nowrap">
+                      <div className="font-semibold text-[#12304A]">{ev.userName}</div>
+                      <div className="text-[10px] text-[#64748B] font-mono">{ev.userRole}</div>
                     </td>
 
-                    {/* Action & Module */}
-                    <td className="py-3.5 px-4 whitespace-nowrap">
-                      <div className="font-semibold text-slate-200">{ev.actionLabel}</div>
-                      <div className="flex items-center gap-1.5 mt-0.5">
-                        <span className="px-1.5 py-0.2 rounded text-[9px] font-mono font-bold bg-slate-900 text-slate-400 border border-slate-700 uppercase">
-                          {ev.module}
-                        </span>
-                        <span className="font-mono text-[9px] text-slate-500">{ev.id}</span>
-                      </div>
+                    <td className="py-3 px-4">
+                      <div className="font-medium text-[#12304A]">{ev.actionLabel}</div>
+                      <div className="text-[10px] text-[#64748B] truncate max-w-xs">{ev.details}</div>
                     </td>
 
-                    {/* Case Association */}
-                    <td className="py-3.5 px-4 font-mono whitespace-nowrap">
-                      {ev.caseId ? (
-                        <button
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            setActiveCaseId(ev.caseId!);
-                            navigateTo('case-details', { caseId: ev.caseId, tab: 'overview' });
-                          }}
-                          className="font-bold text-blue-400 hover:underline flex items-center gap-1"
-                        >
-                          <span>{ev.caseId}</span>
-                          <ExternalLink className="w-2.5 h-2.5" />
-                        </button>
-                      ) : (
-                        <span className="text-slate-600">—</span>
-                      )}
+                    <td className="py-3 px-4 font-mono text-[#087E8B] font-bold whitespace-nowrap">
+                      {ev.caseId || <span className="text-[#94A3B8] font-normal">N/A</span>}
                     </td>
 
-                    {/* Referenced Record */}
-                    <td className="py-3.5 px-4 whitespace-nowrap">
-                      {ev.recordId ? (
-                        <button
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            handleOpenRecord(ev);
-                          }}
-                          className="text-left font-semibold text-slate-300 hover:text-blue-300 hover:underline flex items-center gap-1"
-                        >
-                          <span className="truncate max-w-xs">{ev.recordLabel || ev.recordId}</span>
-                          <ExternalLink className="w-2.5 h-2.5 text-slate-500" />
-                        </button>
-                      ) : (
-                        <span className="text-slate-600">—</span>
-                      )}
+                    <td className="py-3 px-4 font-mono text-[11px] text-[#12304A] whitespace-nowrap">
+                      {ev.recordLabel || ev.recordId || <span className="text-[#94A3B8]">None</span>}
                     </td>
 
-                    {/* Status */}
-                    <td className="py-3.5 px-4 whitespace-nowrap">
+                    <td className="py-3 px-4 whitespace-nowrap">
                       <span className={`px-2 py-0.5 rounded text-[10px] font-mono font-bold uppercase border ${
                         ev.status === 'SUCCESS'
-                          ? 'bg-emerald-500/15 text-emerald-300 border-emerald-500/30'
-                          : 'bg-rose-500/15 text-rose-300 border-rose-500/30'
+                          ? 'bg-[#E8F7F0] text-[#16805C] border-[#A3E0C8]'
+                          : 'bg-[#FEE2E2] text-[#C24141] border-[#FCA5A5]'
                       }`}>
                         {ev.status}
                       </span>
                     </td>
 
-                    {/* Action */}
-                    <td className="py-3.5 px-4 text-right whitespace-nowrap">
+                    <td className="py-3 px-4 text-right whitespace-nowrap" onClick={(e) => e.stopPropagation()}>
                       <button
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          setSelectedEvent(ev);
-                        }}
-                        className="px-2.5 py-1 rounded bg-slate-800 hover:bg-blue-600 text-slate-300 hover:text-white text-[11px] font-semibold transition-colors"
+                        onClick={() => setSelectedEvent(ev)}
+                        className="px-2.5 py-1 rounded-md bg-[#E6F4F5] hover:bg-[#087E8B] text-[#087E8B] hover:text-white font-semibold text-xs transition-colors shadow-sm inline-flex items-center gap-1"
                       >
-                        Inspect
+                        <Eye className="w-3 h-3" />
+                        <span>Inspect</span>
                       </button>
                     </td>
                   </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-        )}
+                ))
+              )}
+            </tbody>
+          </table>
+        </div>
 
-        {/* Pagination Controls */}
-        {logs.length > 0 && (
-          <div className="p-3.5 bg-[#090e1a] border-t border-slate-800 flex items-center justify-between text-xs text-slate-400">
+        {/* Pagination Bar */}
+        {totalPages > 1 && (
+          <div className="p-3 bg-[#F8FAFC] border-t border-[#E2E8F0] flex items-center justify-between text-xs text-[#64748B]">
             <div>
-              Showing <strong className="text-white">{(currentPageNum - 1) * pageSize + 1}</strong> to <strong className="text-white">{Math.min(currentPageNum * pageSize, logs.length)}</strong> of <strong className="text-white">{logs.length}</strong> events
+              Showing {((currentPageNum - 1) * pageSize) + 1} to {Math.min(currentPageNum * pageSize, logs.length)} of {logs.length} entries
             </div>
 
             <div className="flex items-center gap-2">
               <button
                 disabled={currentPageNum === 1}
-                onClick={() => setCurrentPageNum(prev => Math.max(prev - 1, 1))}
-                className="px-2.5 py-1 rounded bg-slate-900 hover:bg-slate-800 border border-slate-700 text-slate-300 disabled:opacity-40 disabled:cursor-not-allowed flex items-center gap-1"
+                onClick={() => setCurrentPageNum(p => Math.max(1, p - 1))}
+                className="p-1 rounded bg-[#FFFFFF] border border-[#CBD5E1] text-[#12304A] disabled:opacity-40"
               >
-                <ChevronLeft className="w-3.5 h-3.5" />
-                <span>Previous</span>
+                <ChevronLeft className="w-4 h-4" />
               </button>
-
-              <span className="font-mono text-white text-xs px-2">
-                Page {currentPageNum} of {totalPages}
-              </span>
-
+              <span className="font-mono font-bold text-[#12304A]">{currentPageNum} / {totalPages}</span>
               <button
-                disabled={currentPageNum >= totalPages}
-                onClick={() => setCurrentPageNum(prev => Math.min(prev + 1, totalPages))}
-                className="px-2.5 py-1 rounded bg-slate-900 hover:bg-slate-800 border border-slate-700 text-slate-300 disabled:opacity-40 disabled:cursor-not-allowed flex items-center gap-1"
+                disabled={currentPageNum === totalPages}
+                onClick={() => setCurrentPageNum(p => Math.min(totalPages, p + 1))}
+                className="p-1 rounded bg-[#FFFFFF] border border-[#CBD5E1] text-[#12304A] disabled:opacity-40"
               >
-                <span>Next</span>
-                <ChevronRight className="w-3.5 h-3.5" />
+                <ChevronRight className="w-4 h-4" />
               </button>
             </div>
           </div>
         )}
       </div>
 
-      {/* 4. Inspection Modal */}
+      {/* Modal */}
       {selectedEvent && (
         <AuditEventDetailsModal
           event={selectedEvent}

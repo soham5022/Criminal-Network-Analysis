@@ -1,26 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { 
   ArrowLeft, 
-  FileText, 
-  ShieldCheck, 
-  User, 
-  Phone, 
-  CreditCard, 
-  MapPin, 
-  Building2, 
-  Truck, 
   Network, 
   Clock, 
-  Layers, 
-  AlertTriangle, 
   Plus, 
   Eye, 
-  ExternalLink, 
   FolderArchive, 
-  Search,
-  Database,
-  Printer,
-  ChevronRight
+  Search
 } from 'lucide-react';
 import { 
   caseRecordsService, 
@@ -28,7 +14,6 @@ import {
   CaseDocument, 
   RelatedCaseReference 
 } from '../../services/caseRecordsService';
-import { evidenceRegistryService } from '../../services/evidenceRegistryService';
 import { useInvestigation } from '../../context/InvestigationContext';
 import { DocumentViewerModal } from './DocumentViewerModal';
 import { DocumentUploadModal } from './DocumentUploadModal';
@@ -39,7 +24,7 @@ interface CaseRecordDetailViewProps {
 }
 
 export const CaseRecordDetailView: React.FC<CaseRecordDetailViewProps> = ({ caseId, onBack }) => {
-  const { navigateTo, openEntityProfile, setSelectedEntityId, setActiveCaseId } = useInvestigation();
+  const { navigateTo, openEntityProfile, setActiveCaseId } = useInvestigation();
 
   const [activeTab, setActiveTab] = useState<
     'overview' | 'documents' | 'entities' | 'related' | 'evidence' | 'timeline'
@@ -71,7 +56,7 @@ export const CaseRecordDetailView: React.FC<CaseRecordDetailViewProps> = ({ case
 
   if (!caseRecord) {
     return (
-      <div className="p-8 text-center text-slate-400 font-mono">
+      <div className="p-8 text-center text-[#64748B] font-mono">
         Loading case record repository file...
       </div>
     );
@@ -91,11 +76,11 @@ export const CaseRecordDetailView: React.FC<CaseRecordDetailViewProps> = ({ case
   const getStatusBadge = (status: string) => {
     switch (status) {
       case 'ACTIVE':
-        return <span className="px-2.5 py-0.5 rounded text-[10px] font-mono font-bold bg-emerald-500/20 text-emerald-300 border border-emerald-500/30">ACTIVE</span>;
+        return <span className="px-2.5 py-0.5 rounded text-[10px] font-mono font-bold bg-[#E8F7F0] text-[#16805C] border border-[#A3E0C8]">ACTIVE</span>;
       case 'UNDER_REVIEW':
-        return <span className="px-2.5 py-0.5 rounded text-[10px] font-mono font-bold bg-blue-500/20 text-blue-300 border border-blue-500/30">UNDER REVIEW</span>;
+        return <span className="px-2.5 py-0.5 rounded text-[10px] font-mono font-bold bg-[#E6F4F5] text-[#087E8B] border border-[#A7DFE3]">UNDER REVIEW</span>;
       default:
-        return <span className="px-2.5 py-0.5 rounded text-[10px] font-mono font-bold bg-slate-800 text-slate-400 border border-slate-700">CLOSED</span>;
+        return <span className="px-2.5 py-0.5 rounded text-[10px] font-mono font-bold bg-[#F1F5F9] text-[#64748B] border border-[#E2E8F0]">CLOSED</span>;
     }
   };
 
@@ -103,11 +88,11 @@ export const CaseRecordDetailView: React.FC<CaseRecordDetailViewProps> = ({ case
     switch (priority) {
       case 'CRITICAL':
       case 'HIGH':
-        return <span className="px-2 py-0.5 rounded text-[10px] font-mono font-bold bg-rose-500/20 text-rose-300 border border-rose-500/30">HIGH</span>;
+        return <span className="px-2 py-0.5 rounded text-[10px] font-mono font-bold bg-[#FEE2E2] text-[#C24141] border border-[#FCA5A5]">HIGH</span>;
       case 'MEDIUM':
-        return <span className="px-2 py-0.5 rounded text-[10px] font-mono font-bold bg-amber-500/20 text-amber-300 border border-amber-500/30">MEDIUM</span>;
+        return <span className="px-2 py-0.5 rounded text-[10px] font-mono font-bold bg-[#FEF3C7] text-[#B7791F] border border-[#FCD34D]">MEDIUM</span>;
       default:
-        return <span className="px-2 py-0.5 rounded text-[10px] font-mono font-bold bg-slate-800 text-slate-300 border border-slate-700">ROUTINE</span>;
+        return <span className="px-2 py-0.5 rounded text-[10px] font-mono font-bold bg-[#F1F5F9] text-[#64748B] border border-[#E2E8F0]">ROUTINE</span>;
     }
   };
 
@@ -115,10 +100,10 @@ export const CaseRecordDetailView: React.FC<CaseRecordDetailViewProps> = ({ case
     <div className="space-y-5 select-none animate-in fade-in max-w-6xl mx-auto py-1">
       
       {/* 1. Top Navigation Bar */}
-      <div className="flex flex-wrap items-center justify-between gap-3 pb-1 border-b border-slate-800">
+      <div className="flex flex-wrap items-center justify-between gap-3 pb-1 border-b border-[#E2E8F0]">
         <button
           onClick={onBack}
-          className="flex items-center gap-2 text-xs font-mono text-slate-400 hover:text-white transition-colors"
+          className="flex items-center gap-2 text-xs font-mono text-[#64748B] hover:text-[#12304A] transition-colors"
         >
           <ArrowLeft className="w-4 h-4" />
           <span>Back to Case Records Repository</span>
@@ -127,7 +112,7 @@ export const CaseRecordDetailView: React.FC<CaseRecordDetailViewProps> = ({ case
         <div className="flex items-center gap-2">
           <button
             onClick={() => setIsUploadModalOpen(true)}
-            className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-blue-600 hover:bg-blue-500 text-white text-xs font-semibold tracking-wide transition-colors shadow-sm"
+            className="flex items-center gap-1.5 px-3 py-1.5 rounded-md bg-[#087E8B] hover:bg-[#06636E] text-white text-xs font-semibold tracking-wide transition-colors shadow-sm"
           >
             <Plus className="w-3.5 h-3.5" />
             <span>Add Case Document</span>
@@ -138,9 +123,9 @@ export const CaseRecordDetailView: React.FC<CaseRecordDetailViewProps> = ({ case
               setActiveCaseId(caseId);
               navigateTo('network', { caseId });
             }}
-            className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-semibold transition-colors border border-slate-700 shadow-sm"
+            className="flex items-center gap-1.5 px-3 py-1.5 rounded-md bg-[#FFFFFF] hover:bg-[#F8FAFC] text-[#12304A] text-xs font-semibold transition-colors border border-[#CBD5E1] shadow-sm"
           >
-            <Network className="w-3.5 h-3.5 text-blue-400" />
+            <Network className="w-3.5 h-3.5 text-[#087E8B]" />
             <span>View Case Network</span>
           </button>
 
@@ -149,61 +134,61 @@ export const CaseRecordDetailView: React.FC<CaseRecordDetailViewProps> = ({ case
               setActiveCaseId(caseId);
               navigateTo('timeline', { caseId });
             }}
-            className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-semibold transition-colors border border-slate-700 shadow-sm"
+            className="flex items-center gap-1.5 px-3 py-1.5 rounded-md bg-[#FFFFFF] hover:bg-[#F8FAFC] text-[#12304A] text-xs font-semibold transition-colors border border-[#CBD5E1] shadow-sm"
           >
-            <Clock className="w-3.5 h-3.5 text-cyan-400" />
+            <Clock className="w-3.5 h-3.5 text-[#087E8B]" />
             <span>View Timeline</span>
           </button>
         </div>
       </div>
 
       {/* 2. Main Case File Banner */}
-      <div className="intel-card p-6 border border-slate-700/80 bg-[#090f1e] shadow-2xl rounded-2xl space-y-4">
+      <div className="p-6 border border-[#E2E8F0] bg-[#FFFFFF] shadow-sm rounded-lg space-y-4">
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
           <div className="flex items-start gap-4">
-            <div className="w-14 h-14 rounded-2xl bg-blue-950/40 border border-blue-500/40 flex items-center justify-center flex-shrink-0 shadow-inner text-blue-400">
+            <div className="w-14 h-14 rounded-lg bg-[#E6F4F5] border border-[#A7DFE3] flex items-center justify-center flex-shrink-0 shadow-sm text-[#087E8B]">
               <FolderArchive className="w-7 h-7" />
             </div>
 
             <div className="space-y-1">
               <div className="flex flex-wrap items-center gap-2">
-                <h1 className="text-xl sm:text-2xl font-bold text-white font-mono tracking-tight">
+                <h1 className="text-xl sm:text-2xl font-bold text-[#12304A] font-mono tracking-tight">
                   {caseRecord.title}
                 </h1>
-                <span className="font-mono text-xs text-blue-400">({caseRecord.id})</span>
-                <span className="font-mono text-xs text-amber-300 bg-amber-950/60 px-2 py-0.5 rounded border border-amber-500/30">
+                <span className="font-mono text-xs text-[#087E8B]">({caseRecord.id})</span>
+                <span className="font-mono text-xs text-[#B7791F] bg-[#FEF3C7] px-2 py-0.5 rounded border border-[#FCD34D]">
                   {caseRecord.firNumber}
                 </span>
                 {getStatusBadge(caseRecord.status)}
                 {getPriorityBadge(caseRecord.priority)}
               </div>
 
-              <div className="flex flex-wrap items-center gap-3 text-xs text-slate-300 font-sans">
-                <span>Station: <strong className="text-white">{caseRecord.policeStation}</strong></span>
+              <div className="flex flex-wrap items-center gap-3 text-xs text-[#475569] font-sans">
+                <span>Station: <strong className="text-[#12304A]">{caseRecord.policeStation}</strong></span>
                 <span>•</span>
-                <span>IO: <strong className="text-blue-300">{caseRecord.investigatingOfficer}</strong> ({caseRecord.badgeNumber})</span>
+                <span>IO: <strong className="text-[#12304A]">{caseRecord.investigatingOfficer}</strong> ({caseRecord.badgeNumber})</span>
                 <span>•</span>
-                <span className="text-slate-400">Registered: <strong className="text-slate-200 font-mono">{caseRecord.dateRegistered}</strong></span>
+                <span className="text-[#64748B]">Registered: <strong className="text-[#17212B] font-mono">{caseRecord.dateRegistered}</strong></span>
               </div>
             </div>
           </div>
 
-          <div className="flex items-center gap-3 p-3 rounded-xl bg-[#060a14] border border-slate-800 self-start md:self-auto font-mono text-xs text-right">
+          <div className="flex items-center gap-3 p-3 rounded-lg bg-[#F8FAFC] border border-[#E2E8F0] self-start md:self-auto font-mono text-xs text-right">
             <div>
-              <div className="text-[10px] uppercase font-bold text-slate-400 font-sans">Repository Scale</div>
-              <div className="text-white font-bold text-sm">{documents.length} Case Docs</div>
+              <div className="text-[10px] uppercase font-bold text-[#64748B] font-sans">Repository Scale</div>
+              <div className="text-[#12304A] font-bold text-sm">{documents.length} Case Docs</div>
             </div>
-            <span className="text-slate-700">|</span>
+            <span className="text-[#CBD5E1]">|</span>
             <div>
-              <div className="text-[10px] uppercase font-bold text-slate-400 font-sans">Extracted Nodes</div>
-              <div className="text-blue-400 font-bold text-sm">{caseRecord.entityCount} Entities</div>
+              <div className="text-[10px] uppercase font-bold text-[#64748B] font-sans">Extracted Nodes</div>
+              <div className="text-[#087E8B] font-bold text-sm">{caseRecord.entityCount} Entities</div>
             </div>
           </div>
         </div>
       </div>
 
       {/* 3. Navigation Tabs */}
-      <div className="flex items-center gap-1.5 overflow-x-auto pb-1 text-xs border-b border-slate-800">
+      <div className="flex items-center gap-1.5 overflow-x-auto pb-1 text-xs border-b border-[#E2E8F0]">
         {[
           { id: 'overview' as const, label: '1. Case Overview & Scope' },
           { id: 'documents' as const, label: `2. Case Documents Repository (${documents.length})` },
@@ -215,10 +200,10 @@ export const CaseRecordDetailView: React.FC<CaseRecordDetailViewProps> = ({ case
           <button
             key={tab.id}
             onClick={() => setActiveTab(tab.id)}
-            className={`px-3.5 py-2 rounded-lg text-xs font-semibold whitespace-nowrap transition-colors ${
+            className={`px-3.5 py-2 rounded-md text-xs font-semibold whitespace-nowrap transition-colors ${
               activeTab === tab.id
-                ? 'bg-blue-600 text-white shadow-sm'
-                : 'text-slate-400 hover:text-white hover:bg-slate-800'
+                ? 'bg-[#E6F4F5] text-[#087E8B] border border-[#A7DFE3]'
+                : 'text-[#64748B] hover:text-[#12304A] hover:bg-[#FFFFFF]'
             }`}
           >
             {tab.label}
@@ -231,44 +216,44 @@ export const CaseRecordDetailView: React.FC<CaseRecordDetailViewProps> = ({ case
       {/* TAB 1: OVERVIEW & SCOPE */}
       {activeTab === 'overview' && (
         <div className="space-y-5 animate-in fade-in">
-          <div className="intel-card p-5 border border-slate-800 bg-[#090f1e] space-y-2">
-            <span className="text-[10px] font-mono font-bold uppercase tracking-wider text-slate-400">
+          <div className="p-5 border border-[#E2E8F0] bg-[#FFFFFF] shadow-sm rounded-lg space-y-2">
+            <span className="text-[10px] font-mono font-bold uppercase tracking-wider text-[#64748B]">
               Investigative Scope & Background Narrative
             </span>
-            <p className="text-xs text-slate-200 leading-relaxed font-sans">
+            <p className="text-xs text-[#334155] leading-relaxed font-sans">
               {caseRecord.description}
             </p>
           </div>
 
           <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-3 font-mono">
-            <div className="p-3 rounded-xl bg-[#090e1a] border border-slate-800 space-y-0.5">
-              <div className="text-lg font-bold text-white">{caseRecord.entityCount}</div>
-              <div className="text-[10px] text-slate-400 uppercase font-sans">Persons / Nodes</div>
+            <div className="p-3 rounded-lg bg-[#F8FAFC] border border-[#E2E8F0] space-y-0.5 text-center">
+              <div className="text-lg font-bold text-[#12304A]">{caseRecord.entityCount}</div>
+              <div className="text-[10px] text-[#64748B] uppercase font-sans">Persons / Nodes</div>
             </div>
 
-            <div className="p-3 rounded-xl bg-[#090e1a] border border-slate-800 space-y-0.5">
-              <div className="text-lg font-bold text-blue-400">{documents.length}</div>
-              <div className="text-[10px] text-slate-400 uppercase font-sans">Case Documents</div>
+            <div className="p-3 rounded-lg bg-[#F8FAFC] border border-[#E2E8F0] space-y-0.5 text-center">
+              <div className="text-lg font-bold text-[#087E8B]">{documents.length}</div>
+              <div className="text-[10px] text-[#64748B] uppercase font-sans">Case Documents</div>
             </div>
 
-            <div className="p-3 rounded-xl bg-[#090e1a] border border-slate-800 space-y-0.5">
-              <div className="text-lg font-bold text-emerald-400">{caseRecord.evidenceCount}</div>
-              <div className="text-[10px] text-slate-400 uppercase font-sans">Evidence Ledgers</div>
+            <div className="p-3 rounded-lg bg-[#F8FAFC] border border-[#E2E8F0] space-y-0.5 text-center">
+              <div className="text-lg font-bold text-[#16805C]">{caseRecord.evidenceCount}</div>
+              <div className="text-[10px] text-[#64748B] uppercase font-sans">Evidence Ledgers</div>
             </div>
 
-            <div className="p-3 rounded-xl bg-[#090e1a] border border-slate-800 space-y-0.5">
-              <div className="text-lg font-bold text-purple-400">{caseRecord.locationsCount}</div>
-              <div className="text-[10px] text-slate-400 uppercase font-sans">Locations / ANPR</div>
+            <div className="p-3 rounded-lg bg-[#F8FAFC] border border-[#E2E8F0] space-y-0.5 text-center">
+              <div className="text-lg font-bold text-[#7E22CE]">{caseRecord.locationsCount}</div>
+              <div className="text-[10px] text-[#64748B] uppercase font-sans">Locations / ANPR</div>
             </div>
 
-            <div className="p-3 rounded-xl bg-[#090e1a] border border-slate-800 space-y-0.5">
-              <div className="text-lg font-bold text-rose-400">{caseRecord.vehiclesCount}</div>
-              <div className="text-[10px] text-slate-400 uppercase font-sans">Vehicles Logged</div>
+            <div className="p-3 rounded-lg bg-[#F8FAFC] border border-[#E2E8F0] space-y-0.5 text-center">
+              <div className="text-lg font-bold text-[#B7791F]">{caseRecord.vehiclesCount}</div>
+              <div className="text-[10px] text-[#64748B] uppercase font-sans">Vehicles Logged</div>
             </div>
 
-            <div className="p-3 rounded-xl bg-[#090e1a] border border-slate-800 space-y-0.5">
-              <div className="text-lg font-bold text-amber-400">{caseRecord.alertsCount}</div>
-              <div className="text-[10px] text-slate-400 uppercase font-sans">Alerts Flagged</div>
+            <div className="p-3 rounded-lg bg-[#F8FAFC] border border-[#E2E8F0] space-y-0.5 text-center">
+              <div className="text-lg font-bold text-[#C24141]">{caseRecord.alertsCount}</div>
+              <div className="text-[10px] text-[#64748B] uppercase font-sans">Alerts Flagged</div>
             </div>
           </div>
         </div>
@@ -279,219 +264,64 @@ export const CaseRecordDetailView: React.FC<CaseRecordDetailViewProps> = ({ case
         <div className="space-y-4 animate-in fade-in">
           <div className="flex flex-wrap items-center justify-between gap-3">
             <div className="relative flex-1 min-w-[240px] max-w-md">
-              <Search className="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
+              <Search className="w-4 h-4 text-[#64748B] absolute left-3 top-1/2 -translate-y-1/2" />
               <input
                 type="text"
                 value={docSearch}
                 onChange={(e) => setDocSearch(e.target.value)}
                 placeholder="Search case documents by title, ID, or extracted entity..."
-                className="w-full pl-9 pr-3 py-2 rounded-lg bg-slate-900 border border-slate-700 text-xs font-mono text-white placeholder-slate-400 focus:outline-none focus:border-blue-500"
+                className="w-full pl-9 pr-3 py-2 rounded-md bg-[#FFFFFF] border border-[#CBD5E1] text-xs font-mono text-[#17212B] placeholder-[#94A3B8] focus:outline-none focus:border-[#087E8B]"
               />
             </div>
 
             <button
               onClick={() => setIsUploadModalOpen(true)}
-              className="flex items-center gap-1.5 px-3.5 py-2 rounded-lg bg-blue-600 hover:bg-blue-500 text-white text-xs font-semibold transition-colors shadow-sm"
+              className="flex items-center gap-1.5 px-3.5 py-2 rounded-md bg-[#087E8B] hover:bg-[#06636E] text-white text-xs font-semibold transition-colors shadow-sm"
             >
               <Plus className="w-3.5 h-3.5" />
               <span>Ingest Document</span>
             </button>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            {filteredDocs.map((doc) => (
-              <div
-                key={doc.id}
-                onClick={() => setSelectedDoc(doc)}
-                className="intel-card p-5 border border-slate-800 hover:border-blue-500/50 cursor-pointer transition-all bg-[#090f1e] space-y-3 group"
-              >
-                <div className="flex items-center justify-between border-b border-slate-800 pb-2">
-                  <span className="font-mono text-[10px] font-bold text-blue-400 bg-blue-950/60 px-2 py-0.5 rounded border border-blue-500/30">
-                    {doc.documentType}
-                  </span>
-                  <span className="text-[10px] text-slate-400 font-mono">{doc.id}</span>
-                </div>
-
-                <div className="space-y-1">
-                  <h4 className="font-bold text-white text-sm group-hover:text-blue-300 font-mono">
-                    {doc.title}
-                  </h4>
-                  <p className="text-xs text-slate-300 font-sans line-clamp-2">{doc.summary}</p>
-                </div>
-
-                {/* Extracted Entities Tag Snippet */}
-                <div className="flex flex-wrap items-center gap-1.5 pt-1">
-                  <span className="text-[10px] font-mono text-slate-500">Extracted:</span>
-                  {doc.extractedEntities.slice(0, 3).map(e => (
-                    <span key={e.id} className="text-[10px] font-mono text-slate-300 bg-slate-900 px-1.5 py-0.5 rounded border border-slate-800">
-                      {e.id}
-                    </span>
-                  ))}
-                  {doc.extractedEntities.length > 3 && (
-                    <span className="text-[10px] font-mono text-slate-500">+{doc.extractedEntities.length - 3} more</span>
-                  )}
-                </div>
-
-                <div className="text-[10px] text-slate-500 font-mono flex items-center justify-between border-t border-slate-800/80 pt-2">
-                  <span>SHA-256: {doc.integrityHash.slice(0, 12)}...</span>
-                  <span className="text-blue-400 font-semibold flex items-center gap-1 group-hover:underline">
-                    <span>View Record</span>
-                    <ChevronRight className="w-3 h-3" />
-                  </span>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      )}
-
-      {/* TAB 3: EXTRACTED PERSONS & ENTITIES */}
-      {activeTab === 'entities' && (
-        <div className="space-y-4 animate-in fade-in">
-          <div className="intel-card p-4 border border-slate-800 bg-[#090e1a] text-xs text-slate-300 flex items-center justify-between">
-            <span>Entities indexed and extracted from official case documentation in <strong className="text-white">{caseId}</strong>.</span>
-            <span className="text-slate-400 font-mono">Click any entity to open its complete 360° Profile</span>
-          </div>
-
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3 font-mono text-xs">
-            {['Person_044', 'Person_001', 'Person_078', 'Phone_021', 'Account_103', 'Location_A', 'Vehicle_017', 'Organization_X'].map((entId) => (
-              <div
-                key={entId}
-                onClick={() => openEntityProfile(entId)}
-                className="p-4 rounded-xl bg-[#090f1e] border border-slate-800 hover:border-blue-500/50 cursor-pointer transition-all space-y-1.5 group"
-              >
-                <div className="flex items-center justify-between">
-                  <strong className="text-white group-hover:text-blue-300">{entId}</strong>
-                  <span className="text-[10px] text-blue-400 bg-blue-950/60 px-1.5 py-0.5 rounded border border-blue-500/30 font-bold">
-                    INDEXED
-                  </span>
-                </div>
-                <div className="text-[11px] text-slate-400 font-sans">
-                  Active subject indexed in case records and telecommunication intercepts.
-                </div>
-                <div className="text-[10px] text-blue-400 flex items-center gap-1 pt-1 group-hover:underline">
-                  <span>Open 360° Profile</span>
-                  <ExternalLink className="w-3 h-3" />
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      )}
-
-      {/* TAB 4: RELATED CASES & CROSS-REFERENCES */}
-      {activeTab === 'related' && (
-        <div className="space-y-4 animate-in fade-in">
-          <div className="space-y-3">
-            {relatedCases.length === 0 ? (
-              <div className="p-8 text-center text-xs text-slate-500 font-mono">
-                No related cases found in the available dataset.
-              </div>
-            ) : (
-              relatedCases.map((rel, idx) => (
-                <div
-                  key={idx}
-                  className="intel-card p-5 border border-slate-800 bg-[#090f1e] space-y-3"
-                >
-                  <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-slate-800 pb-2.5">
-                    <div>
-                      <div className="flex items-center gap-2 font-mono font-bold text-white text-xs">
-                        <span>{caseId}</span>
-                        <span className="text-blue-400">⟷</span>
-                        <span className="text-emerald-400">{rel.caseId}: {rel.caseTitle}</span>
-                        <span className="text-slate-400 font-normal">({rel.firNumber})</span>
-                      </div>
-                      <p className="text-[11px] text-slate-400 font-sans mt-0.5">
-                        Station: {rel.policeStation}
-                      </p>
-                    </div>
-
-                    <button
-                      onClick={() => {
-                        setActiveCaseId(rel.caseId);
-                        navigateTo('case-records');
-                      }}
-                      className="px-3.5 py-1.5 rounded-lg bg-slate-800 hover:bg-blue-600 text-slate-200 hover:text-white font-semibold text-xs transition-colors self-start sm:self-auto shadow-sm flex items-center gap-1"
-                    >
-                      <span>Open Case Record</span>
-                      <ExternalLink className="w-3 h-3" />
-                    </button>
-                  </div>
-
-                  <div className="p-3 rounded-lg bg-slate-900 border border-slate-800 text-xs space-y-1 font-mono">
-                    <div className="flex items-center gap-2">
-                      <span className="text-slate-400 font-sans">Correlating Shared Entity:</span>
-                      <strong 
-                        onClick={() => openEntityProfile(rel.sharedEntityId)}
-                        className="text-blue-300 hover:underline cursor-pointer"
-                      >
-                        {rel.sharedEntityId} ({rel.sharedEntityLabel})
-                      </strong>
-                    </div>
-                    <p className="text-slate-300 font-sans text-[11px]">{rel.correlationReason}</p>
-                  </div>
-                </div>
-              ))
-            )}
-          </div>
-        </div>
-      )}
-
-      {/* TAB 5: SOURCE EVIDENCE LEDGER */}
-      {activeTab === 'evidence' && (
-        <div className="space-y-4 animate-in fade-in">
-          <div className="flex items-center justify-between">
-            <span className="text-xs font-bold uppercase tracking-wider text-slate-400">
-              Registered Evidence for {caseRecord.id}
-            </span>
-            <button
-              onClick={() => navigateTo('evidence')}
-              className="text-xs font-semibold text-blue-400 hover:underline flex items-center gap-1"
-            >
-              <span>Open Full Evidence Registry</span>
-              <ExternalLink className="w-3.5 h-3.5" />
-            </button>
-          </div>
-
-          <div className="intel-card border border-slate-800 overflow-hidden shadow-lg font-mono text-xs">
-            <table className="w-full text-left">
-              <thead className="bg-[#090e1a] text-[10px] text-slate-400 uppercase tracking-wider border-b border-slate-800">
+          <div className="bg-[#FFFFFF] rounded-lg border border-[#E2E8F0] shadow-sm overflow-hidden">
+            <table className="w-full text-left text-xs">
+              <thead className="bg-[#F8FAFC] text-[10px] text-[#64748B] uppercase tracking-wider border-b border-[#E2E8F0] font-semibold">
                 <tr>
-                  <th className="py-3 px-4">Evidence ID</th>
-                  <th className="py-3 px-4">Type</th>
-                  <th className="py-3 px-4">Title & Evidentiary Value</th>
-                  <th className="py-3 px-4">SHA-256 Hash</th>
-                  <th className="py-3 px-4 text-right">Verification</th>
+                  <th className="py-3.5 px-4">Doc ID & Title</th>
+                  <th className="py-3.5 px-4">Type</th>
+                  <th className="py-3.5 px-4">Date</th>
+                  <th className="py-3.5 px-4">Officer</th>
+                  <th className="py-3.5 px-4">Extracted Entities</th>
+                  <th className="py-3.5 px-4 text-right">Actions</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-slate-800/80">
-                {evidenceRegistryService.getEvidenceByCase(caseRecord.id).map((ev) => (
-                  <tr 
-                    key={ev.id} 
-                    onClick={() => navigateTo('evidence')}
-                    className="hover:bg-slate-800/60 cursor-pointer transition-colors"
-                  >
-                    <td className="py-3 px-4 font-bold text-blue-400">{ev.id}</td>
-                    <td className="py-3 px-4 text-slate-300">
-                      <span className="px-2 py-0.5 rounded text-[10px] font-bold uppercase bg-slate-900 text-slate-300 border border-slate-700">
-                        {ev.evidenceType.replace(/_/g, ' ')}
-                      </span>
+              <tbody className="divide-y divide-[#E2E8F0]">
+                {filteredDocs.map(doc => (
+                  <tr key={doc.id} className="hover:bg-[#F8FAFC] cursor-pointer bg-[#FFFFFF]" onClick={() => setSelectedDoc(doc)}>
+                    <td className="py-3 px-4">
+                      <div className="font-mono font-bold text-[#087E8B]">{doc.id}</div>
+                      <div className="font-semibold text-[#12304A]">{doc.title}</div>
                     </td>
-                    <td className="py-3 px-4 font-sans text-xs">
-                      <div className="font-semibold text-white">{ev.title}</div>
-                      <div className="text-[11px] text-slate-400 truncate max-w-sm">{ev.description}</div>
+                    <td className="py-3 px-4 text-[#64748B]">{doc.documentType}</td>
+                    <td className="py-3 px-4 font-mono text-[#64748B]">{doc.uploadedDate}</td>
+                    <td className="py-3 px-4 text-[#12304A]">{doc.investigatingOfficer}</td>
+                    <td className="py-3 px-4">
+                      <div className="flex gap-1 flex-wrap">
+                        {doc.extractedEntities.slice(0, 3).map(ent => (
+                          <span key={ent.id} className="text-[10px] px-1.5 py-0.5 rounded bg-[#F1F5F9] border border-[#CBD5E1] text-[#475569]">
+                            {ent.label}
+                          </span>
+                        ))}
+                      </div>
                     </td>
-                    <td className="py-3 px-4 text-slate-400 text-[11px]">
-                      {ev.digitalDocument?.integrityHash ? `${ev.digitalDocument.integrityHash.slice(0, 10)}...` : 'Pending'}
-                    </td>
-                    <td className="py-3 px-4 text-right">
-                      <span className={`px-2 py-0.5 rounded text-[10px] font-bold ${
-                        ev.status === 'VERIFIED' 
-                          ? 'bg-emerald-500/20 text-emerald-300 border border-emerald-500/30'
-                          : 'bg-blue-500/20 text-blue-300 border border-blue-500/30'
-                      }`}>
-                        {ev.status.replace(/_/g, ' ')}
-                      </span>
+                    <td className="py-3 px-4 text-right" onClick={(e) => e.stopPropagation()}>
+                      <button
+                        onClick={() => setSelectedDoc(doc)}
+                        className="px-2.5 py-1 rounded-md bg-[#E6F4F5] hover:bg-[#087E8B] text-[#087E8B] hover:text-white font-semibold text-xs inline-flex items-center gap-1 shadow-sm"
+                      >
+                        <Eye className="w-3 h-3" />
+                        <span>Inspect</span>
+                      </button>
                     </td>
                   </tr>
                 ))}
@@ -501,26 +331,82 @@ export const CaseRecordDetailView: React.FC<CaseRecordDetailViewProps> = ({ case
         </div>
       )}
 
-      {/* TAB 6: CHRONOLOGICAL ACTIVITY TIMELINE */}
-      {activeTab === 'timeline' && (
-        <div className="space-y-3 animate-in fade-in text-xs font-mono">
-          {[
-            { date: '10 Jun 2026', title: 'FIR Registered', desc: 'Case officially filed under Section 420/120-B IPC.' },
-            { date: '18 Jun 2026', title: 'ANPR Intercept at Location_A', desc: 'Vehicle_017 logged at toll checkpoint.' },
-            { date: '24 Jul 2026', title: 'CDR Forensic Report Synthesized', desc: 'Betweenness centrality graph analysis completed.' }
-          ].map((item, idx) => (
-            <div key={idx} className="p-3.5 rounded-xl bg-[#090e1a] border border-slate-800 flex items-start justify-between gap-3">
-              <div className="space-y-0.5">
-                <div className="font-bold text-white">{item.title}</div>
-                <div className="text-[11px] text-slate-400 font-sans">{item.desc}</div>
+      {/* TAB 3: ENTITIES */}
+      {activeTab === 'entities' && (
+        <div className="p-5 border border-[#E2E8F0] bg-[#FFFFFF] shadow-sm rounded-lg space-y-4">
+          <h3 className="text-sm font-bold text-[#12304A]">Extracted Entities ({caseRecord.entityCount})</h3>
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3">
+            {documents.flatMap(d => d.extractedEntities).slice(0, 9).map((ent, i) => (
+              <div
+                key={`${ent.id}-${i}`}
+                onClick={() => openEntityProfile(ent.id)}
+                className="p-3 rounded-md bg-[#F8FAFC] hover:bg-[#E6F4F5] border border-[#E2E8F0] hover:border-[#A7DFE3] cursor-pointer transition-colors space-y-1"
+              >
+                <div className="font-bold text-xs text-[#12304A]">{ent.label}</div>
+                <div className="text-[10px] text-[#64748B] font-mono">ID: {ent.id} • {ent.type}</div>
               </div>
-              <span className="text-blue-400 text-[10px] shrink-0 font-bold">{item.date}</span>
-            </div>
-          ))}
+            ))}
+          </div>
         </div>
       )}
 
-      {/* Document Viewer Modal */}
+      {/* TAB 4: RELATED CASES */}
+      {activeTab === 'related' && (
+        <div className="p-5 border border-[#E2E8F0] bg-[#FFFFFF] shadow-sm rounded-lg space-y-4">
+          <h3 className="text-sm font-bold text-[#12304A]">Correlated & Related Cases ({relatedCases.length})</h3>
+          <div className="space-y-3">
+            {relatedCases.map(rc => (
+              <div key={rc.caseId} className="p-3.5 rounded-md bg-[#F8FAFC] border border-[#E2E8F0] space-y-1.5">
+                <div className="flex items-center justify-between">
+                  <span className="font-mono font-bold text-[#087E8B]">{rc.caseId}</span>
+                  <span className="text-xs font-semibold text-[#12304A]">{rc.caseTitle}</span>
+                </div>
+                <p className="text-xs text-[#475569]">{rc.correlationReason}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {/* TAB 5: EVIDENCE */}
+      {activeTab === 'evidence' && (
+        <div className="p-5 border border-[#E2E8F0] bg-[#FFFFFF] shadow-sm rounded-lg space-y-4">
+          <div className="flex items-center justify-between">
+            <h3 className="text-sm font-bold text-[#12304A]">Case Evidence Ledgers ({caseRecord.evidenceCount})</h3>
+            <button
+              onClick={() => {
+                setActiveCaseId(caseId);
+                navigateTo('evidence');
+              }}
+              className="text-xs font-semibold text-[#087E8B] hover:underline"
+            >
+              Open Central Evidence Registry →
+            </button>
+          </div>
+          <p className="text-xs text-[#64748B]">All digital soft copies and physical evidence seized for case {caseId}.</p>
+        </div>
+      )}
+
+      {/* TAB 6: TIMELINE */}
+      {activeTab === 'timeline' && (
+        <div className="p-5 border border-[#E2E8F0] bg-[#FFFFFF] shadow-sm rounded-lg space-y-4">
+          <div className="flex items-center justify-between">
+            <h3 className="text-sm font-bold text-[#12304A]">Case Activity & Timeline</h3>
+            <button
+              onClick={() => {
+                setActiveCaseId(caseId);
+                navigateTo('timeline', { caseId });
+              }}
+              className="text-xs font-semibold text-[#087E8B] hover:underline"
+            >
+              Open Unified Chronology →
+            </button>
+          </div>
+          <p className="text-xs text-[#64748B]">Full chronological audit stream linking all investigation events.</p>
+        </div>
+      )}
+
+      {/* Modals */}
       {selectedDoc && (
         <DocumentViewerModal
           document={selectedDoc}
@@ -528,16 +414,16 @@ export const CaseRecordDetailView: React.FC<CaseRecordDetailViewProps> = ({ case
         />
       )}
 
-      {/* Document Upload Modal */}
-      <DocumentUploadModal
-        caseId={caseId}
-        firNumber={caseRecord.firNumber}
-        isOpen={isUploadModalOpen}
-        onClose={() => setIsUploadModalOpen(false)}
-        onDocumentAdded={(newDoc) => {
-          setDocuments(prev => [newDoc, ...prev]);
-        }}
-      />
+      {isUploadModalOpen && (
+        <DocumentUploadModal
+          caseId={caseId}
+          onClose={() => setIsUploadModalOpen(false)}
+          onSuccess={() => {
+            setIsUploadModalOpen(false);
+            loadData();
+          }}
+        />
+      )}
 
     </div>
   );

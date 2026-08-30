@@ -14,8 +14,7 @@ import {
   ChevronLeft, 
   ChevronRight, 
   LogOut,
-  User,
-  ShieldAlert
+  User
 } from 'lucide-react';
 import { useInvestigation, AppPage } from '../../context/InvestigationContext';
 import { useAuth } from '../../context/AuthContext';
@@ -27,7 +26,7 @@ export const Sidebar: React.FC = () => {
   const { user, logout } = useAuth();
   const [isCollapsed, setIsCollapsed] = useState<boolean>(false);
   const [alertCount, setAlertCount] = useState<number>(6);
-  const [caseCount, setCaseCount] = useState<number>(4);
+  const [caseCount, setCaseCount] = useState<number>(10);
 
   useEffect(() => {
     alertService.getAlerts({ status: 'NEW' as any })
@@ -58,31 +57,30 @@ export const Sidebar: React.FC = () => {
 
   return (
     <aside 
-      className={`relative flex flex-col border-r border-slate-800 bg-[#0c1322] transition-all duration-150 z-30 select-none ${
+      className={`relative flex flex-col border-r border-[#E2E8F0] bg-[#FFFFFF] transition-all duration-150 z-30 select-none ${
         isCollapsed ? 'w-16' : 'w-56'
       }`}
     >
       {/* Government App Header */}
-      <div className="h-16 flex items-center justify-between px-3.5 border-b border-slate-800 bg-[#090e1a]">
+      <div className="h-16 flex items-center justify-between px-3.5 border-b border-[#E2E8F0] bg-[#FFFFFF]">
         <div 
           className="flex items-center gap-2.5 overflow-hidden cursor-pointer" 
           onClick={() => navigateTo('dashboard')}
         >
-          <div className="w-8 h-8 rounded-lg bg-blue-700 border border-blue-500/30 flex items-center justify-center text-white shadow-sm flex-shrink-0 font-bold text-sm">
+          <div className="w-8 h-8 rounded-lg bg-[#12304A] flex items-center justify-center text-white shadow-sm flex-shrink-0 font-bold text-sm">
             T
           </div>
           {!isCollapsed && (
             <div className="flex flex-col min-w-0">
-              <span className="font-bold text-sm tracking-wide text-white font-mono">TraceNet</span>
-              <span className="text-[10px] text-slate-400 truncate">SIH Prototype</span>
+              <span className="font-bold text-sm tracking-wide text-[#12304A] font-sans">TraceNet</span>
+              <span className="text-[10px] text-[#64748B] truncate">Investigation Platform</span>
             </div>
           )}
-
         </div>
 
         <button
           onClick={() => setIsCollapsed(!isCollapsed)}
-          className="p-1 rounded-md text-slate-400 hover:text-white hover:bg-slate-800 transition-colors"
+          className="p-1 rounded-md text-[#64748B] hover:text-[#12304A] hover:bg-[#F1F5F9] transition-colors"
           title={isCollapsed ? 'Expand Navigation' : 'Collapse Navigation'}
         >
           {isCollapsed ? <ChevronRight className="w-4 h-4" /> : <ChevronLeft className="w-4 h-4" />}
@@ -90,9 +88,9 @@ export const Sidebar: React.FC = () => {
       </div>
 
       {/* Primary Navigation Items */}
-      <nav className="flex-1 py-3 px-2 space-y-1 overflow-y-auto">
+      <nav className="flex-1 py-3 px-2 space-y-1 overflow-y-auto bg-[#FFFFFF]">
         {!isCollapsed && (
-          <div className="px-2.5 pb-1 text-[10px] font-bold uppercase tracking-wider text-slate-500">
+          <div className="px-2.5 pb-1 text-[10px] font-bold uppercase tracking-wider text-[#64748B]">
             Investigation
           </div>
         )}
@@ -108,20 +106,24 @@ export const Sidebar: React.FC = () => {
               key={item.id}
               onClick={() => navigateTo(item.id)}
               title={isCollapsed ? item.label : undefined}
-              className={`w-full flex items-center gap-2.5 px-3 py-2 rounded-lg text-xs font-semibold transition-colors relative ${
+              className={`w-full flex items-center gap-2.5 px-3 py-2 rounded-md text-xs font-semibold transition-all relative ${
                 isActive
-                  ? 'bg-blue-600 text-white shadow-sm'
-                  : 'text-slate-300 hover:text-white hover:bg-slate-800/80'
+                  ? 'bg-[#E6F4F5] text-[#087E8B] border-l-4 border-[#087E8B]'
+                  : 'text-[#475569] hover:text-[#12304A] hover:bg-[#F8FAFC]'
               }`}
             >
-              <Icon className={`w-4 h-4 flex-shrink-0 ${isActive ? 'text-white' : 'text-slate-400'}`} />
+              <Icon className={`w-4 h-4 flex-shrink-0 ${isActive ? 'text-[#087E8B]' : 'text-[#64748B]'}`} />
               
               {!isCollapsed && (
                 <span className="flex-1 text-left truncate">{item.label}</span>
               )}
 
-              {!isCollapsed && item.badge && !isActive && (
-                <span className="text-[10px] font-mono px-1.5 py-0.2 rounded bg-slate-800 text-slate-400 border border-slate-700">
+              {!isCollapsed && item.badge && (
+                <span className={`text-[10px] font-mono px-1.5 py-0.2 rounded border ${
+                  isActive 
+                    ? 'bg-[#FFFFFF] text-[#087E8B] border-[#A7DFE3]' 
+                    : 'bg-[#F1F5F9] text-[#64748B] border-[#E2E8F0]'
+                }`}>
                   {item.badge}
                 </span>
               )}
@@ -131,11 +133,11 @@ export const Sidebar: React.FC = () => {
 
         {/* Administration Section */}
         <div className="pt-3 pb-1">
-          <div className="h-px bg-slate-800 mx-2" />
+          <div className="h-px bg-[#E2E8F0] mx-2" />
         </div>
 
         {!isCollapsed && (
-          <div className="px-2.5 py-1 text-[10px] font-bold uppercase tracking-wider text-slate-500">
+          <div className="px-2.5 py-1 text-[10px] font-bold uppercase tracking-wider text-[#64748B]">
             System & Security
           </div>
         )}
@@ -149,13 +151,13 @@ export const Sidebar: React.FC = () => {
               key={item.id}
               onClick={() => navigateTo(item.id)}
               title={isCollapsed ? item.label : undefined}
-              className={`w-full flex items-center gap-2.5 px-3 py-2 rounded-lg text-xs font-semibold transition-colors ${
+              className={`w-full flex items-center gap-2.5 px-3 py-2 rounded-md text-xs font-semibold transition-all ${
                 isActive
-                  ? 'bg-blue-600 text-white shadow-sm'
-                  : 'text-slate-300 hover:text-white hover:bg-slate-800/80'
+                  ? 'bg-[#E6F4F5] text-[#087E8B] border-l-4 border-[#087E8B]'
+                  : 'text-[#475569] hover:text-[#12304A] hover:bg-[#F8FAFC]'
               }`}
             >
-              <Icon className={`w-4 h-4 flex-shrink-0 ${isActive ? 'text-white' : 'text-slate-400'}`} />
+              <Icon className={`w-4 h-4 flex-shrink-0 ${isActive ? 'text-[#087E8B]' : 'text-[#64748B]'}`} />
               {!isCollapsed && <span className="flex-1 text-left truncate">{item.label}</span>}
             </button>
           );
@@ -163,22 +165,22 @@ export const Sidebar: React.FC = () => {
       </nav>
 
       {/* Logged-In Investigator & Role Footer */}
-      <div className="p-3 border-t border-slate-800 bg-[#090e1a] text-xs">
+      <div className="p-3 border-t border-[#E2E8F0] bg-[#FFFFFF] text-xs">
         {!isCollapsed ? (
           <div className="space-y-2.5">
             <div className="flex items-center gap-2.5 min-w-0">
-              <div className="w-8 h-8 rounded-full bg-slate-800 border border-slate-700 flex items-center justify-center text-slate-300 text-xs shrink-0">
-                <User className="w-4 h-4 text-blue-400" />
+              <div className="w-8 h-8 rounded-full bg-[#E6F4F5] border border-[#A7DFE3] flex items-center justify-center text-[#087E8B] text-xs shrink-0">
+                <User className="w-4 h-4" />
               </div>
               <div className="min-w-0">
-                <div className="font-semibold text-slate-200 truncate text-xs">
+                <div className="font-semibold text-[#12304A] truncate text-xs">
                   {user?.name || 'Inspector Rajesh Verma'}
                 </div>
                 <div className="flex items-center gap-1.5">
-                  <span className="text-[9px] font-bold px-1.5 py-0.2 rounded bg-blue-500/20 text-blue-300 border border-blue-500/30">
+                  <span className="text-[9px] font-bold px-1.5 py-0.2 rounded bg-[#E6F4F5] text-[#087E8B] border border-[#A7DFE3]">
                     {user?.role || 'INVESTIGATOR'}
                   </span>
-                  <span className="text-[10px] text-slate-500 font-mono">
+                  <span className="text-[10px] text-[#64748B] font-mono">
                     {user?.badge_number || 'MHA-8902'}
                   </span>
                 </div>
@@ -190,23 +192,22 @@ export const Sidebar: React.FC = () => {
                 logout();
                 navigateTo('landing');
               }}
-              className="w-full flex items-center justify-center gap-1.5 py-1.5 rounded-lg bg-slate-900 hover:bg-slate-800 text-slate-400 hover:text-slate-200 text-xs font-medium transition-colors border border-slate-800"
+              className="w-full flex items-center justify-center gap-1.5 py-1.5 rounded-md bg-[#FFFFFF] hover:bg-[#F8FAFC] text-[#64748B] hover:text-[#12304A] text-xs font-medium transition-colors border border-[#CBD5E1]"
             >
-              <LogOut className="w-3.5 h-3.5 text-slate-400" />
+              <LogOut className="w-3.5 h-3.5" />
               <span>Sign Out</span>
             </button>
           </div>
         ) : (
           <button
             onClick={() => setIsLoginModalOpen(true)}
-            className="w-full flex justify-center p-2 rounded-lg text-slate-400 hover:text-white hover:bg-slate-800"
+            className="w-full flex justify-center p-2 rounded-md text-[#64748B] hover:text-[#12304A] hover:bg-[#F8FAFC]"
             title={`${user?.name || 'Inspector Rajesh Verma'} (${user?.role || 'INVESTIGATOR'})`}
           >
-            <User className="w-4 h-4 text-blue-400" />
+            <User className="w-4 h-4 text-[#087E8B]" />
           </button>
         )}
       </div>
     </aside>
   );
 };
-

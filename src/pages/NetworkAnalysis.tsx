@@ -10,12 +10,9 @@ import {
   Search, 
   RotateCcw,
   Network,
-  Users,
   Layers,
   Sparkles,
   Eye,
-  Activity,
-  SlidersHorizontal,
   X
 } from 'lucide-react';
 
@@ -157,7 +154,6 @@ export const NetworkAnalysis: React.FC = () => {
     fetchGraph();
   };
 
-  // Selected Entity Metrics for Overview Bar
   const totalNodesCount = graphData?.nodes?.length || 0;
   const totalEdgesCount = graphData?.edges?.length || 0;
   const totalCommunitiesCount = dynamicCommunities.length || 1;
@@ -175,60 +171,60 @@ export const NetworkAnalysis: React.FC = () => {
     <div className="space-y-3 select-none animate-in fade-in max-w-7xl mx-auto py-1">
       
       {/* 1. NETWORK OVERVIEW Header Status Bar */}
-      <div className="intel-card px-4 py-2.5 rounded-xl border border-slate-800 bg-[#090e1a]/95 flex flex-wrap items-center justify-between gap-3 text-xs shadow-md">
+      <div className="bg-[#FFFFFF] px-4 py-2.5 rounded-lg border border-[#E2E8F0] flex flex-wrap items-center justify-between gap-3 text-xs shadow-sm">
         <div className="flex items-center gap-2">
-          <div className="p-1 rounded-md bg-blue-500/20 text-blue-400 border border-blue-500/30">
+          <div className="p-1 rounded-md bg-[#E6F4F5] text-[#087E8B] border border-[#A7DFE3]">
             <Network className="w-3.5 h-3.5" />
           </div>
-          <span className="font-mono font-bold uppercase tracking-wider text-slate-300">
+          <span className="font-bold uppercase tracking-wider text-[#12304A]">
             NETWORK OVERVIEW:
           </span>
-          <span className="text-slate-200 font-semibold font-mono">
+          <span className="text-[#64748B] font-medium font-mono">
             {totalNodesCount} Entities • {totalEdgesCount} Relationships • {totalCommunitiesCount} Communities
           </span>
         </div>
 
         {selectedEntityId && (
-          <div className="flex items-center gap-3 text-slate-300 font-mono text-[11px]">
+          <div className="flex items-center gap-3 text-[#475569] text-[11px]">
             <div>
-              <span className="text-slate-500 uppercase mr-1">Selected:</span>
-              <span className="font-bold text-white bg-slate-800 px-1.5 py-0.5 rounded border border-slate-700">
+              <span className="text-[#64748B] uppercase mr-1">Selected:</span>
+              <span className="font-bold text-[#12304A] bg-[#F1F5F9] px-1.5 py-0.5 rounded border border-[#E2E8F0] font-mono">
                 {selectedEntityId}
               </span>
             </div>
             <div>
-              <span className="text-slate-500 mr-1">Connections:</span>
-              <span className="font-bold text-cyan-300">{selectedConnectionsCount}</span>
+              <span className="text-[#64748B] mr-1">Connections:</span>
+              <span className="font-bold text-[#087E8B]">{selectedConnectionsCount}</span>
             </div>
             <div>
-              <span className="text-slate-500 mr-1">Cross-community:</span>
-              <span className="font-bold text-amber-300">{selectedCrossCommunityCount}</span>
+              <span className="text-[#64748B] mr-1">Cross-community:</span>
+              <span className="font-bold text-[#B7791F]">{selectedCrossCommunityCount}</span>
             </div>
           </div>
         )}
       </div>
 
       {/* 2. Streamlined Investigation Toolbar */}
-      <div className="intel-card p-3 border border-slate-800 flex flex-wrap items-center justify-between gap-3 bg-[#0d1527] rounded-xl shadow-lg">
+      <div className="bg-[#FFFFFF] p-3 border border-[#E2E8F0] flex flex-wrap items-center justify-between gap-3 rounded-lg shadow-sm">
         <div className="flex flex-wrap items-center gap-2 text-xs">
           
           {/* Entity Search Input with Autocomplete */}
           <div className="relative min-w-[220px]">
             <form onSubmit={handleSearchSubmit}>
-              <Search className="w-3.5 h-3.5 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
+              <Search className="w-3.5 h-3.5 text-[#64748B] absolute left-3 top-1/2 -translate-y-1/2" />
               <input
                 type="text"
                 value={searchQuery}
                 onFocus={() => setIsSearchFocused(true)}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                placeholder="Inspect entity (e.g. Rahul Sharma, Thane West, Acct ending 4821)..."
-                className="w-full pl-8 pr-7 py-1.5 rounded-lg bg-slate-900 border border-slate-700 text-xs font-mono text-white placeholder-slate-400 focus:outline-none focus:border-blue-500 shadow-inner"
+                placeholder="Inspect entity (e.g. Rahul Sharma, Thane West)..."
+                className="w-full pl-8 pr-7 py-1.5 rounded-md bg-[#FFFFFF] border border-[#CBD5E1] text-xs text-[#17212B] placeholder-[#94A3B8] focus:outline-none focus:border-[#087E8B]"
               />
               {searchQuery && (
                 <button
                   type="button"
                   onClick={() => setSearchQuery('')}
-                  className="absolute right-2 top-1/2 -translate-y-1/2 text-slate-400 hover:text-white"
+                  className="absolute right-2 top-1/2 -translate-y-1/2 text-[#64748B] hover:text-[#12304A]"
                 >
                   <X className="w-3 h-3" />
                 </button>
@@ -237,15 +233,15 @@ export const NetworkAnalysis: React.FC = () => {
 
             {/* Autocomplete Dropdown List */}
             {isSearchFocused && searchSuggestions.length > 0 && (
-              <div className="absolute top-full left-0 mt-1 w-full bg-[#0b1326] border border-slate-700 rounded-lg shadow-2xl z-50 overflow-hidden divide-y divide-slate-800/80 animate-in fade-in">
+              <div className="absolute top-full left-0 mt-1 w-full bg-[#FFFFFF] border border-[#CBD5E1] rounded-md shadow-xl z-50 overflow-hidden divide-y divide-[#E2E8F0] animate-in fade-in">
                 {searchSuggestions.map((item) => (
                   <div
                     key={item.data.id}
                     onMouseDown={() => handleSelectSearchItem(item.data.id)}
-                    className="p-2 hover:bg-slate-800 cursor-pointer flex items-center justify-between transition-colors text-xs"
+                    className="p-2 hover:bg-[#F8FAFC] cursor-pointer flex items-center justify-between transition-colors text-xs"
                   >
-                    <div className="font-mono font-bold text-white">{item.data.id}</div>
-                    <span className="text-[10px] text-slate-400 font-mono">{item.data.type}</span>
+                    <div className="font-bold text-[#12304A]">{item.data.id}</div>
+                    <span className="text-[10px] text-[#64748B] font-mono">{item.data.type}</span>
                   </div>
                 ))}
               </div>
@@ -255,56 +251,56 @@ export const NetworkAnalysis: React.FC = () => {
           {/* Quick Bridge View Button */}
           <button
             onClick={handleToggleBridgeView}
-            className={`px-3 py-1.5 rounded-lg font-semibold transition-all flex items-center gap-1.5 ${
+            className={`px-3 py-1.5 rounded-md font-semibold transition-all flex items-center gap-1.5 border shadow-sm ${
               isBridgeView
-                ? 'bg-amber-600/30 text-amber-300 border border-amber-500/50 shadow-md shadow-amber-950/40'
-                : 'bg-slate-900 hover:bg-slate-800 text-slate-300 border border-slate-800'
+                ? 'bg-[#FEF3C7] text-[#B7791F] border-[#FCD34D]'
+                : 'bg-[#FFFFFF] hover:bg-[#F8FAFC] text-[#475569] border-[#CBD5E1]'
             }`}
             title="Isolate cross-community pathways routed through central bridge node"
           >
-            <Sparkles className="w-3.5 h-3.5 text-amber-400" />
+            <Sparkles className="w-3.5 h-3.5 text-[#B7791F]" />
             <span>Bridge View ({bridgeNodeId || 'Bridge'})</span>
           </button>
 
           {/* Community Clusters View Button */}
           <button
             onClick={handleToggleCommunityView}
-            className={`px-3 py-1.5 rounded-lg font-semibold transition-all flex items-center gap-1.5 ${
+            className={`px-3 py-1.5 rounded-md font-semibold transition-all flex items-center gap-1.5 border shadow-sm ${
               isCommunityView
-                ? 'bg-blue-600/30 text-blue-300 border border-blue-500/50 shadow-md shadow-blue-950/40'
-                : 'bg-slate-900 hover:bg-slate-800 text-slate-300 border border-slate-800'
+                ? 'bg-[#E6F4F5] text-[#087E8B] border-[#A7DFE3]'
+                : 'bg-[#FFFFFF] hover:bg-[#F8FAFC] text-[#475569] border-[#CBD5E1]'
             }`}
             title="Organize network into detected modularity communities"
           >
-            <Layers className="w-3.5 h-3.5 text-blue-400" />
+            <Layers className="w-3.5 h-3.5 text-[#087E8B]" />
             <span>Community View ({totalCommunitiesCount} Clusters)</span>
           </button>
 
           {/* Investigation Story Mode Button */}
           <button
             onClick={handleToggleStoryMode}
-            className={`px-3 py-1.5 rounded-lg font-semibold transition-all flex items-center gap-1.5 ${
+            className={`px-3 py-1.5 rounded-md font-semibold transition-all flex items-center gap-1.5 border shadow-sm ${
               isStoryMode
-                ? 'bg-emerald-600/30 text-emerald-300 border border-emerald-500/50 shadow-md shadow-emerald-950/40'
-                : 'bg-slate-900 hover:bg-slate-800 text-slate-300 border border-slate-800'
+                ? 'bg-[#E8F7F0] text-[#16805C] border-[#A3E0C8]'
+                : 'bg-[#FFFFFF] hover:bg-[#F8FAFC] text-[#475569] border-[#CBD5E1]'
             }`}
             title="Presentation-friendly view simplifying the core suspect-asset storyline"
           >
-            <Eye className="w-3.5 h-3.5 text-emerald-400" />
+            <Eye className="w-3.5 h-3.5 text-[#16805C]" />
             <span>Investigation View</span>
           </button>
 
           {/* Connection Depth Control: [ 1 ] [ 2 ] [ 3 ] */}
-          <div className="flex items-center gap-1 px-2 py-1 rounded-lg bg-slate-900 border border-slate-800 text-xs">
-            <span className="text-slate-400 font-mono text-[10px] uppercase mr-1 hidden sm:inline">Depth:</span>
+          <div className="flex items-center gap-1 px-2 py-1 rounded-md bg-[#FFFFFF] border border-[#CBD5E1] text-xs">
+            <span className="text-[#64748B] text-[10px] uppercase mr-1 hidden sm:inline">Depth:</span>
             {[1, 2, 3].map((depth) => (
               <button
                 key={depth}
                 onClick={() => setConnectionDepth(depth)}
-                className={`w-6 h-6 rounded flex items-center justify-center font-mono font-bold text-xs transition-colors ${
+                className={`w-6 h-6 rounded flex items-center justify-center font-bold text-xs transition-colors ${
                   connectionDepth === depth
-                    ? 'bg-blue-600 text-white shadow-sm'
-                    : 'text-slate-400 hover:text-white hover:bg-slate-800'
+                    ? 'bg-[#087E8B] text-white shadow-sm'
+                    : 'text-[#64748B] hover:text-[#12304A] hover:bg-[#F1F5F9]'
                 }`}
                 title={`Connection Depth ${depth}: ${
                   depth === 1 ? 'Direct links only' : depth === 2 ? 'Direct + 2nd degree' : 'Broader network'
@@ -318,7 +314,7 @@ export const NetworkAnalysis: React.FC = () => {
           {/* Reset Layout */}
           <button
             onClick={handleReset}
-            className="p-1.5 rounded-lg bg-slate-900 hover:bg-slate-800 text-slate-400 hover:text-white border border-slate-800 transition-colors"
+            className="p-1.5 rounded-md bg-[#FFFFFF] hover:bg-[#F8FAFC] text-[#64748B] hover:text-[#12304A] border border-[#CBD5E1] transition-colors shadow-sm"
             title="Reset Graph Layout, Depth & Filters"
           >
             <RotateCcw className="w-3.5 h-3.5" />
@@ -327,9 +323,9 @@ export const NetworkAnalysis: React.FC = () => {
       </div>
 
       {/* 3. Main Graph Canvas & Intelligence Inspector Split Layout */}
-      <div className="intel-card border border-slate-800 rounded-xl overflow-hidden flex flex-col lg:flex-row h-[620px] shadow-2xl">
+      <div className="bg-[#FFFFFF] border border-[#E2E8F0] rounded-lg overflow-hidden flex flex-col lg:flex-row h-[620px] shadow-sm">
         {/* Left Interactive Cytoscape Canvas */}
-        <div className="flex-1 relative h-full bg-[#070d18]">
+        <div className="flex-1 relative h-full bg-[#FAFCFD]">
           {graphData && (
             <CytoscapeGraph
               graphData={graphData}

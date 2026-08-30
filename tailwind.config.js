@@ -8,26 +8,47 @@ export default {
   theme: {
     extend: {
       colors: {
-        background: '#090e17',
+        background: '#F8FAFC',
         surface: {
-          DEFAULT: '#0f172a',
-          card: '#111c34',
-          muted: '#182442',
-          border: '#1e293b',
-          hover: '#1e2d4d'
+          DEFAULT: '#FFFFFF',
+          card: '#FFFFFF',
+          muted: '#F1F5F9',
+          border: '#E2E8F0',
+          hover: '#F8FAFC'
+        },
+        navy: {
+          DEFAULT: '#12304A',
+          secondary: '#234E70',
+          dark: '#0B1E2E',
+          light: '#1B476E'
+        },
+        teal: {
+          DEFAULT: '#087E8B',
+          light: '#E6F4F5',
+          dark: '#06636E',
+          50: '#E6F4F5',
+          100: '#CEEAEB',
+          500: '#087E8B',
+          600: '#076D78',
+          700: '#065C66'
         },
         primary: {
-          50: '#eff6ff',
-          100: '#dbeafe',
-          200: '#bfdbfe',
-          300: '#93c5fd',
-          400: '#60a5fa',
-          500: '#3b82f6',
-          600: '#2563eb',
-          700: '#1d4ed8',
-          800: '#1e40af',
-          900: '#1e3a8a',
-          DEFAULT: '#2563eb'
+          DEFAULT: '#087E8B',
+          50: '#E6F4F5',
+          100: '#CEEAEB',
+          200: '#9DD5D8',
+          300: '#6CBFC4',
+          400: '#3BAAB1',
+          500: '#087E8B',
+          600: '#076D78',
+          700: '#065C66',
+          800: '#054C54',
+          900: '#033B42'
+        },
+        brandText: {
+          main: '#17212B',
+          secondary: '#64748B',
+          muted: '#94A3B8'
         }
       },
       fontFamily: {
@@ -35,11 +56,10 @@ export default {
         mono: ['JetBrains Mono', 'Fira Code', 'Cascadia Code', 'Consolas', 'monospace']
       },
       boxShadow: {
-        'intel-card': '0 1px 3px 0 rgba(0, 0, 0, 0.3), 0 1px 2px -1px rgba(0, 0, 0, 0.3)',
-        'intel-modal': '0 20px 25px -5px rgba(0, 0, 0, 0.6), 0 8px 10px -6px rgba(0, 0, 0, 0.5)',
+        'intel-card': '0 1px 3px 0 rgba(0, 0, 0, 0.05), 0 1px 2px -1px rgba(0, 0, 0, 0.05)',
+        'intel-modal': '0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.08)',
       }
     },
   },
   plugins: [],
 }
-

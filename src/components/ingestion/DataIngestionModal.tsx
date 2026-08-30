@@ -2,16 +2,10 @@ import React, { useState, useRef } from 'react';
 import { 
   X, 
   UploadCloud, 
-  PhoneCall, 
-  CreditCard, 
-  MapPin, 
-  FileText, 
   CheckCircle2, 
   Check,
   Cpu, 
   ArrowRight,
-  Database,
-  Layers,
   FileSpreadsheet
 } from 'lucide-react';
 import { useInvestigation } from '../../context/InvestigationContext';
@@ -126,37 +120,37 @@ export const DataIngestionModal: React.FC = () => {
   };
 
   return (
-    <div className="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4 select-none animate-in fade-in duration-150">
+    <div className="fixed inset-0 z-50 bg-black/40 backdrop-blur-sm flex items-center justify-center p-4 select-none animate-in fade-in duration-150">
       <div 
-        className="w-full max-w-2xl intel-card rounded-xl border border-slate-700 bg-[#090f1e] shadow-2xl overflow-hidden flex flex-col max-h-[90vh]"
+        className="w-full max-w-2xl bg-[#FFFFFF] rounded-lg border border-[#CBD5E1] shadow-2xl overflow-hidden flex flex-col max-h-[90vh]"
         onClick={(e) => e.stopPropagation()}
       >
         {/* Header */}
-        <div className="p-4 sm:p-5 border-b border-slate-800 bg-[#090e1a] flex items-center justify-between">
+        <div className="p-4 sm:p-5 border-b border-[#E2E8F0] bg-[#F8FAFC] flex items-center justify-between">
           <div className="space-y-0.5">
-            <h3 className="font-bold text-sm sm:text-base text-white tracking-tight flex items-center gap-2">
-              <UploadCloud className="w-4 h-4 text-blue-400" />
+            <h3 className="font-bold text-sm sm:text-base text-[#12304A] tracking-tight flex items-center gap-2">
+              <UploadCloud className="w-4 h-4 text-[#087E8B]" />
               <span>ADD CASE DATA</span>
             </h3>
-            <p className="text-xs text-slate-400 font-mono">
-              Case File: <strong className="text-blue-400">{activeCaseId}</strong> // Multi-Source Ingestion
+            <p className="text-xs text-[#64748B] font-mono">
+              Case File: <strong className="text-[#087E8B]">{activeCaseId}</strong> // Multi-Source Ingestion
             </p>
           </div>
           <button
             onClick={() => setIsIngestionModalOpen(false)}
-            className="p-1 rounded-lg text-slate-400 hover:text-white hover:bg-slate-800 transition-colors"
+            className="p-1 rounded-md text-[#64748B] hover:text-[#12304A] hover:bg-[#E2E8F0] transition-colors"
           >
             <X className="w-5 h-5" />
           </button>
         </div>
 
         {/* Modal Content */}
-        <div className="p-5 sm:p-6 overflow-y-auto space-y-5 flex-1">
+        <div className="p-5 sm:p-6 overflow-y-auto space-y-5 flex-1 text-xs">
           {!isComplete ? (
             <>
               {/* Step 1: Select Data Type */}
               <div className="space-y-2">
-                <label className="text-[11px] font-bold uppercase tracking-wider text-slate-300 block">
+                <label className="text-[11px] font-bold uppercase tracking-wider text-[#64748B] block">
                   Select Data Type:
                 </label>
                 <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
@@ -170,10 +164,10 @@ export const DataIngestionModal: React.FC = () => {
                           setSelectedType(type.id);
                           if (!customFile) setSelectedFileName(type.sampleName);
                         }}
-                        className={`p-3 rounded-lg border text-center transition-all ${
+                        className={`p-3 rounded-md border text-center transition-all ${
                           isSelected
-                            ? 'bg-blue-600/20 border-blue-500 text-white shadow-sm'
-                            : 'bg-slate-900/80 border-slate-800 text-slate-300 hover:bg-slate-850 hover:text-white'
+                            ? 'bg-[#E6F4F5] border-[#A7DFE3] text-[#087E8B] font-bold shadow-sm'
+                            : 'bg-[#FFFFFF] border-[#CBD5E1] text-[#475569] hover:bg-[#F8FAFC] hover:text-[#12304A]'
                         }`}
                       >
                         <div className="font-bold text-xs">[ {type.label} ]</div>
@@ -181,14 +175,14 @@ export const DataIngestionModal: React.FC = () => {
                     );
                   })}
                 </div>
-                <p className="text-xs text-slate-400 pt-0.5">
+                <p className="text-xs text-[#64748B] pt-0.5">
                   {currentTypeInfo.fullName} — {currentTypeInfo.desc}
                 </p>
               </div>
 
               {/* Step 2: Upload File */}
               <div className="space-y-2">
-                <label className="text-[11px] font-bold uppercase tracking-wider text-slate-300 block">
+                <label className="text-[11px] font-bold uppercase tracking-wider text-[#64748B] block">
                   Upload File:
                 </label>
                 <input 
@@ -200,36 +194,36 @@ export const DataIngestionModal: React.FC = () => {
                 />
                 <div 
                   onClick={() => fileInputRef.current?.click()}
-                  className="p-6 border-2 border-dashed border-slate-700 hover:border-blue-500/60 rounded-xl bg-slate-950/50 text-center space-y-1.5 transition-colors cursor-pointer"
+                  className="p-6 border-2 border-dashed border-[#CBD5E1] hover:border-[#087E8B] rounded-lg bg-[#F8FAFC] text-center space-y-1.5 transition-colors cursor-pointer"
                 >
-                  <FileSpreadsheet className="w-8 h-8 mx-auto text-blue-400" />
-                  <div className="text-xs font-semibold text-white">
-                    File: <span className="font-mono text-blue-300">{selectedFileName}</span>
+                  <FileSpreadsheet className="w-8 h-8 mx-auto text-[#087E8B]" />
+                  <div className="text-xs font-semibold text-[#12304A]">
+                    File: <span className="font-mono text-[#087E8B]">{selectedFileName}</span>
                   </div>
-                  <div className="text-[11px] text-slate-400">
-                    Records detected: <strong className="text-slate-200 font-mono">{currentTypeInfo.recordsCount.toLocaleString()}</strong>
+                  <div className="text-[11px] text-[#64748B]">
+                    Records detected: <strong className="text-[#12304A] font-mono">{currentTypeInfo.recordsCount.toLocaleString()}</strong>
                   </div>
-                  <div className="text-[10px] text-slate-500 pt-1">
+                  <div className="text-[10px] text-[#94A3B8] pt-1">
                     Drag & Drop or Click to Browse Local CSV/XLSX
                   </div>
                 </div>
               </div>
 
               {/* Step 3: Validation Checklist */}
-              <div className="p-4 rounded-lg bg-[#090e1a] border border-slate-800 space-y-2">
-                <span className="text-[10px] font-bold uppercase tracking-wider text-slate-400 block">
+              <div className="p-4 rounded-md bg-[#F8FAFC] border border-[#E2E8F0] space-y-2">
+                <span className="text-[10px] font-bold uppercase tracking-wider text-[#64748B] block">
                   Validation Status:
                 </span>
                 <div className="space-y-1.5 text-xs">
-                  <div className="flex items-center gap-2 text-emerald-400 font-medium">
+                  <div className="flex items-center gap-2 text-[#16805C] font-medium">
                     <Check className="w-3.5 h-3.5" />
                     <span>Required columns present</span>
                   </div>
-                  <div className="flex items-center gap-2 text-emerald-400 font-medium">
+                  <div className="flex items-center gap-2 text-[#16805C] font-medium">
                     <Check className="w-3.5 h-3.5" />
                     <span>Timestamp format valid (ISO-8601 UTC)</span>
                   </div>
-                  <div className="flex items-center gap-2 text-emerald-400 font-medium">
+                  <div className="flex items-center gap-2 text-[#16805C] font-medium">
                     <Check className="w-3.5 h-3.5" />
                     <span>Entity identifiers normalized</span>
                   </div>
@@ -238,32 +232,32 @@ export const DataIngestionModal: React.FC = () => {
 
               {/* Step 4: Live Processing Sequence */}
               {isAnalyzing && (
-                <div className="p-4 rounded-lg bg-[#090e1a] border border-blue-500/40 space-y-3 animate-in fade-in">
+                <div className="p-4 rounded-md bg-[#E6F4F5] border border-[#A7DFE3] space-y-3 animate-in fade-in">
                   <div className="flex items-center justify-between text-xs font-mono">
-                    <span className="text-blue-300 font-semibold flex items-center gap-2">
-                      <Cpu className="w-4 h-4 text-blue-400 animate-spin" />
+                    <span className="text-[#087E8B] font-semibold flex items-center gap-2">
+                      <Cpu className="w-4 h-4 text-[#087E8B] animate-spin" />
                       <span>{analysisSteps[currentStepIndex]}</span>
                     </span>
-                    <span className="text-slate-400">
+                    <span className="text-[#64748B]">
                       Step {currentStepIndex + 1} of {analysisSteps.length}
                     </span>
                   </div>
 
-                  <div className="w-full h-1.5 bg-slate-900 rounded-full overflow-hidden">
+                  <div className="w-full h-1.5 bg-[#CBD5E1] rounded-full overflow-hidden">
                     <div 
-                      className="h-full bg-blue-600 transition-all duration-300"
+                      className="h-full bg-[#087E8B] transition-all duration-300"
                       style={{ width: `${((currentStepIndex + 1) / analysisSteps.length) * 100}%` }}
                     />
                   </div>
 
-                  <div className="grid grid-cols-2 sm:grid-cols-3 gap-1.5 text-[11px] text-slate-400 font-mono pt-1">
+                  <div className="grid grid-cols-2 sm:grid-cols-3 gap-1.5 text-[11px] text-[#64748B] font-mono pt-1">
                     {analysisSteps.map((step, idx) => (
                       <div 
                         key={idx}
                         className={`flex items-center gap-1.5 ${
-                          idx < currentStepIndex ? 'text-emerald-400' :
-                          idx === currentStepIndex ? 'text-blue-300 font-bold' :
-                          'text-slate-600'
+                          idx < currentStepIndex ? 'text-[#16805C]' :
+                          idx === currentStepIndex ? 'text-[#087E8B] font-bold' :
+                          'text-[#94A3B8]'
                         }`}
                       >
                         {idx < currentStepIndex ? '✓' : idx === currentStepIndex ? '●' : '○'} {step.replace('...', '')}
@@ -276,33 +270,33 @@ export const DataIngestionModal: React.FC = () => {
           ) : (
             /* Analysis Complete State */
             <div className="py-6 text-center space-y-5 animate-in zoom-in-95 duration-150">
-              <div className="w-12 h-12 mx-auto rounded-full bg-emerald-500/20 border border-emerald-500/50 flex items-center justify-center text-emerald-400">
+              <div className="w-12 h-12 mx-auto rounded-full bg-[#E8F7F0] border border-[#A3E0C8] flex items-center justify-center text-[#16805C]">
                 <CheckCircle2 className="w-6 h-6" />
               </div>
 
               <div className="space-y-1">
-                <h4 className="text-lg font-bold text-white">Analysis Complete</h4>
-                <p className="text-xs text-slate-400">
+                <h4 className="text-lg font-bold text-[#12304A]">Analysis Complete</h4>
+                <p className="text-xs text-[#64748B]">
                   Data records processed and merged into the case knowledge graph.
                 </p>
               </div>
 
-              <div className="p-4 rounded-lg bg-[#090e1a] border border-slate-800 max-w-md mx-auto grid grid-cols-2 gap-3 text-xs font-mono text-left">
-                <div className="p-2 rounded bg-slate-900 border border-slate-800">
-                  <span className="text-slate-400 text-[10px] block uppercase font-sans">Records Processed</span>
-                  <strong className="text-base font-bold text-white">1,247</strong>
+              <div className="p-4 rounded-md bg-[#F8FAFC] border border-[#E2E8F0] max-w-md mx-auto grid grid-cols-2 gap-3 text-xs font-mono text-left">
+                <div className="p-2 rounded bg-[#FFFFFF] border border-[#CBD5E1]">
+                  <span className="text-[#64748B] text-[10px] block uppercase font-sans">Records Processed</span>
+                  <strong className="text-base font-bold text-[#12304A]">1,247</strong>
                 </div>
-                <div className="p-2 rounded bg-slate-900 border border-slate-800">
-                  <span className="text-slate-400 text-[10px] block uppercase font-sans">Entities Detected</span>
-                  <strong className="text-base font-bold text-blue-400">186</strong>
+                <div className="p-2 rounded bg-[#FFFFFF] border border-[#CBD5E1]">
+                  <span className="text-[#64748B] text-[10px] block uppercase font-sans">Entities Detected</span>
+                  <strong className="text-base font-bold text-[#087E8B]">186</strong>
                 </div>
-                <div className="p-2 rounded bg-slate-900 border border-slate-800">
-                  <span className="text-slate-400 text-[10px] block uppercase font-sans">Relationships Created</span>
-                  <strong className="text-base font-bold text-emerald-400">423</strong>
+                <div className="p-2 rounded bg-[#FFFFFF] border border-[#CBD5E1]">
+                  <span className="text-[#64748B] text-[10px] block uppercase font-sans">Relationships Created</span>
+                  <strong className="text-base font-bold text-[#16805C]">423</strong>
                 </div>
-                <div className="p-2 rounded bg-slate-900 border border-slate-800">
-                  <span className="text-slate-400 text-[10px] block uppercase font-sans">Patterns Detected</span>
-                  <strong className="text-base font-bold text-amber-400">6 Leads</strong>
+                <div className="p-2 rounded bg-[#FFFFFF] border border-[#CBD5E1]">
+                  <span className="text-[#64748B] text-[10px] block uppercase font-sans">Patterns Detected</span>
+                  <strong className="text-base font-bold text-[#B7791F]">6 Leads</strong>
                 </div>
               </div>
             </div>
@@ -310,10 +304,10 @@ export const DataIngestionModal: React.FC = () => {
         </div>
 
         {/* Footer Actions */}
-        <div className="p-4 border-t border-slate-800 bg-[#090e1a] flex items-center justify-between">
+        <div className="p-4 border-t border-[#E2E8F0] bg-[#F8FAFC] flex items-center justify-between">
           <button
             onClick={() => setIsIngestionModalOpen(false)}
-            className="px-4 py-2 rounded-lg text-xs font-semibold text-slate-400 hover:text-white transition-colors"
+            className="px-4 py-2 rounded-md text-xs font-semibold text-[#64748B] hover:text-[#12304A] transition-colors"
           >
             Close
           </button>
@@ -322,7 +316,7 @@ export const DataIngestionModal: React.FC = () => {
             <button
               onClick={handleRunAnalysis}
               disabled={isAnalyzing}
-              className="flex items-center gap-2 px-5 py-2 rounded-lg bg-blue-600 hover:bg-blue-500 text-white text-xs font-semibold tracking-wide transition-colors shadow-sm disabled:opacity-50"
+              className="flex items-center gap-2 px-5 py-2 rounded-md bg-[#087E8B] hover:bg-[#06636E] text-white text-xs font-semibold tracking-wide transition-colors shadow-sm disabled:opacity-50"
             >
               <Cpu className="w-4 h-4" />
               <span>{isAnalyzing ? 'Processing...' : 'Run Analysis'}</span>
@@ -330,7 +324,7 @@ export const DataIngestionModal: React.FC = () => {
           ) : (
             <button
               onClick={handleExploreGraph}
-              className="flex items-center gap-1.5 px-5 py-2 rounded-lg bg-blue-600 hover:bg-blue-500 text-white text-xs font-semibold tracking-wide transition-colors shadow-sm"
+              className="flex items-center gap-1.5 px-5 py-2 rounded-md bg-[#087E8B] hover:bg-[#06636E] text-white text-xs font-semibold tracking-wide transition-colors shadow-sm"
             >
               <span>View Network Graph</span>
               <ArrowRight className="w-4 h-4" />
@@ -341,4 +335,3 @@ export const DataIngestionModal: React.FC = () => {
     </div>
   );
 };
-

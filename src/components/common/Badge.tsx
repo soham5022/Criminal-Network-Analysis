@@ -3,7 +3,7 @@ import { EntityType, AnalyticalPriority, CasePriority, CaseStatus, AlertStatus }
 
 interface BadgeProps {
   children: React.ReactNode;
-  variant?: 'default' | 'critical' | 'high' | 'medium' | 'low' | 'success' | 'indigo' | 'cyan' | 'purple';
+  variant?: 'default' | 'critical' | 'high' | 'medium' | 'low' | 'success' | 'indigo' | 'cyan' | 'purple' | 'teal';
   size?: 'sm' | 'md' | 'lg';
   className?: string;
   dot?: boolean;
@@ -17,37 +17,39 @@ export const Badge: React.FC<BadgeProps> = ({
   dot = false
 }) => {
   const sizeClasses = {
-    sm: 'text-xs px-2 py-0.5',
-    md: 'text-xs px-2.5 py-1',
-    lg: 'text-sm px-3 py-1.5'
+    sm: 'text-[10px] px-2 py-0.5 font-bold',
+    md: 'text-xs px-2.5 py-1 font-semibold',
+    lg: 'text-sm px-3 py-1.5 font-semibold'
   };
 
   const variantClasses = {
-    default: 'bg-slate-800/80 text-slate-300 border border-slate-700/60',
-    critical: 'bg-rose-500/15 text-rose-300 border border-rose-500/30',
-    high: 'bg-amber-500/15 text-amber-300 border border-amber-500/30',
-    medium: 'bg-cyan-500/15 text-cyan-300 border border-cyan-500/30',
-    low: 'bg-slate-700/40 text-slate-300 border border-slate-600/30',
-    success: 'bg-emerald-500/15 text-emerald-300 border border-emerald-500/30',
-    indigo: 'bg-indigo-500/15 text-indigo-300 border border-indigo-500/30',
-    cyan: 'bg-cyan-500/15 text-cyan-300 border border-cyan-500/30',
-    purple: 'bg-purple-500/15 text-purple-300 border border-purple-500/30'
+    default: 'bg-[#F1F5F9] text-[#475569] border border-[#E2E8F0]',
+    critical: 'bg-[#FEE2E2] text-[#C24141] border border-[#FCA5A5]',
+    high: 'bg-[#FEF3C7] text-[#B7791F] border border-[#FCD34D]',
+    medium: 'bg-[#EBF8FF] text-[#2563A6] border border-[#BEE3F8]',
+    low: 'bg-[#F1F5F9] text-[#64748B] border border-[#E2E8F0]',
+    success: 'bg-[#E8F7F0] text-[#16805C] border border-[#A3E0C8]',
+    teal: 'bg-[#E6F4F5] text-[#087E8B] border border-[#A7DFE3]',
+    cyan: 'bg-[#E6F4F5] text-[#087E8B] border border-[#A7DFE3]',
+    indigo: 'bg-[#EEF2FF] text-[#4338CA] border border-[#C7D2FE]',
+    purple: 'bg-[#F3E8FF] text-[#7E22CE] border border-[#E9D5FF]'
   };
 
   const dotColorClasses = {
-    default: 'bg-slate-400',
-    critical: 'bg-rose-400 animate-pulse',
-    high: 'bg-amber-400',
-    medium: 'bg-cyan-400',
-    low: 'bg-slate-400',
-    success: 'bg-emerald-400',
-    indigo: 'bg-indigo-400',
-    cyan: 'bg-cyan-400',
-    purple: 'bg-purple-400'
+    default: 'bg-[#64748B]',
+    critical: 'bg-[#C24141]',
+    high: 'bg-[#B7791F]',
+    medium: 'bg-[#2563A6]',
+    low: 'bg-[#94A3B8]',
+    success: 'bg-[#16805C]',
+    teal: 'bg-[#087E8B]',
+    cyan: 'bg-[#087E8B]',
+    indigo: 'bg-[#4338CA]',
+    purple: 'bg-[#7E22CE]'
   };
 
   return (
-    <span className={`inline-flex items-center gap-1.5 font-medium rounded-full uppercase tracking-wider ${sizeClasses[size]} ${variantClasses[variant]} ${className}`}>
+    <span className={`inline-flex items-center gap-1.5 font-sans rounded-full uppercase tracking-wider ${sizeClasses[size]} ${variantClasses[variant]} ${className}`}>
       {dot && <span className={`w-1.5 h-1.5 rounded-full ${dotColorClasses[variant]}`} />}
       {children}
     </span>
@@ -55,8 +57,8 @@ export const Badge: React.FC<BadgeProps> = ({
 };
 
 export const EntityTypeBadge: React.FC<{ type: EntityType; size?: 'sm' | 'md' }> = ({ type, size = 'sm' }) => {
-  const mapping: Record<EntityType, { label: string; variant: 'cyan' | 'success' | 'high' | 'purple' | 'indigo' | 'critical' }> = {
-    PERSON: { label: 'Person', variant: 'cyan' },
+  const mapping: Record<EntityType, { label: string; variant: 'teal' | 'success' | 'high' | 'purple' | 'indigo' | 'critical' }> = {
+    PERSON: { label: 'Person', variant: 'teal' },
     PHONE: { label: 'Phone', variant: 'success' },
     ACCOUNT: { label: 'Account', variant: 'high' },
     LOCATION: { label: 'Location', variant: 'purple' },
@@ -90,8 +92,8 @@ export const PriorityBadge: React.FC<{ priority: AnalyticalPriority | CasePriori
 };
 
 export const StatusBadge: React.FC<{ status: CaseStatus | AlertStatus; size?: 'sm' | 'md' }> = ({ status, size = 'sm' }) => {
-  const variantMap: Record<string, 'cyan' | 'critical' | 'high' | 'low' | 'success' | 'default'> = {
-    ACTIVE: 'cyan',
+  const variantMap: Record<string, 'teal' | 'critical' | 'high' | 'low' | 'success' | 'default'> = {
+    ACTIVE: 'teal',
     CRITICAL_LEAD: 'critical',
     UNDER_REVIEW: 'high',
     CLOSED: 'low',

@@ -4,28 +4,14 @@ import {
   Printer, 
   Check, 
   X, 
-  Sparkles, 
-  CheckCircle2, 
   ArrowLeft, 
-  Calendar, 
-  Clock, 
-  Download,
-  Plus,
-  ShieldCheck,
-  Building2,
-  Users,
-  UserCheck,
-  FileSpreadsheet,
-  AlertTriangle,
-  ClipboardList,
-  Eye,
-  Loader2,
-  ExternalLink
+  Download, 
+  Plus, 
+  Eye, 
+  Loader2 
 } from 'lucide-react';
 import { useInvestigation } from '../../context/InvestigationContext';
 import { reportService, CaseReport, ReportConfig } from '../../services/reportService';
-import { caseService } from '../../services/caseService';
-import { Case } from '../../types';
 
 export const ReportGenerator: React.FC = () => {
   const { activeCaseId, openEntityProfile } = useInvestigation();
@@ -139,15 +125,10 @@ export const ReportGenerator: React.FC = () => {
       content += `3. REGISTERED DIGITAL EVIDENCE\n`;
       content += `==================================================\n`;
       report.evidence.forEach(ev => {
-        content += `- [${ev.id}] ${ev.title} (${ev.policeStation}) | SHA-256: ${ev.digitalDocument?.integrityHash || (ev.hasDigitalCopy ? 'DIGITAL_ATTACHED' : 'PHYSICAL_REGISTERED')}\n`;
+        content += `- Evidence: ${ev.title} (${ev.id}) | ${ev.policeStation}\n`;
       });
       content += `\n`;
     }
-
-    content += `==================================================\n`;
-    content += `DISCLAIMER\n`;
-    content += `==================================================\n`;
-    content += `${report.disclaimer}\n`;
 
     const blob = new Blob([content], { type: 'text/plain;charset=utf-8' });
     const url = URL.createObjectURL(blob);
@@ -160,81 +141,89 @@ export const ReportGenerator: React.FC = () => {
     URL.revokeObjectURL(url);
   };
 
-  // VIEW MODE 1: REPORT DOSSIER PREVIEW
+  const handlePrint = () => {
+    window.print();
+  };
+
+  // VIEW MODE 1: REPORT READER VIEW (Legal Document Paper Presentation)
   if (viewMode === 'report' && activeReport) {
     return (
-      <div className="max-w-5xl mx-auto space-y-6 select-none animate-in fade-in py-2">
+      <div className="max-w-4xl mx-auto py-2 space-y-4 select-none animate-in fade-in">
         
-        {/* Top Action Bar */}
-        <div className="flex items-center justify-between print:hidden">
+        {/* Action Header Bar */}
+        <div className="bg-[#FFFFFF] p-4 border border-[#E2E8F0] rounded-lg shadow-sm flex items-center justify-between">
           <button
             onClick={() => setViewMode('list')}
-            className="flex items-center gap-1.5 text-xs font-semibold text-slate-400 hover:text-white transition-colors"
+            className="flex items-center gap-1.5 text-xs font-semibold text-[#475569] hover:text-[#12304A] transition-colors"
           >
-            <ArrowLeft className="w-3.5 h-3.5" />
-            <span>Back to Reports Directory ({reports.length})</span>
+            <ArrowLeft className="w-4 h-4" />
+            <span>Back to Reports List</span>
           </button>
 
           <div className="flex items-center gap-2">
             <button
-              onClick={() => setShowGenerateModal(true)}
-              className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-blue-600 hover:bg-blue-500 text-white text-xs font-bold transition-all shadow-md"
-            >
-              <Plus className="w-3.5 h-3.5" />
-              <span>Generate New Version</span>
-            </button>
-            <button
               onClick={() => handleDownload(activeReport)}
-              className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-semibold border border-slate-700 transition-colors"
+              className="flex items-center gap-1.5 px-3 py-1.5 rounded-md bg-[#FFFFFF] hover:bg-[#F8FAFC] border border-[#CBD5E1] text-[#12304A] text-xs font-semibold transition-colors shadow-sm"
             >
-              <Download className="w-3.5 h-3.5" />
-              <span>Download (.txt)</span>
+              <Download className="w-3.5 h-3.5 text-[#087E8B]" />
+              <span>Export Text</span>
             </button>
             <button
-              onClick={() => window.print()}
-              className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-semibold border border-slate-700 transition-colors"
+              onClick={handlePrint}
+              className="flex items-center gap-1.5 px-3.5 py-1.5 rounded-md bg-[#087E8B] hover:bg-[#06636E] text-white text-xs font-semibold transition-colors shadow-sm"
             >
               <Printer className="w-3.5 h-3.5" />
-              <span>Print</span>
+              <span>Print Official Report</span>
             </button>
           </div>
         </div>
 
-        {/* Formal Printable Intelligence Dossier */}
-        <div className="intel-card p-8 border border-slate-800 bg-[#090f1d] shadow-2xl space-y-7 print:p-0 print:border-none print:bg-white print:text-black">
+        {/* Paper Document Container */}
+        <div className="bg-[#FFFFFF] p-8 sm:p-12 border border-[#CBD5E1] rounded-lg shadow-sm space-y-8 text-[#17212B]">
           
-          {/* Official Document Header */}
-          <div className="border-b border-slate-800 pb-5 flex flex-col sm:flex-row sm:items-start justify-between gap-4">
-            <div className="space-y-1">
-              <span className="px-2.5 py-0.5 rounded bg-blue-500/20 text-blue-300 border border-blue-500/30 text-[10px] font-bold uppercase tracking-wider">
-                CONFIDENTIAL // LAW ENFORCEMENT INTELLIGENCE
-              </span>
-              <div className="font-mono text-sm font-bold text-blue-400">TraceNet</div>
-              <h2 className="text-xl font-bold text-white tracking-tight">
-                {activeReport.title}
-              </h2>
-              <div className="text-xs text-slate-400 font-semibold uppercase tracking-wider">
-                {activeReport.reportType} • Version {activeReport.version}.0
-              </div>
-              <p className="text-xs text-slate-300 pt-1">
-                CASE IDENTIFIER: <strong className="text-blue-400 font-mono">{activeReport.caseId}</strong>
-              </p>
+          {/* Header Banner */}
+          <div className="border-b-2 border-[#12304A] pb-4 space-y-2 text-center">
+            <div className="text-[11px] font-bold tracking-widest text-[#087E8B] uppercase">
+              CONFIDENTIAL // LAW ENFORCEMENT INVESTIGATION DOSSIER
             </div>
+            <h1 className="text-xl sm:text-2xl font-bold text-[#12304A]">
+              {activeReport.title}
+            </h1>
+            <div className="flex items-center justify-center gap-4 text-xs text-[#64748B] font-mono pt-1">
+              <span>REPORT REF: {activeReport.id}</span>
+              <span>•</span>
+              <span>CASE: {activeReport.caseId}</span>
+              <span>•</span>
+              <span>VERSION: {activeReport.version}.0</span>
+            </div>
+          </div>
 
-            <div className="text-right text-xs space-y-1 text-slate-400 font-mono">
-              <div>Report ID: <strong className="text-white">{activeReport.id}</strong></div>
-              <div>Investigator: <strong className="text-white">{activeReport.createdBy}</strong></div>
-              <div>Badge: <strong className="text-slate-300">{activeReport.badgeNumber}</strong></div>
-              <div>Generated: {activeReport.createdDate} • {activeReport.createdTime}</div>
+          {/* Metadata Grid */}
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 p-3.5 rounded-md bg-[#F8FAFC] border border-[#E2E8F0] text-xs">
+            <div>
+              <span className="text-[10px] text-[#64748B] uppercase font-bold block">Case Name</span>
+              <span className="font-semibold text-[#12304A]">{activeReport.caseTitle}</span>
+            </div>
+            <div>
+              <span className="text-[10px] text-[#64748B] uppercase font-bold block">Reporting Officer</span>
+              <span className="font-semibold text-[#12304A]">{activeReport.createdBy}</span>
+            </div>
+            <div>
+              <span className="text-[10px] text-[#64748B] uppercase font-bold block">Generated Date</span>
+              <span className="font-mono text-[#17212B]">{activeReport.createdDate}</span>
+            </div>
+            <div>
+              <span className="text-[10px] text-[#64748B] uppercase font-bold block">Status</span>
+              <span className="font-bold text-[#16805C]">{activeReport.status}</span>
             </div>
           </div>
 
           {/* Executive Summary */}
           <div className="space-y-2">
-            <h4 className="text-xs font-bold uppercase tracking-wider text-blue-400 border-b border-slate-800 pb-1">
+            <h3 className="text-xs font-bold uppercase tracking-wider text-[#12304A] border-b border-[#E2E8F0] pb-1">
               Executive Summary
-            </h4>
-            <p className="text-xs text-slate-200 leading-relaxed font-sans bg-slate-950 p-4 rounded-lg border border-slate-800/80">
+            </h3>
+            <p className="text-xs text-[#334155] leading-relaxed font-sans bg-[#F8FAFC] p-4 rounded-md border border-[#E2E8F0]">
               {activeReport.executiveSummary}
             </p>
           </div>
@@ -242,20 +231,20 @@ export const ReportGenerator: React.FC = () => {
           {/* Section 1: Incident Summary */}
           {activeReport.incident && (
             <div className="space-y-2">
-              <h4 className="text-xs font-bold uppercase tracking-wider text-blue-400 border-b border-slate-800 pb-1">
+              <h3 className="text-xs font-bold uppercase tracking-wider text-[#12304A] border-b border-[#E2E8F0] pb-1">
                 1. Incident Dossier & Statutory Filings
-              </h4>
+              </h3>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
-                <div className="p-3 rounded-lg bg-[#090e1a] border border-slate-800 space-y-1">
-                  <span className="text-[10px] text-slate-500 uppercase font-bold block">FIR Number & Station</span>
-                  <span className="text-white font-medium">{activeReport.incident.firNumber} ({activeReport.incident.policeStation})</span>
+                <div className="p-3 rounded-md bg-[#F8FAFC] border border-[#E2E8F0] space-y-1">
+                  <span className="text-[10px] text-[#64748B] uppercase font-bold block">FIR Number & Station</span>
+                  <span className="text-[#12304A] font-semibold">{activeReport.incident.firNumber} ({activeReport.incident.policeStation})</span>
                 </div>
-                <div className="p-3 rounded-lg bg-[#090e1a] border border-slate-800 space-y-1">
-                  <span className="text-[10px] text-slate-500 uppercase font-bold block">Incident Location & Date</span>
-                  <span className="text-white font-medium">{activeReport.incident.location} • {activeReport.incident.date}</span>
+                <div className="p-3 rounded-md bg-[#F8FAFC] border border-[#E2E8F0] space-y-1">
+                  <span className="text-[10px] text-[#64748B] uppercase font-bold block">Incident Location & Date</span>
+                  <span className="text-[#12304A] font-semibold">{activeReport.incident.location} • {activeReport.incident.date}</span>
                 </div>
               </div>
-              <p className="text-xs text-slate-300 leading-relaxed font-sans bg-[#090e1a] p-3 rounded-lg border border-slate-800">
+              <p className="text-xs text-[#334155] leading-relaxed font-sans bg-[#F8FAFC] p-3 rounded-md border border-[#E2E8F0]">
                 {activeReport.incident.description}
               </p>
             </div>
@@ -264,20 +253,20 @@ export const ReportGenerator: React.FC = () => {
           {/* Section 2: Case Participants */}
           {activeReport.participants.length > 0 && (
             <div className="space-y-2">
-              <h4 className="text-xs font-bold uppercase tracking-wider text-blue-400 border-b border-slate-800 pb-1">
-                2. Case Participants Directory (Neutral Classifications)
-              </h4>
+              <h3 className="text-xs font-bold uppercase tracking-wider text-[#12304A] border-b border-[#E2E8F0] pb-1">
+                2. Case Participants Directory
+              </h3>
               <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-2.5 text-xs">
                 {activeReport.participants.map(p => (
-                  <div key={p.id} className="p-3 rounded-lg bg-[#090e1a] border border-slate-800 space-y-1">
+                  <div key={p.id} className="p-3 rounded-md bg-[#F8FAFC] border border-[#E2E8F0] space-y-1">
                     <div className="flex items-center justify-between">
-                      <span className="font-bold text-white">{p.name}</span>
-                      <span className="text-[9px] font-mono font-bold px-1.5 py-0.2 rounded bg-slate-900 text-slate-300 border border-slate-700">
+                      <span className="font-bold text-[#12304A]">{p.name}</span>
+                      <span className="text-[9px] font-mono font-bold px-1.5 py-0.2 rounded bg-[#FFFFFF] text-[#475569] border border-[#CBD5E1]">
                         {p.role.replace(/_/g, ' ')}
                       </span>
                     </div>
-                    <div className="text-[11px] text-slate-400">{p.roleDescription}</div>
-                    <div className="text-[10px] text-slate-500 font-mono truncate">{p.relevance}</div>
+                    <div className="text-[11px] text-[#64748B]">{p.roleDescription}</div>
+                    <div className="text-[10px] text-[#087E8B] font-mono truncate">{p.relevance}</div>
                   </div>
                 ))}
               </div>
@@ -287,23 +276,23 @@ export const ReportGenerator: React.FC = () => {
           {/* Section 3: Witnesses & Statements */}
           {activeReport.witnesses.length > 0 && (
             <div className="space-y-2">
-              <h4 className="text-xs font-bold uppercase tracking-wider text-blue-400 border-b border-slate-800 pb-1">
+              <h3 className="text-xs font-bold uppercase tracking-wider text-[#12304A] border-b border-[#E2E8F0] pb-1">
                 3. Recorded Witness Depositions (Section 161 CrPC)
-              </h4>
+              </h3>
               <div className="space-y-2 text-xs">
                 {activeReport.witnesses.map(w => (
-                  <div key={w.id} className="p-3.5 rounded-lg bg-[#090e1a] border border-slate-800 space-y-2">
+                  <div key={w.id} className="p-3.5 rounded-md bg-[#F8FAFC] border border-[#E2E8F0] space-y-2">
                     <div className="flex items-center justify-between">
-                      <span className="font-bold text-white">{w.name} ({w.id})</span>
-                      <span className="text-slate-400 font-mono text-[10px]">{w.relationshipToIncident}</span>
+                      <span className="font-bold text-[#12304A]">{w.name} ({w.id})</span>
+                      <span className="text-[#64748B] font-mono text-[10px]">{w.relationshipToIncident}</span>
                     </div>
                     {w.statements.map(st => (
-                      <div key={st.id} className="p-2.5 rounded bg-slate-950 border border-slate-800 text-[11px] space-y-1">
-                        <div className="flex items-center justify-between text-slate-400 font-mono text-[10px]">
+                      <div key={st.id} className="p-2.5 rounded bg-[#FFFFFF] border border-[#CBD5E1] text-[11px] space-y-1 shadow-sm">
+                        <div className="flex items-center justify-between text-[#64748B] font-mono text-[10px]">
                           <span>Statement #{st.statementNumber} ({st.type})</span>
                           <span>{st.date} • {st.time}</span>
                         </div>
-                        <p className="text-slate-200 font-sans">{st.summary}</p>
+                        <p className="text-[#17212B] font-sans">{st.summary}</p>
                       </div>
                     ))}
                   </div>
@@ -315,18 +304,18 @@ export const ReportGenerator: React.FC = () => {
           {/* Section 4: Registered Evidence */}
           {activeReport.evidence.length > 0 && (
             <div className="space-y-2">
-              <h4 className="text-xs font-bold uppercase tracking-wider text-blue-400 border-b border-slate-800 pb-1">
+              <h3 className="text-xs font-bold uppercase tracking-wider text-[#12304A] border-b border-[#E2E8F0] pb-1">
                 4. Registered Digital Evidence & Bitwise Integrity
-              </h4>
+              </h3>
               <div className="space-y-1.5 text-xs">
                 {activeReport.evidence.map(ev => (
-                  <div key={ev.id} className="p-2.5 rounded bg-[#090e1a] border border-slate-800 flex items-center justify-between">
+                  <div key={ev.id} className="p-2.5 rounded bg-[#F8FAFC] border border-[#E2E8F0] flex items-center justify-between">
                     <div>
-                      <span className="font-mono text-blue-400 font-bold">{ev.id}: </span>
-                      <span className="text-white font-medium">{ev.title}</span>
-                      <span className="text-slate-500 font-mono text-[10px] ml-2">({ev.policeStation})</span>
+                      <span className="font-mono text-[#087E8B] font-bold">{ev.id}: </span>
+                      <span className="text-[#12304A] font-semibold">{ev.title}</span>
+                      <span className="text-[#64748B] font-mono text-[10px] ml-2">({ev.policeStation})</span>
                     </div>
-                    <span className="text-emerald-400 font-mono text-[11px] shrink-0">
+                    <span className="text-[#16805C] font-mono text-[11px] shrink-0 font-semibold">
                       {ev.hasDigitalCopy ? 'SHA-256 Verified' : 'Registered in Ledger'}
                     </span>
                   </div>
@@ -335,48 +324,12 @@ export const ReportGenerator: React.FC = () => {
             </div>
           )}
 
-          {/* Section 5: Network Analytical Leads */}
-          <div className="space-y-2">
-            <h4 className="text-xs font-bold uppercase tracking-wider text-blue-400 border-b border-slate-800 pb-1">
-              5. Network Topology & Graph Analytical Leads
-            </h4>
-            <div className="space-y-2 text-xs">
-              {activeReport.networkSummary.bridgeLeads.map((lead, idx) => (
-                <div key={idx} className="p-2.5 rounded bg-[#090e1a] border border-slate-800 flex items-center gap-2">
-                  <Sparkles className="w-3.5 h-3.5 text-amber-400 shrink-0" />
-                  <span className="text-slate-200 font-sans">{lead}</span>
-                </div>
-              ))}
-            </div>
-          </div>
-
-          {/* Section 6: Officer Field Observations */}
-          {activeReport.observations.length > 0 && (
-            <div className="space-y-2">
-              <h4 className="text-xs font-bold uppercase tracking-wider text-blue-400 border-b border-slate-800 pb-1">
-                6. Officer Field Observations (Human Verified)
-              </h4>
-              <div className="space-y-2 text-xs">
-                {activeReport.observations.map(obs => (
-                  <div key={obs.id} className="p-3 rounded bg-[#090e1a] border border-slate-800 space-y-1">
-                    <div className="flex items-center justify-between text-[10px] text-slate-400 font-mono">
-                      <span>{obs.officer} ({obs.badge})</span>
-                      <span>{obs.date} • {obs.time}</span>
-                    </div>
-                    <p className="text-slate-200 font-sans">{obs.observation}</p>
-                  </div>
-                ))}
-              </div>
-            </div>
-          )}
-
           {/* Statutory Disclaimer */}
-          <div className="pt-4 border-t border-slate-800 text-[11px] text-slate-400 italic bg-slate-950 p-4 rounded-lg border border-slate-800">
+          <div className="pt-4 border-t border-[#E2E8F0] text-[11px] text-[#64748B] italic bg-[#F8FAFC] p-4 rounded-md border border-[#E2E8F0]">
             <strong>STATUTORY NOTICE:</strong> {activeReport.disclaimer}
           </div>
 
         </div>
-
       </div>
     );
   }
@@ -386,38 +339,38 @@ export const ReportGenerator: React.FC = () => {
     <div className="max-w-6xl mx-auto py-1 space-y-5 select-none animate-in fade-in">
       
       {/* Header Bar */}
-      <div className="intel-card p-5 border border-slate-800 rounded-xl bg-[#0d1527] flex flex-col sm:flex-row sm:items-center justify-between gap-4 shadow-xl">
+      <div className="bg-[#FFFFFF] p-5 border border-[#E2E8F0] rounded-lg shadow-sm flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div className="space-y-0.5">
           <div className="flex items-center gap-2">
-            <span className="font-mono text-xs font-bold text-blue-400">{activeCaseId}</span>
-            <span className="text-slate-600">•</span>
-            <span className="text-[10px] font-mono font-bold uppercase tracking-wider text-slate-400">
+            <span className="font-mono text-xs font-bold text-[#087E8B]">{activeCaseId}</span>
+            <span className="text-[#CBD5E1]">•</span>
+            <span className="text-[10px] font-bold uppercase tracking-wider text-[#64748B]">
               INTELLIGENCE BRIEFINGS
             </span>
           </div>
-          <h1 className="text-xl font-bold text-white tracking-tight">
+          <h1 className="text-xl font-bold text-[#12304A] tracking-tight">
             Case Intelligence Reports & Briefings ({reports.length})
           </h1>
-          <p className="text-xs text-slate-400">
+          <p className="text-xs text-[#64748B]">
             Formally compiled investigation dossiers referencing all case records, witness statements, and registered evidence.
           </p>
         </div>
 
         <button
           onClick={() => setShowGenerateModal(true)}
-          className="flex items-center gap-1.5 px-4 py-2 rounded-lg bg-blue-600 hover:bg-blue-500 text-white text-xs font-bold transition-all shadow-md shrink-0"
+          className="flex items-center gap-1.5 px-4 py-2 rounded-md bg-[#087E8B] hover:bg-[#06636E] text-white text-xs font-bold transition-all shadow-sm shrink-0"
         >
           <Plus className="w-4 h-4" />
           <span>Generate Case Report</span>
         </button>
       </div>
 
-      {/* Reports Cards / Table */}
+      {/* Reports Cards */}
       {reports.length === 0 ? (
-        <div className="intel-card p-12 border border-slate-800 rounded-xl bg-[#0c1322] text-center space-y-2">
-          <FileText className="w-8 h-8 text-slate-600 mx-auto" />
-          <h3 className="text-sm font-bold text-white">No Reports Generated</h3>
-          <p className="text-xs text-slate-400 max-w-md mx-auto">
+        <div className="bg-[#FFFFFF] p-12 border border-[#E2E8F0] rounded-lg text-center space-y-2 shadow-sm">
+          <FileText className="w-8 h-8 text-[#94A3B8] mx-auto" />
+          <h3 className="text-sm font-bold text-[#12304A]">No Reports Generated</h3>
+          <p className="text-xs text-[#64748B] max-w-md mx-auto">
             No intelligence briefings have been compiled for {activeCaseId} yet.
           </p>
         </div>
@@ -426,25 +379,25 @@ export const ReportGenerator: React.FC = () => {
           {reports.map((rpt) => (
             <div
               key={rpt.id}
-              className="intel-card p-5 border border-slate-800 rounded-xl bg-[#0c1322] hover:border-slate-700 transition-all space-y-3.5 shadow-lg flex flex-col justify-between"
+              className="bg-[#FFFFFF] p-5 border border-[#E2E8F0] rounded-lg hover:border-[#087E8B] transition-all space-y-3.5 shadow-sm flex flex-col justify-between"
             >
               <div className="space-y-2">
                 <div className="flex items-center justify-between">
-                  <span className="font-mono text-xs font-bold text-blue-400">{rpt.id}</span>
-                  <span className="px-2 py-0.5 rounded text-[10px] font-mono font-bold bg-emerald-500/15 text-emerald-300 border border-emerald-500/30">
+                  <span className="font-mono text-xs font-bold text-[#087E8B]">{rpt.id}</span>
+                  <span className="px-2 py-0.5 rounded text-[10px] font-mono font-bold bg-[#E8F7F0] text-[#16805C] border border-[#A3E0C8]">
                     Version {rpt.version}.0 • {rpt.status}
                   </span>
                 </div>
 
-                <h3 className="text-sm font-bold text-white">{rpt.title}</h3>
-                <div className="text-xs text-slate-400">{rpt.reportType}</div>
-                <p className="text-xs text-slate-300 line-clamp-2 leading-relaxed font-sans">
+                <h3 className="text-sm font-bold text-[#12304A]">{rpt.title}</h3>
+                <div className="text-xs text-[#64748B]">{rpt.reportType}</div>
+                <p className="text-xs text-[#475569] line-clamp-2 leading-relaxed font-sans">
                   {rpt.executiveSummary}
                 </p>
               </div>
 
-              <div className="pt-3 border-t border-slate-800 flex items-center justify-between text-xs">
-                <div className="text-[11px] text-slate-500 font-mono">
+              <div className="pt-3 border-t border-[#E2E8F0] flex items-center justify-between text-xs">
+                <div className="text-[11px] text-[#64748B] font-mono">
                   {rpt.createdDate} • {rpt.createdBy}
                 </div>
 
@@ -454,14 +407,14 @@ export const ReportGenerator: React.FC = () => {
                       setActiveReport(rpt);
                       setViewMode('report');
                     }}
-                    className="px-3 py-1.5 rounded-lg bg-blue-600 hover:bg-blue-500 text-white font-bold text-xs flex items-center gap-1 transition-colors"
+                    className="px-3 py-1.5 rounded-md bg-[#087E8B] hover:bg-[#06636E] text-white font-bold text-xs flex items-center gap-1 transition-colors shadow-sm"
                   >
-                    <Eye className="w-3 h-3" />
+                    <Eye className="w-3.5 h-3.5" />
                     <span>View Dossier</span>
                   </button>
                   <button
                     onClick={() => handleDownload(rpt)}
-                    className="p-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white border border-slate-700 transition-colors"
+                    className="p-1.5 rounded-md bg-[#FFFFFF] hover:bg-[#F8FAFC] text-[#475569] hover:text-[#12304A] border border-[#CBD5E1] transition-colors shadow-sm"
                     title="Download Report"
                   >
                     <Download className="w-3.5 h-3.5" />
@@ -475,19 +428,19 @@ export const ReportGenerator: React.FC = () => {
 
       {/* Modal: Generate Case Report */}
       {showGenerateModal && (
-        <div className="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4 select-none animate-in fade-in">
+        <div className="fixed inset-0 z-50 bg-black/40 backdrop-blur-sm flex items-center justify-center p-4 select-none animate-in fade-in">
           <div 
-            className="w-full max-w-lg intel-card rounded-xl border border-slate-700 bg-[#0c1322] shadow-2xl p-5 space-y-4"
+            className="w-full max-w-lg bg-[#FFFFFF] rounded-lg border border-[#CBD5E1] shadow-2xl p-5 space-y-4"
             onClick={(e) => e.stopPropagation()}
           >
-            <div className="flex items-center justify-between border-b border-slate-800 pb-3">
+            <div className="flex items-center justify-between border-b border-[#E2E8F0] pb-3">
               <div>
-                <span className="font-mono text-xs font-bold text-blue-400">{activeCaseId}</span>
-                <h3 className="font-bold text-sm text-white">Generate Official Case Report</h3>
+                <span className="font-mono text-xs font-bold text-[#087E8B]">{activeCaseId}</span>
+                <h3 className="font-bold text-sm text-[#12304A]">Generate Official Case Report</h3>
               </div>
               <button 
                 onClick={() => setShowGenerateModal(false)}
-                className="text-slate-400 hover:text-white"
+                className="text-[#64748B] hover:text-[#12304A]"
               >
                 ✕
               </button>
@@ -495,30 +448,30 @@ export const ReportGenerator: React.FC = () => {
 
             {isGenerating ? (
               <div className="py-8 text-center space-y-3">
-                <Loader2 className="w-8 h-8 text-blue-400 animate-spin mx-auto" />
-                <div className="font-bold text-white text-sm">{generationStep}</div>
-                <div className="text-xs text-slate-400">Compiling multi-source investigation ledger...</div>
+                <Loader2 className="w-8 h-8 text-[#087E8B] animate-spin mx-auto" />
+                <div className="font-bold text-[#12304A] text-sm">{generationStep}</div>
+                <div className="text-xs text-[#64748B]">Compiling multi-source investigation ledger...</div>
               </div>
             ) : (
               <form onSubmit={handleGenerateSubmit} className="space-y-3.5 text-xs">
                 <div className="space-y-1">
-                  <label className="block text-[10px] uppercase font-bold text-slate-400">Report Title</label>
+                  <label className="block text-[10px] uppercase font-bold text-[#64748B]">Report Title</label>
                   <input
                     type="text"
                     required
                     placeholder="e.g. Operation Meridian Comprehensive Case Summary"
                     value={reportTitle}
                     onChange={(e) => setReportTitle(e.target.value)}
-                    className="w-full px-3 py-2 rounded-lg bg-slate-900 border border-slate-700 text-xs text-white focus:outline-none focus:border-blue-500"
+                    className="w-full px-3 py-2 rounded-md bg-[#FFFFFF] border border-[#CBD5E1] text-xs text-[#17212B] focus:outline-none focus:border-[#087E8B]"
                   />
                 </div>
 
                 <div className="space-y-1">
-                  <label className="block text-[10px] uppercase font-bold text-slate-400">Report Type</label>
+                  <label className="block text-[10px] uppercase font-bold text-[#64748B]">Report Type</label>
                   <select
                     value={reportType}
                     onChange={(e) => setReportType(e.target.value)}
-                    className="w-full px-3 py-2 rounded-lg bg-slate-900 border border-slate-700 text-xs text-white focus:outline-none focus:border-blue-500"
+                    className="w-full px-3 py-2 rounded-md bg-[#FFFFFF] border border-[#CBD5E1] text-xs text-[#17212B] focus:outline-none focus:border-[#087E8B]"
                   >
                     <option value="Comprehensive Investigation Summary">Comprehensive Investigation Summary</option>
                     <option value="Evidentiary Court Deposition Briefing">Evidentiary Court Deposition Briefing</option>
@@ -526,16 +479,16 @@ export const ReportGenerator: React.FC = () => {
                   </select>
                 </div>
 
-                <div className="space-y-2 pt-1 border-t border-slate-800">
-                  <span className="block text-[10px] uppercase font-bold text-slate-400">Include Sections:</span>
-                  <div className="grid grid-cols-2 gap-2 text-[11px] text-slate-300">
+                <div className="space-y-2 pt-1 border-t border-[#E2E8F0]">
+                  <span className="block text-[10px] uppercase font-bold text-[#64748B]">Include Sections:</span>
+                  <div className="grid grid-cols-2 gap-2 text-[11px] text-[#475569]">
                     {Object.entries(configOptions).map(([key, val]) => (
                       <label key={key} className="flex items-center gap-2 cursor-pointer">
                         <input
                           type="checkbox"
                           checked={val}
                           onChange={() => setConfigOptions(prev => ({ ...prev, [key]: !val }))}
-                          className="rounded bg-slate-900 border-slate-700 text-blue-600 focus:ring-0"
+                          className="rounded bg-[#FFFFFF] border-[#CBD5E1] text-[#087E8B] focus:ring-0"
                         />
                         <span>{key.replace('include', '')}</span>
                       </label>
@@ -543,17 +496,17 @@ export const ReportGenerator: React.FC = () => {
                   </div>
                 </div>
 
-                <div className="flex justify-end gap-2 pt-3 border-t border-slate-800">
+                <div className="flex justify-end gap-2 pt-3 border-t border-[#E2E8F0]">
                   <button
                     type="button"
                     onClick={() => setShowGenerateModal(false)}
-                    className="px-4 py-2 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs font-semibold"
+                    className="px-4 py-2 rounded-md bg-[#FFFFFF] hover:bg-[#F8FAFC] border border-[#CBD5E1] text-[#475569] text-xs font-semibold shadow-sm"
                   >
                     Cancel
                   </button>
                   <button
                     type="submit"
-                    className="px-4 py-2 rounded-lg bg-blue-600 hover:bg-blue-500 text-white text-xs font-bold shadow-md"
+                    className="px-4 py-2 rounded-md bg-[#087E8B] hover:bg-[#06636E] text-white text-xs font-bold shadow-sm"
                   >
                     Generate Report
                   </button>

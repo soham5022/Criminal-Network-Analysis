@@ -2,20 +2,11 @@ import React, { useState, useEffect } from 'react';
 import { 
   UserCheck, 
   Search, 
-  PlusCircle, 
   FileText, 
-  Phone, 
-  MapPin, 
-  Calendar, 
-  Clock, 
   ExternalLink, 
-  AlertTriangle, 
-  CheckCircle2, 
-  Columns, 
   Eye, 
-  ShieldCheck,
-  User,
-  Plus
+  User, 
+  Plus 
 } from 'lucide-react';
 import { 
   WitnessRecord, 
@@ -39,7 +30,6 @@ export const WitnessManagementTab: React.FC<WitnessManagementTabProps> = ({ case
   // Modals state
   const [selectedStatement, setSelectedStatement] = useState<WitnessStatement | null>(null);
   const [showAddStatementModal, setShowAddStatementModal] = useState<boolean>(false);
-  const [showAddWitnessModal, setShowAddWitnessModal] = useState<boolean>(false);
 
   // New statement form state
   const [newStatementType, setNewStatementType] = useState<'INITIAL_INTERVIEW' | 'SUPPLEMENTARY_STATEMENT'>('SUPPLEMENTARY_STATEMENT');
@@ -110,32 +100,32 @@ export const WitnessManagementTab: React.FC<WitnessManagementTabProps> = ({ case
   };
 
   return (
-    <div className="space-y-5 animate-in fade-in select-none">
+    <div className="space-y-5 animate-in fade-in select-none max-w-6xl">
       
       {/* 1. Header Bar */}
-      <div className="intel-card p-4 border border-slate-800 rounded-xl bg-[#0d1527] flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+      <div className="p-4 border border-[#E2E8F0] rounded-lg bg-[#FFFFFF] shadow-sm flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div className="space-y-0.5">
-          <div className="flex items-center gap-2 text-xs font-mono font-semibold text-blue-400">
+          <div className="flex items-center gap-2 text-xs font-semibold text-[#087E8B]">
             <UserCheck className="w-4 h-4" />
             <span>CASE WITNESS & STATEMENT REGISTRY</span>
           </div>
-          <h2 className="text-base sm:text-lg font-bold text-white tracking-tight">
+          <h2 className="text-base sm:text-lg font-bold text-[#12304A] tracking-tight">
             Witness Statements & Deposition Log ({witnesses.length} Registered)
           </h2>
-          <p className="text-xs text-slate-400">
-            Official records of witness testimonies, Section 161 CrPC depositions, and chronological statement comparison.
+          <p className="text-xs text-[#64748B]">
+            Official records of witness testimonies, Section 161 CrPC depositions, and statement repository.
           </p>
         </div>
 
         <div className="flex items-center gap-2">
           <div className="relative min-w-[200px]">
-            <Search className="w-3.5 h-3.5 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
+            <Search className="w-3.5 h-3.5 text-[#64748B] absolute left-3 top-1/2 -translate-y-1/2" />
             <input
               type="text"
               value={search}
               onChange={(e) => setSearch(e.target.value)}
               placeholder="Search witnesses, statements..."
-              className="w-full pl-8 pr-3 py-1.5 rounded-lg bg-slate-900 border border-slate-700 text-xs text-white placeholder-slate-400 focus:outline-none focus:border-blue-500 font-sans"
+              className="w-full pl-8 pr-3 py-1.5 rounded-md bg-[#FFFFFF] border border-[#CBD5E1] text-xs text-[#17212B] placeholder-[#94A3B8] focus:outline-none focus:border-[#087E8B]"
             />
           </div>
         </div>
@@ -143,10 +133,10 @@ export const WitnessManagementTab: React.FC<WitnessManagementTabProps> = ({ case
 
       {/* 2. Empty State */}
       {witnesses.length === 0 ? (
-        <div className="intel-card p-12 border border-slate-800 rounded-xl bg-[#0c1322] text-center space-y-2">
-          <UserCheck className="w-8 h-8 text-slate-600 mx-auto" />
-          <h3 className="text-sm font-bold text-white">No Witnesses Recorded</h3>
-          <p className="text-xs text-slate-400 max-w-md mx-auto">
+        <div className="p-12 border border-[#E2E8F0] rounded-lg bg-[#FFFFFF] text-center space-y-2 shadow-sm">
+          <UserCheck className="w-8 h-8 text-[#94A3B8] mx-auto" />
+          <h3 className="text-sm font-bold text-[#12304A]">No Witnesses Recorded</h3>
+          <p className="text-xs text-[#64748B] max-w-md mx-auto">
             No witness profiles or statements have been recorded for this case file yet.
           </p>
         </div>
@@ -156,7 +146,7 @@ export const WitnessManagementTab: React.FC<WitnessManagementTabProps> = ({ case
           
           {/* Left Column: Witness List */}
           <div className="lg:col-span-4 space-y-2.5">
-            <span className="text-[10px] font-bold uppercase tracking-wider text-slate-400 block px-1">
+            <span className="text-[10px] font-bold uppercase tracking-wider text-[#64748B] block px-1">
               Witnesses ({filteredWitnesses.length})
             </span>
             <div className="space-y-2">
@@ -166,25 +156,25 @@ export const WitnessManagementTab: React.FC<WitnessManagementTabProps> = ({ case
                   <div
                     key={w.id}
                     onClick={() => setSelectedWitness(w)}
-                    className={`p-3.5 rounded-xl border cursor-pointer transition-all ${
+                    className={`p-3.5 rounded-lg border cursor-pointer transition-all shadow-sm ${
                       isSelected
-                        ? 'bg-blue-950/30 border-blue-500/60 shadow-md shadow-blue-950/30'
-                        : 'bg-[#0c1322] hover:bg-slate-800/60 border-slate-800'
+                        ? 'bg-[#E6F4F5] border-[#A7DFE3]'
+                        : 'bg-[#FFFFFF] hover:bg-[#F8FAFC] border-[#E2E8F0]'
                     }`}
                   >
                     <div className="flex items-center justify-between">
-                      <span className="font-mono text-[10px] font-bold text-blue-400">{w.id}</span>
-                      <span className="px-2 py-0.5 rounded text-[9px] font-mono font-bold bg-emerald-500/15 text-emerald-300 border border-emerald-500/30">
+                      <span className="font-mono text-[10px] font-bold text-[#087E8B]">{w.id}</span>
+                      <span className="px-2 py-0.5 rounded text-[9px] font-mono font-bold bg-[#E8F7F0] text-[#16805C] border border-[#A3E0C8]">
                         {w.statements.length} {w.statements.length === 1 ? 'Statement' : 'Statements'}
                       </span>
                     </div>
 
-                    <div className="font-bold text-white text-xs mt-1">{w.name}</div>
-                    <div className="text-[11px] text-slate-400 truncate mt-0.5">
+                    <div className="font-bold text-[#12304A] text-xs mt-1">{w.name}</div>
+                    <div className="text-[11px] text-[#64748B] truncate mt-0.5">
                       {w.relationshipToIncident}
                     </div>
 
-                    <div className="pt-2 mt-2 border-t border-slate-800/80 flex items-center justify-between text-[10px] text-slate-500 font-mono">
+                    <div className="pt-2 mt-2 border-t border-[#E2E8F0] flex items-center justify-between text-[10px] text-[#64748B] font-mono">
                       <span>Interviewed: {w.interviewDate}</span>
                       <span>Age: {w.age}</span>
                     </div>
@@ -199,26 +189,26 @@ export const WitnessManagementTab: React.FC<WitnessManagementTabProps> = ({ case
             <div className="lg:col-span-8 space-y-4">
               
               {/* Profile Card */}
-              <div className="intel-card p-5 border border-slate-800 rounded-xl bg-[#0c1322] space-y-4 shadow-xl">
-                <div className="flex flex-wrap items-center justify-between gap-3 border-b border-slate-800 pb-3">
+              <div className="p-5 border border-[#E2E8F0] rounded-lg bg-[#FFFFFF] space-y-4 shadow-sm">
+                <div className="flex flex-wrap items-center justify-between gap-3 border-b border-[#E2E8F0] pb-3">
                   <div className="flex items-center gap-3">
-                    <div className="p-2.5 rounded-xl bg-slate-900 border border-slate-700 text-blue-400">
+                    <div className="p-2.5 rounded-md bg-[#F1F5F9] border border-[#CBD5E1] text-[#12304A]">
                       <User className="w-5 h-5" />
                     </div>
                     <div>
                       <div className="flex items-center gap-2">
-                        <span className="font-mono text-xs font-bold text-blue-400">{selectedWitness.id}</span>
-                        <span className="px-2 py-0.5 rounded text-[10px] font-bold uppercase bg-slate-900 text-slate-300 border border-slate-700">
+                        <span className="font-mono text-xs font-bold text-[#087E8B]">{selectedWitness.id}</span>
+                        <span className="px-2 py-0.5 rounded text-[10px] font-bold uppercase bg-[#F1F5F9] text-[#475569] border border-[#E2E8F0]">
                           {selectedWitness.status.replace(/_/g, ' ')}
                         </span>
                       </div>
-                      <h3 className="text-base font-bold text-white">{selectedWitness.name}</h3>
+                      <h3 className="text-base font-bold text-[#12304A]">{selectedWitness.name}</h3>
                     </div>
                   </div>
 
                   <button
                     onClick={() => setShowAddStatementModal(true)}
-                    className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-blue-600 hover:bg-blue-500 text-white text-xs font-bold transition-all shadow-md"
+                    className="flex items-center gap-1.5 px-3 py-1.5 rounded-md bg-[#087E8B] hover:bg-[#06636E] text-white text-xs font-bold transition-all shadow-sm"
                   >
                     <Plus className="w-3.5 h-3.5" />
                     <span>Record Statement</span>
@@ -227,133 +217,71 @@ export const WitnessManagementTab: React.FC<WitnessManagementTabProps> = ({ case
 
                 {/* Attributes Grid */}
                 <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3 text-xs">
-                  <div className="p-2.5 rounded-lg bg-slate-950 border border-slate-800 space-y-1">
-                    <span className="text-[10px] text-slate-500 uppercase font-bold block">Contact (Masked)</span>
-                    <span className="font-mono text-white">{selectedWitness.contact}</span>
+                  <div className="p-2.5 rounded-md bg-[#F8FAFC] border border-[#E2E8F0] space-y-1">
+                    <span className="text-[10px] text-[#64748B] uppercase font-bold block">Contact</span>
+                    <span className="font-mono text-[#12304A]">{selectedWitness.contact}</span>
                   </div>
 
-                  <div className="p-2.5 rounded-lg bg-slate-950 border border-slate-800 space-y-1">
-                    <span className="text-[10px] text-slate-500 uppercase font-bold block">Interview Timestamp</span>
-                    <span className="font-mono text-slate-300">{selectedWitness.interviewDate} • {selectedWitness.interviewTime}</span>
+                  <div className="p-2.5 rounded-md bg-[#F8FAFC] border border-[#E2E8F0] space-y-1">
+                    <span className="text-[10px] text-[#64748B] uppercase font-bold block">Interview Timestamp</span>
+                    <span className="font-mono text-[#17212B]">{selectedWitness.interviewDate} • {selectedWitness.interviewTime}</span>
                   </div>
 
-                  <div className="p-2.5 rounded-lg bg-slate-950 border border-slate-800 space-y-1">
-                    <span className="text-[10px] text-slate-500 uppercase font-bold block">Recording Officer</span>
-                    <span className="text-slate-300">{selectedWitness.recordingOfficer}</span>
-                  </div>
-
-                  <div className="sm:col-span-2 p-2.5 rounded-lg bg-slate-950 border border-slate-800 space-y-1">
-                    <span className="text-[10px] text-slate-500 uppercase font-bold block">Synthetic Address</span>
-                    <span className="text-slate-300">{selectedWitness.address}</span>
-                  </div>
-
-                  <div className="p-2.5 rounded-lg bg-slate-950 border border-slate-800 space-y-1">
-                    <span className="text-[10px] text-slate-500 uppercase font-bold block">Interview Location</span>
-                    <span className="text-slate-300">{selectedWitness.interviewLocation}</span>
+                  <div className="p-2.5 rounded-md bg-[#F8FAFC] border border-[#E2E8F0] space-y-1">
+                    <span className="text-[10px] text-[#64748B] uppercase font-bold block">Location</span>
+                    <span className="text-[#17212B] truncate">{selectedWitness.interviewLocation}</span>
                   </div>
                 </div>
 
-                {/* Observed Entities Connections */}
-                {selectedWitness.observedEntities.length > 0 && (
-                  <div className="p-3.5 rounded-lg bg-[#090e1a] border border-slate-800 space-y-2">
-                    <span className="text-[10px] font-bold uppercase tracking-wider text-slate-400 block">
-                      Observed Subjects & Transport Assets
-                    </span>
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
-                      {selectedWitness.observedEntities.map((ent, idx) => (
-                        <div
-                          key={idx}
-                          onClick={() => openEntityProfile(ent.entityId)}
-                          className="p-2.5 rounded-lg bg-slate-950 hover:bg-slate-900 border border-slate-800 hover:border-blue-500/50 cursor-pointer flex items-center justify-between gap-2 transition-all group"
-                        >
-                          <div className="min-w-0 space-y-0.5">
-                            <div className="font-bold text-white text-xs group-hover:text-blue-300 transition-colors truncate">
-                              {ent.label}
-                            </div>
-                            <div className="text-[10px] text-slate-400 font-sans leading-tight line-clamp-2">
-                              {ent.observation}
-                            </div>
-                          </div>
-                          <ExternalLink className="w-3.5 h-3.5 text-slate-600 group-hover:text-blue-400 shrink-0" />
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-                )}
-              </div>
-
-              {/* Statements Chronology Section */}
-              <div className="intel-card p-5 border border-slate-800 rounded-xl bg-[#0c1322] space-y-3">
-                <div className="flex items-center justify-between">
-                  <span className="text-[10px] font-bold uppercase tracking-wider text-slate-400 flex items-center gap-1.5">
-                    <FileText className="w-3.5 h-3.5 text-blue-400" />
-                    <span>Recorded Statements ({selectedWitness.statements.length})</span>
+                {/* Recorded Statements List */}
+                <div className="space-y-3 pt-2">
+                  <span className="text-xs font-bold uppercase tracking-wider text-[#12304A] block">
+                    Recorded Statements ({selectedWitness.statements.length})
                   </span>
-                  
-                  {selectedWitness.statements.length > 1 && (
-                    <button
-                      onClick={() => setSelectedStatement(selectedWitness.statements[0])}
-                      className="flex items-center gap-1 text-xs font-semibold text-blue-400 hover:underline"
-                    >
-                      <Columns className="w-3.5 h-3.5" />
-                      <span>Compare All Statements</span>
-                    </button>
-                  )}
-                </div>
 
-                <div className="space-y-3">
-                  {selectedWitness.statements.map((st) => (
-                    <div 
-                      key={st.id} 
-                      className="p-4 rounded-xl bg-[#090e1a] border border-slate-800 space-y-2.5"
-                    >
-                      <div className="flex flex-wrap items-center justify-between gap-2">
-                        <div className="flex items-center gap-2">
-                          <span className="font-mono text-xs font-bold text-blue-400">{st.id}</span>
-                          <span className="text-[10px] font-bold px-2 py-0.5 rounded bg-slate-900 text-slate-300 border border-slate-700">
-                            Statement #{st.statementNumber} ({st.type.replace(/_/g, ' ')})
+                  <div className="space-y-2.5">
+                    {selectedWitness.statements.map((st) => (
+                      <div
+                        key={st.id}
+                        onClick={() => setSelectedStatement(st)}
+                        className="p-3.5 rounded-md bg-[#F8FAFC] hover:bg-[#E6F4F5] border border-[#E2E8F0] hover:border-[#A7DFE3] cursor-pointer transition-all space-y-2 group shadow-sm"
+                      >
+                        <div className="flex items-center justify-between text-xs">
+                          <div className="flex items-center gap-2">
+                            <span className="font-mono font-bold text-[#087E8B]">Statement #{st.statementNumber}</span>
+                            <span className="text-[10px] px-1.5 py-0.2 rounded bg-[#FFFFFF] text-[#475569] border border-[#CBD5E1]">
+                              {st.type.replace(/_/g, ' ')}
+                            </span>
+                          </div>
+                          <span className="font-mono text-[10px] text-[#64748B]">{st.date} • {st.time}</span>
+                        </div>
+
+                        <p className="text-xs text-[#334155] leading-relaxed font-sans">{st.summary}</p>
+
+                        <div className="pt-2 border-t border-[#E2E8F0] flex items-center justify-between text-[11px] text-[#64748B]">
+                          <span>Recording Officer: <strong className="text-[#12304A]">{st.recordingOfficer}</strong></span>
+                          <span className="text-[#087E8B] group-hover:underline font-semibold flex items-center gap-1">
+                            <span>Read Full Deposition</span>
+                            <Eye className="w-3 h-3" />
                           </span>
                         </div>
-                        <span className="font-mono text-[10px] text-slate-400">
-                          {st.date} • {st.time}
-                        </span>
                       </div>
-
-                      <p className="text-xs text-slate-200 leading-relaxed font-sans">
-                        {st.summary}
-                      </p>
-
-                      {st.inconsistenciesWithPrevious && st.inconsistenciesWithPrevious.length > 0 && (
-                        <div className="p-2 rounded bg-amber-950/20 border border-amber-500/30 text-[11px] text-amber-300 flex items-center gap-1.5">
-                          <AlertTriangle className="w-3.5 h-3.5 text-amber-400 shrink-0" />
-                          <span>Note: Subsequent statement expands on earlier recollections for officer review.</span>
-                        </div>
-                      )}
-
-                      <div className="pt-2 border-t border-slate-800/80 flex items-center justify-between">
-                        <span className="text-[10px] text-slate-500 font-mono truncate max-w-xs">
-                          Officer: {st.recordingOfficer}
-                        </span>
-                        <button
-                          onClick={() => setSelectedStatement(st)}
-                          className="px-3 py-1 rounded bg-slate-800 hover:bg-blue-600 text-slate-200 hover:text-white text-[11px] font-semibold flex items-center gap-1 transition-colors"
-                        >
-                          <Eye className="w-3 h-3" />
-                          <span>View Full Statement</span>
-                        </button>
-                      </div>
-                    </div>
-                  ))}
+                    ))}
+                  </div>
                 </div>
               </div>
 
             </div>
-          ) : null}
+          ) : (
+            <div className="lg:col-span-8 p-12 border border-[#E2E8F0] rounded-lg bg-[#FFFFFF] text-center text-[#64748B] text-xs">
+              Select a witness from the left list to view recorded statements.
+            </div>
+          )}
 
         </div>
       )}
 
-      {/* Modal 1: Statement Viewer & Comparison Modal */}
+      {/* Statement Modal */}
       {selectedStatement && selectedWitness && (
         <StatementViewerModal
           witness={selectedWitness}
@@ -363,85 +291,71 @@ export const WitnessManagementTab: React.FC<WitnessManagementTabProps> = ({ case
         />
       )}
 
-      {/* Modal 2: Record New Supplementary Statement Modal */}
-      {showAddStatementModal && selectedWitness && (
-        <div className="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4 select-none animate-in fade-in">
-          <div 
-            className="w-full max-w-lg intel-card rounded-xl border border-slate-700 bg-[#0c1322] shadow-2xl p-5 space-y-4"
-            onClick={(e) => e.stopPropagation()}
-          >
-            <div className="flex items-center justify-between border-b border-slate-800 pb-3">
+      {/* Record Statement Modal */}
+      {showAddStatementModal && (
+        <div className="fixed inset-0 z-50 bg-black/40 backdrop-blur-sm flex items-center justify-center p-4">
+          <div className="w-full max-w-lg bg-[#FFFFFF] rounded-lg border border-[#CBD5E1] shadow-2xl p-5 space-y-4 animate-in fade-in">
+            <div className="flex items-center justify-between border-b border-[#E2E8F0] pb-3">
               <div>
-                <span className="font-mono text-xs font-bold text-blue-400">{selectedWitness.id}</span>
-                <h3 className="font-bold text-sm text-white">Record Statement for {selectedWitness.name}</h3>
+                <span className="font-mono text-xs font-bold text-[#087E8B]">{selectedWitness?.id}</span>
+                <h3 className="font-bold text-sm text-[#12304A]">Record Witness Statement (Sec 161 CrPC)</h3>
               </div>
               <button 
                 onClick={() => setShowAddStatementModal(false)}
-                className="p-1 text-slate-400 hover:text-white"
+                className="text-[#64748B] hover:text-[#12304A]"
               >
-                <XIcon className="w-4 h-4" />
+                ✕
               </button>
             </div>
 
             <form onSubmit={handleAddStatementSubmit} className="space-y-3 text-xs">
               <div className="space-y-1">
-                <label className="block text-[10px] uppercase font-bold text-slate-400">Statement Type</label>
+                <label className="block text-[10px] uppercase font-bold text-[#64748B]">Statement Classification</label>
                 <select
                   value={newStatementType}
                   onChange={(e) => setNewStatementType(e.target.value as any)}
-                  className="w-full px-3 py-2 rounded-lg bg-slate-900 border border-slate-700 text-xs text-white focus:outline-none focus:border-blue-500"
+                  className="w-full px-3 py-2 rounded-md bg-[#FFFFFF] border border-[#CBD5E1] text-xs text-[#17212B] focus:outline-none focus:border-[#087E8B]"
                 >
-                  <option value="SUPPLEMENTARY_STATEMENT">Supplementary Statement (Sec 161 CrPC)</option>
-                  <option value="SCENE_RECONSTRUCTION">Scene Reconstruction Statement</option>
-                  <option value="INITIAL_INTERVIEW">Initial Deposition</option>
+                  <option value="SUPPLEMENTARY_STATEMENT">Supplementary Deposition</option>
+                  <option value="INITIAL_INTERVIEW">Initial Investigation Interview</option>
                 </select>
               </div>
 
               <div className="space-y-1">
-                <label className="block text-[10px] uppercase font-bold text-slate-400">Recording Officer</label>
-                <input
-                  type="text"
-                  value={newStatementOfficer}
-                  onChange={(e) => setNewStatementOfficer(e.target.value)}
-                  className="w-full px-3 py-2 rounded-lg bg-slate-900 border border-slate-700 text-xs text-white focus:outline-none focus:border-blue-500"
-                />
-              </div>
-
-              <div className="space-y-1">
-                <label className="block text-[10px] uppercase font-bold text-slate-400">Statement Summary</label>
+                <label className="block text-[10px] uppercase font-bold text-[#64748B]">Brief Summary (1-2 sentences)</label>
                 <input
                   type="text"
                   required
-                  placeholder="Summary of observations or testimony..."
+                  placeholder="Key observations or claims recorded..."
                   value={newStatementSummary}
                   onChange={(e) => setNewStatementSummary(e.target.value)}
-                  className="w-full px-3 py-2 rounded-lg bg-slate-900 border border-slate-700 text-xs text-white focus:outline-none focus:border-blue-500"
+                  className="w-full px-3 py-2 rounded-md bg-[#FFFFFF] border border-[#CBD5E1] text-xs text-[#17212B] focus:outline-none focus:border-[#087E8B]"
                 />
               </div>
 
               <div className="space-y-1">
-                <label className="block text-[10px] uppercase font-bold text-slate-400">Full Deposition Text</label>
+                <label className="block text-[10px] uppercase font-bold text-[#64748B]">Full Statement Transcript</label>
                 <textarea
                   rows={4}
                   required
-                  placeholder="Certified deposition text..."
+                  placeholder="Verbatim or detailed deposition text..."
                   value={newStatementText}
                   onChange={(e) => setNewStatementText(e.target.value)}
-                  className="w-full p-2.5 rounded-lg bg-slate-950 border border-slate-700 text-xs font-mono text-slate-200 focus:outline-none focus:border-blue-500"
+                  className="w-full px-3 py-2 rounded-md bg-[#FFFFFF] border border-[#CBD5E1] text-xs text-[#17212B] focus:outline-none focus:border-[#087E8B] leading-relaxed"
                 />
               </div>
 
-              <div className="flex justify-end gap-2 pt-2 border-t border-slate-800">
+              <div className="flex justify-end gap-2 pt-2 border-t border-[#E2E8F0]">
                 <button
                   type="button"
                   onClick={() => setShowAddStatementModal(false)}
-                  className="px-4 py-2 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs font-semibold"
+                  className="px-4 py-2 rounded-md bg-[#FFFFFF] hover:bg-[#F8FAFC] border border-[#CBD5E1] text-[#475569] text-xs font-semibold shadow-sm"
                 >
                   Cancel
                 </button>
                 <button
                   type="submit"
-                  className="px-4 py-2 rounded-lg bg-blue-600 hover:bg-blue-500 text-white text-xs font-bold shadow-md"
+                  className="px-4 py-2 rounded-md bg-[#087E8B] hover:bg-[#06636E] text-white text-xs font-bold shadow-sm"
                 >
                   Save Statement
                 </button>
@@ -454,20 +368,3 @@ export const WitnessManagementTab: React.FC<WitnessManagementTabProps> = ({ case
     </div>
   );
 };
-
-function XIcon(props: React.SVGProps<SVGSVGElement>) {
-  return (
-    <svg 
-      {...props} 
-      viewBox="0 0 24 24" 
-      fill="none" 
-      stroke="currentColor" 
-      strokeWidth="2" 
-      strokeLinecap="round" 
-      strokeLinejoin="round"
-    >
-      <line x1="18" y1="6" x2="6" y2="18" />
-      <line x1="6" y1="6" x2="18" y2="18" />
-    </svg>
-  );
-}

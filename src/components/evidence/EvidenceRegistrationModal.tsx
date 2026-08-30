@@ -2,15 +2,7 @@ import React, { useState } from 'react';
 import { 
   X, 
   PlusCircle, 
-  FileText, 
-  ShieldCheck, 
   AlertCircle, 
-  User, 
-  Building2, 
-  Calendar, 
-  Clock, 
-  MapPin, 
-  Radio, 
   FolderLock,
   UploadCloud
 } from 'lucide-react';
@@ -149,27 +141,27 @@ REGISTERING OFFICER: Inspector Rajesh Verma (MHA-INT-8902)
   };
 
   return (
-    <div className="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4 select-none animate-in fade-in">
+    <div className="fixed inset-0 z-50 bg-black/40 backdrop-blur-sm flex items-center justify-center p-4 select-none animate-in fade-in">
       <div 
-        className="w-full max-w-2xl intel-card rounded-xl border border-slate-700 bg-[#0c1322] shadow-2xl overflow-hidden flex flex-col max-h-[92vh]"
+        className="w-full max-w-2xl bg-[#FFFFFF] rounded-lg border border-[#CBD5E1] shadow-2xl overflow-hidden flex flex-col max-h-[92vh]"
         onClick={(e) => e.stopPropagation()}
       >
         {/* Header */}
-        <div className="p-4 border-b border-slate-800 bg-[#090e1a] flex items-center justify-between">
+        <div className="p-4 border-b border-[#E2E8F0] bg-[#F8FAFC] flex items-center justify-between">
           <div className="flex items-center gap-2.5">
-            <div className="p-2 rounded-lg bg-blue-500/20 text-blue-400 border border-blue-500/30">
+            <div className="p-2 rounded-md bg-[#E6F4F5] text-[#087E8B] border border-[#A7DFE3]">
               <FolderLock className="w-5 h-5" />
             </div>
             <div>
-              <span className="text-[10px] font-mono px-1.5 py-0.2 rounded bg-blue-500/20 text-blue-300 border border-blue-500/30">
+              <span className="text-[10px] font-mono px-1.5 py-0.2 rounded bg-[#E6F4F5] text-[#087E8B] border border-[#A7DFE3]">
                 OFFICIAL REGISTRATION
               </span>
-              <h3 className="text-sm font-bold text-white">Register Investigation Evidence</h3>
+              <h3 className="text-sm font-bold text-[#12304A]">Register Investigation Evidence</h3>
             </div>
           </div>
           <button 
             onClick={onClose}
-            className="p-1 rounded text-slate-400 hover:text-white hover:bg-slate-800 transition-colors"
+            className="p-1 rounded text-[#64748B] hover:text-[#12304A] hover:bg-[#E2E8F0] transition-colors"
           >
             <X className="w-4 h-4" />
           </button>
@@ -178,7 +170,7 @@ REGISTERING OFFICER: Inspector Rajesh Verma (MHA-INT-8902)
         {/* Form Body */}
         <form onSubmit={handleSubmit} className="p-5 overflow-y-auto space-y-4 text-xs">
           {error && (
-            <div className="p-3 rounded-lg bg-rose-950/60 border border-rose-500/40 text-rose-300 flex items-center gap-2">
+            <div className="p-3 rounded-md bg-[#FEE2E2] border border-[#FCA5A5] text-[#C24141] flex items-center gap-2">
               <AlertCircle className="w-4 h-4 flex-shrink-0" />
               <span>{error}</span>
             </div>
@@ -187,13 +179,13 @@ REGISTERING OFFICER: Inspector Rajesh Verma (MHA-INT-8902)
           {/* Row 1: Case Association & FIR Number */}
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
             <div className="space-y-1.5">
-              <label className="block text-[11px] font-semibold text-slate-300 uppercase tracking-wider">
-                Case Association <span className="text-rose-400">*</span>
+              <label className="block text-[11px] font-semibold text-[#64748B] uppercase tracking-wider">
+                Case Association <span className="text-rose-600">*</span>
               </label>
               <select
                 value={caseId}
                 onChange={(e) => handleCaseChange(e.target.value)}
-                className="w-full px-3 py-2 rounded-lg bg-slate-900 border border-slate-700 text-xs font-mono text-white focus:outline-none focus:border-blue-500"
+                className="w-full px-3 py-2 rounded-md bg-[#FFFFFF] border border-[#CBD5E1] text-xs font-mono text-[#17212B] focus:outline-none focus:border-[#087E8B]"
               >
                 {mockCases.map(c => (
                   <option key={c.id} value={c.id}>
@@ -204,15 +196,15 @@ REGISTERING OFFICER: Inspector Rajesh Verma (MHA-INT-8902)
             </div>
 
             <div className="space-y-1.5">
-              <label className="block text-[11px] font-semibold text-slate-300 uppercase tracking-wider">
-                FIR Number <span className="text-rose-400">*</span>
+              <label className="block text-[11px] font-semibold text-[#64748B] uppercase tracking-wider">
+                FIR Number <span className="text-rose-600">*</span>
               </label>
               <input
                 type="text"
                 required
                 value={firNumber}
                 onChange={(e) => setFirNumber(e.target.value)}
-                className="w-full px-3 py-2 rounded-lg bg-slate-900 border border-slate-700 text-xs font-mono text-white focus:outline-none focus:border-blue-500"
+                className="w-full px-3 py-2 rounded-md bg-[#FFFFFF] border border-[#CBD5E1] text-xs font-mono text-[#17212B] focus:outline-none focus:border-[#087E8B]"
               />
             </div>
           </div>
@@ -220,8 +212,8 @@ REGISTERING OFFICER: Inspector Rajesh Verma (MHA-INT-8902)
           {/* Row 2: Title & Evidence Type */}
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
             <div className="sm:col-span-2 space-y-1.5">
-              <label className="block text-[11px] font-semibold text-slate-300 uppercase tracking-wider">
-                Evidence Title / Summary <span className="text-rose-400">*</span>
+              <label className="block text-[11px] font-semibold text-[#64748B] uppercase tracking-wider">
+                Evidence Title / Summary <span className="text-rose-600">*</span>
               </label>
               <input
                 type="text"
@@ -229,18 +221,18 @@ REGISTERING OFFICER: Inspector Rajesh Verma (MHA-INT-8902)
                 placeholder="e.g. CCTV Optical Facial Capture at Checkpoint 4"
                 value={title}
                 onChange={(e) => setTitle(e.target.value)}
-                className="w-full px-3 py-2 rounded-lg bg-slate-900 border border-slate-700 text-xs text-white focus:outline-none focus:border-blue-500"
+                className="w-full px-3 py-2 rounded-md bg-[#FFFFFF] border border-[#CBD5E1] text-xs text-[#17212B] focus:outline-none focus:border-[#087E8B]"
               />
             </div>
 
             <div className="space-y-1.5">
-              <label className="block text-[11px] font-semibold text-slate-300 uppercase tracking-wider">
-                Evidence Type <span className="text-rose-400">*</span>
+              <label className="block text-[11px] font-semibold text-[#64748B] uppercase tracking-wider">
+                Evidence Type <span className="text-rose-600">*</span>
               </label>
               <select
                 value={evidenceType}
                 onChange={(e) => setEvidenceType(e.target.value as EvidenceType)}
-                className="w-full px-3 py-2 rounded-lg bg-slate-900 border border-slate-700 text-xs text-white focus:outline-none focus:border-blue-500"
+                className="w-full px-3 py-2 rounded-md bg-[#FFFFFF] border border-[#CBD5E1] text-xs text-[#17212B] focus:outline-none focus:border-[#087E8B]"
               >
                 {EVIDENCE_TYPES.map(t => (
                   <option key={t.id} value={t.id}>{t.label}</option>
@@ -251,8 +243,8 @@ REGISTERING OFFICER: Inspector Rajesh Verma (MHA-INT-8902)
 
           {/* Row 3: Description */}
           <div className="space-y-1.5">
-            <label className="block text-[11px] font-semibold text-slate-300 uppercase tracking-wider">
-              Detailed Evidentiary Description <span className="text-rose-400">*</span>
+            <label className="block text-[11px] font-semibold text-[#64748B] uppercase tracking-wider">
+              Detailed Evidentiary Description <span className="text-rose-600">*</span>
             </label>
             <textarea
               rows={3}
@@ -260,20 +252,20 @@ REGISTERING OFFICER: Inspector Rajesh Verma (MHA-INT-8902)
               placeholder="Describe physical/digital context, acquisition parameters, and evidentiary value..."
               value={description}
               onChange={(e) => setDescription(e.target.value)}
-              className="w-full p-3 rounded-lg bg-slate-900 border border-slate-700 text-xs text-slate-200 focus:outline-none focus:border-blue-500 leading-relaxed"
+              className="w-full p-3 rounded-md bg-[#FFFFFF] border border-[#CBD5E1] text-xs text-[#17212B] focus:outline-none focus:border-[#087E8B] leading-relaxed"
             />
           </div>
 
           {/* Row 4: Police Station & Registering Officer */}
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
             <div className="space-y-1.5">
-              <label className="block text-[11px] font-semibold text-slate-300 uppercase tracking-wider">
+              <label className="block text-[11px] font-semibold text-[#64748B] uppercase tracking-wider">
                 Registering Police Station / Dept
               </label>
               <select
                 value={policeStation}
                 onChange={(e) => setPoliceStation(e.target.value)}
-                className="w-full px-3 py-2 rounded-lg bg-slate-900 border border-slate-700 text-xs text-white focus:outline-none focus:border-blue-500"
+                className="w-full px-3 py-2 rounded-md bg-[#FFFFFF] border border-[#CBD5E1] text-xs text-[#17212B] focus:outline-none focus:border-[#087E8B]"
               >
                 {POLICE_STATIONS.map((st, i) => (
                   <option key={i} value={st}>{st}</option>
@@ -282,7 +274,7 @@ REGISTERING OFFICER: Inspector Rajesh Verma (MHA-INT-8902)
             </div>
 
             <div className="space-y-1.5">
-              <label className="block text-[11px] font-semibold text-slate-300 uppercase tracking-wider">
+              <label className="block text-[11px] font-semibold text-[#64748B] uppercase tracking-wider">
                 Registering Officer & Badge
               </label>
               <div className="grid grid-cols-2 gap-2">
@@ -290,13 +282,13 @@ REGISTERING OFFICER: Inspector Rajesh Verma (MHA-INT-8902)
                   type="text"
                   value={registeringOfficer}
                   onChange={(e) => setRegisteringOfficer(e.target.value)}
-                  className="w-full px-3 py-2 rounded-lg bg-slate-900 border border-slate-700 text-xs text-white focus:outline-none focus:border-blue-500"
+                  className="w-full px-3 py-2 rounded-md bg-[#FFFFFF] border border-[#CBD5E1] text-xs text-[#17212B] focus:outline-none focus:border-[#087E8B]"
                 />
                 <input
                   type="text"
                   value={badgeNumber}
                   onChange={(e) => setBadgeNumber(e.target.value)}
-                  className="w-full px-3 py-2 rounded-lg bg-slate-900 border border-slate-700 text-xs font-mono text-white focus:outline-none focus:border-blue-500"
+                  className="w-full px-3 py-2 rounded-md bg-[#FFFFFF] border border-[#CBD5E1] text-xs font-mono text-[#17212B] focus:outline-none focus:border-[#087E8B]"
                 />
               </div>
             </div>
@@ -305,60 +297,60 @@ REGISTERING OFFICER: Inspector Rajesh Verma (MHA-INT-8902)
           {/* Row 5: Date, Time, Location & Source */}
           <div className="grid grid-cols-1 sm:grid-cols-4 gap-3">
             <div className="space-y-1.5">
-              <label className="block text-[11px] font-semibold text-slate-300 uppercase tracking-wider">
+              <label className="block text-[11px] font-semibold text-[#64748B] uppercase tracking-wider">
                 Collected Date
               </label>
               <input
                 type="date"
                 value={collectedDate}
                 onChange={(e) => setCollectedDate(e.target.value)}
-                className="w-full px-3 py-2 rounded-lg bg-slate-900 border border-slate-700 text-xs font-mono text-white focus:outline-none focus:border-blue-500"
+                className="w-full px-3 py-2 rounded-md bg-[#FFFFFF] border border-[#CBD5E1] text-xs font-mono text-[#17212B] focus:outline-none focus:border-[#087E8B]"
               />
             </div>
             <div className="space-y-1.5">
-              <label className="block text-[11px] font-semibold text-slate-300 uppercase tracking-wider">
+              <label className="block text-[11px] font-semibold text-[#64748B] uppercase tracking-wider">
                 Collected Time
               </label>
               <input
                 type="text"
                 value={collectedTime}
                 onChange={(e) => setCollectedTime(e.target.value)}
-                className="w-full px-3 py-2 rounded-lg bg-slate-900 border border-slate-700 text-xs font-mono text-white focus:outline-none focus:border-blue-500"
+                className="w-full px-3 py-2 rounded-md bg-[#FFFFFF] border border-[#CBD5E1] text-xs font-mono text-[#17212B] focus:outline-none focus:border-[#087E8B]"
               />
             </div>
             <div className="space-y-1.5">
-              <label className="block text-[11px] font-semibold text-slate-300 uppercase tracking-wider">
+              <label className="block text-[11px] font-semibold text-[#64748B] uppercase tracking-wider">
                 Location
               </label>
               <input
                 type="text"
                 value={location}
                 onChange={(e) => setLocation(e.target.value)}
-                className="w-full px-3 py-2 rounded-lg bg-slate-900 border border-slate-700 text-xs text-white focus:outline-none focus:border-blue-500"
+                className="w-full px-3 py-2 rounded-md bg-[#FFFFFF] border border-[#CBD5E1] text-xs text-[#17212B] focus:outline-none focus:border-[#087E8B]"
               />
             </div>
             <div className="space-y-1.5">
-              <label className="block text-[11px] font-semibold text-slate-300 uppercase tracking-wider">
+              <label className="block text-[11px] font-semibold text-[#64748B] uppercase tracking-wider">
                 Source Instrument
               </label>
               <input
                 type="text"
                 value={source}
                 onChange={(e) => setSource(e.target.value)}
-                className="w-full px-3 py-2 rounded-lg bg-slate-900 border border-slate-700 text-xs text-white focus:outline-none focus:border-blue-500"
+                className="w-full px-3 py-2 rounded-md bg-[#FFFFFF] border border-[#CBD5E1] text-xs text-[#17212B] focus:outline-none focus:border-[#087E8B]"
               />
             </div>
           </div>
 
           {/* Row 6: Related Entity Linking */}
           <div className="space-y-1.5">
-            <label className="block text-[11px] font-semibold text-slate-300 uppercase tracking-wider">
+            <label className="block text-[11px] font-semibold text-[#64748B] uppercase tracking-wider">
               Primary Related Subject / Entity
             </label>
             <select
               value={selectedEntityId}
               onChange={(e) => setSelectedEntityId(e.target.value)}
-              className="w-full px-3 py-2 rounded-lg bg-slate-900 border border-slate-700 text-xs text-white focus:outline-none focus:border-blue-500"
+              className="w-full px-3 py-2 rounded-md bg-[#FFFFFF] border border-[#CBD5E1] text-xs text-[#17212B] focus:outline-none focus:border-[#087E8B]"
             >
               {mockEntities.map(ent => (
                 <option key={ent.id} value={ent.id}>
@@ -369,7 +361,7 @@ REGISTERING OFFICER: Inspector Rajesh Verma (MHA-INT-8902)
           </div>
 
           {/* Row 7: Attach Digital Soft Copy Option */}
-          <div className="p-3.5 rounded-lg bg-[#090e1a] border border-slate-800 space-y-3">
+          <div className="p-3.5 rounded-md bg-[#F8FAFC] border border-[#E2E8F0] space-y-3">
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-2">
                 <input
@@ -377,40 +369,40 @@ REGISTERING OFFICER: Inspector Rajesh Verma (MHA-INT-8902)
                   id="attachCopy"
                   checked={attachSoftCopy}
                   onChange={(e) => setAttachSoftCopy(e.target.checked)}
-                  className="rounded border-slate-700 bg-slate-900 text-blue-600 focus:ring-0 w-4 h-4 cursor-pointer"
+                  className="rounded border-[#CBD5E1] text-[#087E8B] focus:ring-0 w-4 h-4 cursor-pointer"
                 />
-                <label htmlFor="attachCopy" className="text-xs font-semibold text-white cursor-pointer flex items-center gap-1.5">
-                  <UploadCloud className="w-3.5 h-3.5 text-blue-400" />
+                <label htmlFor="attachCopy" className="text-xs font-semibold text-[#12304A] cursor-pointer flex items-center gap-1.5">
+                  <UploadCloud className="w-3.5 h-3.5 text-[#087E8B]" />
                   <span>Attach Scanned Digital Soft Copy Immediately</span>
                 </label>
               </div>
-              <span className="text-[10px] text-slate-500 font-mono">
+              <span className="text-[10px] text-[#64748B] font-mono">
                 {attachSoftCopy ? 'Digital Copy Attached' : 'Pending Digitization'}
               </span>
             </div>
 
             {attachSoftCopy && (
-              <div className="space-y-2 pt-2 border-t border-slate-800/80 animate-in fade-in">
+              <div className="space-y-2 pt-2 border-t border-[#E2E8F0] animate-in fade-in">
                 <div className="space-y-1">
-                  <label className="block text-[10px] uppercase font-bold text-slate-400">
+                  <label className="block text-[10px] uppercase font-bold text-[#64748B]">
                     File Name
                   </label>
                   <input
                     type="text"
                     value={initialFilename}
                     onChange={(e) => setInitialFilename(e.target.value)}
-                    className="w-full px-3 py-1.5 rounded bg-slate-950 border border-slate-700 text-xs font-mono text-white focus:outline-none focus:border-blue-500"
+                    className="w-full px-3 py-1.5 rounded-md bg-[#FFFFFF] border border-[#CBD5E1] text-xs font-mono text-[#17212B] focus:outline-none focus:border-[#087E8B]"
                   />
                 </div>
                 <div className="space-y-1">
-                  <label className="block text-[10px] uppercase font-bold text-slate-400">
+                  <label className="block text-[10px] uppercase font-bold text-[#64748B]">
                     Document Text Payload
                   </label>
                   <textarea
                     rows={3}
                     value={initialContent}
                     onChange={(e) => setInitialContent(e.target.value)}
-                    className="w-full p-2 rounded bg-slate-950 border border-slate-700 text-xs font-mono text-slate-300 focus:outline-none focus:border-blue-500"
+                    className="w-full p-2 rounded-md bg-[#FFFFFF] border border-[#CBD5E1] text-xs font-mono text-[#17212B] focus:outline-none focus:border-[#087E8B]"
                   />
                 </div>
               </div>
@@ -418,18 +410,18 @@ REGISTERING OFFICER: Inspector Rajesh Verma (MHA-INT-8902)
           </div>
 
           {/* Modal Actions */}
-          <div className="flex items-center justify-end gap-3 pt-3 border-t border-slate-800">
+          <div className="flex items-center justify-end gap-3 pt-3 border-t border-[#E2E8F0]">
             <button
               type="button"
               onClick={onClose}
-              className="px-4 py-2 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs font-semibold transition-colors"
+              className="px-4 py-2 rounded-md bg-[#FFFFFF] hover:bg-[#F8FAFC] border border-[#CBD5E1] text-[#475569] text-xs font-semibold transition-colors shadow-sm"
             >
               Cancel
             </button>
             <button
               type="submit"
               disabled={isSubmitting}
-              className="flex items-center gap-2 px-5 py-2 rounded-lg bg-blue-600 hover:bg-blue-500 text-white text-xs font-bold transition-all shadow-lg shadow-blue-900/40 disabled:opacity-50"
+              className="flex items-center gap-2 px-5 py-2 rounded-md bg-[#087E8B] hover:bg-[#06636E] text-white text-xs font-bold transition-all shadow-sm disabled:opacity-50"
             >
               <PlusCircle className="w-4 h-4" />
               <span>{isSubmitting ? 'Registering...' : 'Register Evidence'}</span>

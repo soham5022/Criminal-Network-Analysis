@@ -2,30 +2,27 @@ import React, { useState } from 'react';
 import { 
   X, 
   UploadCloud, 
-  FileText, 
   ShieldCheck, 
-  Cpu, 
-  CheckCircle2, 
-  Layers, 
-  FileSpreadsheet 
+  Cpu 
 } from 'lucide-react';
 import { CaseDocumentType, caseRecordsService, CaseDocument } from '../../services/caseRecordsService';
 import { useAuth } from '../../context/AuthContext';
 
 interface DocumentUploadModalProps {
   caseId: string;
-  firNumber: string;
-  isOpen: boolean;
+  firNumber?: string;
+  isOpen?: boolean;
   onClose: () => void;
-  onDocumentAdded: (doc: CaseDocument) => void;
+  onDocumentAdded?: (doc: CaseDocument) => void;
+  onSuccess?: (doc?: CaseDocument) => void;
 }
 
 export const DocumentUploadModal: React.FC<DocumentUploadModalProps> = ({
   caseId,
-  firNumber,
-  isOpen,
+  firNumber = 'FIR-2026-DEL-0412',
   onClose,
-  onDocumentAdded
+  onDocumentAdded,
+  onSuccess
 }) => {
   const { user } = useAuth();
 
@@ -34,8 +31,6 @@ export const DocumentUploadModal: React.FC<DocumentUploadModalProps> = ({
   const [policeStation, setPoliceStation] = useState<string>('Special Cyber & Financial Crimes Division, Central Delhi');
   const [content, setContent] = useState<string>('');
   const [isProcessing, setIsProcessing] = useState<boolean>(false);
-
-  if (!isOpen) return null;
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -48,23 +43,14 @@ export const DocumentUploadModal: React.FC<DocumentUploadModalProps> = ({
 
     // Automated entity extraction simulation based on content mentions
     const extractedEntities = [];
-    if (content.includes('Person_044') || content.toLowerCase().includes('arjun mehta')) {
-      extractedEntities.push({ id: 'Person_044', label: 'Arjun Mehta', type: 'PERSON' as const, roleInDocument: 'Named Subject' });
+    if (content.includes('Person_044') || content.toLowerCase().includes('arjun mehta') || content.toLowerCase().includes('rahul sharma')) {
+      extractedEntities.push({ id: 'Person_044', label: 'Rahul Sharma', type: 'PERSON' as const, roleInDocument: 'Named Subject' });
     }
     if (content.includes('Person_078') || content.toLowerCase().includes('ramesh patel')) {
       extractedEntities.push({ id: 'Person_078', label: 'Ramesh Patel', type: 'PERSON' as const, roleInDocument: 'Mentioned Counterparty' });
     }
     if (content.includes('Person_001') || content.toLowerCase().includes('vikram singhania')) {
       extractedEntities.push({ id: 'Person_001', label: 'Vikram Singhania', type: 'PERSON' as const, roleInDocument: 'Signatory' });
-    }
-    if (content.includes('Account_103')) {
-      extractedEntities.push({ id: 'Account_103', label: 'ACCT-8849-103', type: 'ACCOUNT' as const, roleInDocument: 'Relay Account' });
-    }
-    if (content.includes('Location_A')) {
-      extractedEntities.push({ id: 'Location_A', label: 'Sector 4 Logistics Hub', type: 'LOCATION' as const, roleInDocument: 'Incident Location' });
-    }
-    if (content.includes('Vehicle_017')) {
-      extractedEntities.push({ id: 'Vehicle_017', label: 'DL-08-CC-9017', type: 'VEHICLE' as const, roleInDocument: 'Observed Asset' });
     }
 
     if (extractedEntities.length === 0) {
@@ -85,31 +71,32 @@ export const DocumentUploadModal: React.FC<DocumentUploadModalProps> = ({
     });
 
     setIsProcessing(false);
-    onDocumentAdded(newDoc);
+    if (onDocumentAdded) onDocumentAdded(newDoc);
+    if (onSuccess) onSuccess(newDoc);
     onClose();
   };
 
   return (
-    <div className="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4 select-none animate-in fade-in duration-150">
+    <div className="fixed inset-0 z-50 bg-black/40 backdrop-blur-sm flex items-center justify-center p-4 select-none animate-in fade-in duration-150">
       <div 
-        className="w-full max-w-2xl intel-card rounded-2xl border border-slate-700 bg-[#090f1e] shadow-2xl overflow-hidden flex flex-col max-h-[90vh]"
+        className="w-full max-w-2xl bg-[#FFFFFF] rounded-lg border border-[#CBD5E1] shadow-2xl overflow-hidden flex flex-col max-h-[90vh]"
         onClick={(e) => e.stopPropagation()}
       >
         {/* Header */}
-        <div className="p-4 sm:p-5 border-b border-slate-800 bg-[#090e1a] flex items-center justify-between">
+        <div className="p-4 sm:p-5 border-b border-[#E2E8F0] bg-[#F8FAFC] flex items-center justify-between">
           <div className="space-y-0.5">
-            <h3 className="font-bold text-sm sm:text-base text-white tracking-tight flex items-center gap-2 font-mono">
-              <UploadCloud className="w-4 h-4 text-blue-400" />
+            <h3 className="font-bold text-sm sm:text-base text-[#12304A] tracking-tight flex items-center gap-2 font-mono">
+              <UploadCloud className="w-4 h-4 text-[#087E8B]" />
               <span>INGEST CASE RECORD / LEGAL DOCUMENT</span>
             </h3>
-            <p className="text-xs text-slate-400 font-sans">
-              Case File: <strong className="text-blue-400 font-mono">{caseId}</strong> // FIR: {firNumber}
+            <p className="text-xs text-[#64748B] font-sans">
+              Case File: <strong className="text-[#087E8B] font-mono">{caseId}</strong> // FIR: {firNumber}
             </p>
           </div>
 
           <button
             onClick={onClose}
-            className="p-1 rounded-lg text-slate-400 hover:text-white hover:bg-slate-800 transition-colors"
+            className="p-1 rounded-md text-[#64748B] hover:text-[#12304A] hover:bg-[#E2E8F0] transition-colors"
           >
             <X className="w-5 h-5" />
           </button>
@@ -120,13 +107,13 @@ export const DocumentUploadModal: React.FC<DocumentUploadModalProps> = ({
           
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
             <div>
-              <label className="text-[10px] font-mono font-bold uppercase tracking-wider text-slate-400 block mb-1">
+              <label className="text-[10px] font-mono font-bold uppercase tracking-wider text-[#64748B] block mb-1">
                 Document Type:
               </label>
               <select
                 value={documentType}
                 onChange={(e) => setDocumentType(e.target.value as CaseDocumentType)}
-                className="w-full p-2 rounded-lg bg-slate-900 border border-slate-700 font-mono text-white text-xs focus:outline-none focus:border-blue-500"
+                className="w-full p-2 rounded-md bg-[#FFFFFF] border border-[#CBD5E1] font-mono text-[#17212B] text-xs focus:outline-none focus:border-[#087E8B]"
               >
                 <option value="FIR">First Information Report (FIR)</option>
                 <option value="COMPLAINT">Formal Police Complaint</option>
@@ -142,7 +129,7 @@ export const DocumentUploadModal: React.FC<DocumentUploadModalProps> = ({
             </div>
 
             <div>
-              <label className="text-[10px] font-mono font-bold uppercase tracking-wider text-slate-400 block mb-1">
+              <label className="text-[10px] font-mono font-bold uppercase tracking-wider text-[#64748B] block mb-1">
                 Issuing Police Station:
               </label>
               <input
@@ -150,14 +137,14 @@ export const DocumentUploadModal: React.FC<DocumentUploadModalProps> = ({
                 value={policeStation}
                 onChange={(e) => setPoliceStation(e.target.value)}
                 placeholder="e.g. Central Cyber Division, New Delhi"
-                className="w-full p-2 rounded-lg bg-slate-900 border border-slate-700 text-white text-xs focus:outline-none focus:border-blue-500"
+                className="w-full p-2 rounded-md bg-[#FFFFFF] border border-[#CBD5E1] text-[#17212B] text-xs focus:outline-none focus:border-[#087E8B]"
                 required
               />
             </div>
           </div>
 
           <div>
-            <label className="text-[10px] font-mono font-bold uppercase tracking-wider text-slate-400 block mb-1">
+            <label className="text-[10px] font-mono font-bold uppercase tracking-wider text-[#64748B] block mb-1">
               Document Title:
             </label>
             <input
@@ -165,40 +152,40 @@ export const DocumentUploadModal: React.FC<DocumentUploadModalProps> = ({
               value={title}
               onChange={(e) => setTitle(e.target.value)}
               placeholder="e.g. Surveillance Intercept Report — Location_A and Person_044"
-              className="w-full p-2 rounded-lg bg-slate-900 border border-slate-700 text-white text-xs focus:outline-none focus:border-blue-500 font-mono"
+              className="w-full p-2 rounded-md bg-[#FFFFFF] border border-[#CBD5E1] text-[#17212B] text-xs focus:outline-none focus:border-[#087E8B] font-mono"
               required
             />
           </div>
 
           <div>
-            <label className="text-[10px] font-mono font-bold uppercase tracking-wider text-slate-400 block mb-1">
-              Document Text / Statement Content (Entities like Person_044, Location_A, etc. are automatically resolved):
+            <label className="text-[10px] font-mono font-bold uppercase tracking-wider text-[#64748B] block mb-1">
+              Document Text / Statement Content (Entities like Rahul Sharma, ACCT-8849-103, etc. are automatically resolved):
             </label>
             <textarea
               value={content}
               onChange={(e) => setContent(e.target.value)}
               placeholder="Enter official police narrative, witness testimony, or seizure statement text..."
-              className="w-full p-3 rounded-lg bg-slate-900 border border-slate-700 text-xs font-mono text-white placeholder-slate-500 focus:outline-none focus:border-blue-500 h-36"
+              className="w-full p-3 rounded-md bg-[#FFFFFF] border border-[#CBD5E1] text-xs font-mono text-[#17212B] placeholder-[#94A3B8] focus:outline-none focus:border-[#087E8B] h-36 leading-relaxed"
               required
             />
           </div>
 
-          <div className="p-3 rounded-lg bg-[#060a14] border border-slate-800 text-[11px] text-slate-400 space-y-1">
-            <div className="text-emerald-400 font-bold flex items-center gap-1.5 font-mono">
+          <div className="p-3 rounded-md bg-[#E8F7F0] border border-[#A3E0C8] text-[11px] text-[#16805C] space-y-1">
+            <div className="text-[#16805C] font-bold flex items-center gap-1.5 font-mono">
               <ShieldCheck className="w-3.5 h-3.5" />
               <span>Automated Cryptographic Stamping:</span>
             </div>
-            <p className="font-sans">
+            <p className="font-sans text-[#475569]">
               Upon ingestion, TraceNet will compute a SHA-256 integrity hash, index extracted entities, and update the case repository.
             </p>
           </div>
 
           {/* Footer Actions */}
-          <div className="pt-3 border-t border-slate-800 flex items-center justify-between">
+          <div className="pt-3 border-t border-[#E2E8F0] flex items-center justify-between">
             <button
               type="button"
               onClick={onClose}
-              className="px-4 py-2 rounded-lg text-xs font-semibold text-slate-400 hover:text-white transition-colors"
+              className="px-4 py-2 rounded-md text-xs font-semibold text-[#64748B] hover:text-[#12304A] transition-colors"
             >
               Cancel
             </button>
@@ -206,7 +193,7 @@ export const DocumentUploadModal: React.FC<DocumentUploadModalProps> = ({
             <button
               type="submit"
               disabled={isProcessing}
-              className="flex items-center gap-2 px-5 py-2 rounded-lg bg-blue-600 hover:bg-blue-500 text-white font-semibold text-xs transition-colors shadow-sm disabled:opacity-50"
+              className="flex items-center gap-2 px-5 py-2 rounded-md bg-[#087E8B] hover:bg-[#06636E] text-white font-semibold text-xs transition-colors shadow-sm disabled:opacity-50"
             >
               <Cpu className="w-4 h-4" />
               <span>{isProcessing ? 'Extracting Entities & Ingesting...' : 'Ingest Document'}</span>

@@ -5,7 +5,6 @@ import {
   Database, 
   Server, 
   Cpu, 
-  ShieldCheck, 
   User, 
   KeyRound, 
   LogOut,
@@ -42,15 +41,15 @@ export const Settings: React.FC = () => {
   }, []);
 
   return (
-    <div className="space-y-6 select-none animate-in fade-in max-w-6xl mx-auto">
+    <div className="space-y-6 select-none animate-in fade-in max-w-6xl mx-auto py-1">
       {/* Page Header */}
-      <div className="intel-card p-5 border border-slate-800 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+      <div className="bg-[#FFFFFF] p-5 border border-[#E2E8F0] rounded-lg shadow-sm flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-          <h2 className="text-xl font-bold text-white tracking-tight flex items-center gap-2">
-            <SettingsIcon className="w-5 h-5 text-blue-400" />
+          <h2 className="text-xl font-bold text-[#12304A] tracking-tight flex items-center gap-2">
+            <SettingsIcon className="w-5 h-5 text-[#087E8B]" />
             <span>Settings & System Status</span>
           </h2>
-          <p className="text-xs text-slate-400 mt-1">
+          <p className="text-xs text-[#64748B] mt-1">
             System diagnostics, active officer session details, and security compliance audit log.
           </p>
         </div>
@@ -59,30 +58,30 @@ export const Settings: React.FC = () => {
         <div className="flex items-center gap-2">
           <button
             onClick={() => setActiveTab('health')}
-            className={`px-3.5 py-2 rounded-lg text-xs font-semibold transition-colors ${
+            className={`px-3.5 py-2 rounded-md text-xs font-semibold transition-colors ${
               activeTab === 'health'
-                ? 'bg-blue-600 text-white shadow-sm'
-                : 'bg-slate-900 border border-slate-800 text-slate-300 hover:text-white'
+                ? 'bg-[#E6F4F5] text-[#087E8B] border border-[#A7DFE3]'
+                : 'bg-[#FFFFFF] border border-[#CBD5E1] text-[#475569] hover:text-[#12304A]'
             }`}
           >
             System Status
           </button>
           <button
             onClick={() => setActiveTab('profile')}
-            className={`px-3.5 py-2 rounded-lg text-xs font-semibold transition-colors ${
+            className={`px-3.5 py-2 rounded-md text-xs font-semibold transition-colors ${
               activeTab === 'profile'
-                ? 'bg-blue-600 text-white shadow-sm'
-                : 'bg-slate-900 border border-slate-800 text-slate-300 hover:text-white'
+                ? 'bg-[#E6F4F5] text-[#087E8B] border border-[#A7DFE3]'
+                : 'bg-[#FFFFFF] border border-[#CBD5E1] text-[#475569] hover:text-[#12304A]'
             }`}
           >
             Officer Profile
           </button>
           <button
             onClick={() => setActiveTab('audit')}
-            className={`px-3.5 py-2 rounded-lg text-xs font-semibold transition-colors ${
+            className={`px-3.5 py-2 rounded-md text-xs font-semibold transition-colors ${
               activeTab === 'audit'
-                ? 'bg-blue-600 text-white shadow-sm'
-                : 'bg-slate-900 border border-slate-800 text-slate-300 hover:text-white'
+                ? 'bg-[#E6F4F5] text-[#087E8B] border border-[#A7DFE3]'
+                : 'bg-[#FFFFFF] border border-[#CBD5E1] text-[#475569] hover:text-[#12304A]'
             }`}
           >
             Audit Trail
@@ -94,74 +93,74 @@ export const Settings: React.FC = () => {
       {activeTab === 'health' && (
         <div className="space-y-6">
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-            <div className="intel-card p-4 border border-slate-800 space-y-1">
-              <div className="flex items-center justify-between text-slate-400 text-xs">
+            <div className="bg-[#FFFFFF] p-4 border border-[#E2E8F0] rounded-lg shadow-sm space-y-1">
+              <div className="flex items-center justify-between text-[#64748B] text-xs">
                 <span>FastAPI Service</span>
-                <Server className="w-4 h-4 text-emerald-400" />
+                <Server className="w-4 h-4 text-[#16805C]" />
               </div>
-              <div className="text-lg font-bold text-white flex items-center gap-2">
-                <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
+              <div className="text-lg font-bold text-[#12304A] flex items-center gap-2">
+                <span className="w-2 h-2 rounded-full bg-[#16805C] animate-pulse" />
                 <span>Online</span>
               </div>
-              <p className="text-[11px] text-slate-400">REST backend operational</p>
+              <p className="text-[11px] text-[#64748B]">REST backend operational</p>
             </div>
 
-            <div className="intel-card p-4 border border-slate-800 space-y-1">
-              <div className="flex items-center justify-between text-slate-400 text-xs">
+            <div className="bg-[#FFFFFF] p-4 border border-[#E2E8F0] rounded-lg shadow-sm space-y-1">
+              <div className="flex items-center justify-between text-[#64748B] text-xs">
                 <span>Graph Engine</span>
-                <Database className="w-4 h-4 text-blue-400" />
+                <Database className="w-4 h-4 text-[#087E8B]" />
               </div>
-              <div className="text-lg font-bold text-white flex items-center gap-2">
-                <span className="w-2 h-2 rounded-full bg-blue-400" />
+              <div className="text-lg font-bold text-[#12304A] flex items-center gap-2">
+                <span className="w-2 h-2 rounded-full bg-[#087E8B]" />
                 <span>{health?.neo4j_status === 'connected' ? 'Neo4j Bolt' : 'NetworkX Core'}</span>
               </div>
-              <p className="text-[11px] text-slate-400">Topology & partition engine</p>
+              <p className="text-[11px] text-[#64748B]">Topology & partition engine</p>
             </div>
 
-            <div className="intel-card p-4 border border-slate-800 space-y-1">
-              <div className="flex items-center justify-between text-slate-400 text-xs">
+            <div className="bg-[#FFFFFF] p-4 border border-[#E2E8F0] rounded-lg shadow-sm space-y-1">
+              <div className="flex items-center justify-between text-[#64748B] text-xs">
                 <span>AI / NLP Engine</span>
-                <Cpu className="w-4 h-4 text-purple-400" />
+                <Cpu className="w-4 h-4 text-[#7E22CE]" />
               </div>
-              <div className="text-lg font-bold text-white flex items-center gap-2">
-                <span className="w-2 h-2 rounded-full bg-purple-400" />
+              <div className="text-lg font-bold text-[#12304A] flex items-center gap-2">
+                <span className="w-2 h-2 rounded-full bg-[#7E22CE]" />
                 <span>spaCy Pipeline</span>
               </div>
-              <p className="text-[11px] text-slate-400">Entity & FIR extraction active</p>
+              <p className="text-[11px] text-[#64748B]">Entity & FIR extraction active</p>
             </div>
 
-            <div className="intel-card p-4 border border-slate-800 space-y-1">
-              <div className="flex items-center justify-between text-slate-400 text-xs">
+            <div className="bg-[#FFFFFF] p-4 border border-[#E2E8F0] rounded-lg shadow-sm space-y-1">
+              <div className="flex items-center justify-between text-[#64748B] text-xs">
                 <span>Graph Scale</span>
-                <Activity className="w-4 h-4 text-amber-400" />
+                <Activity className="w-4 h-4 text-[#B7791F]" />
               </div>
-              <div className="text-lg font-bold text-white">
+              <div className="text-lg font-bold text-[#12304A]">
                 {health?.database_nodes ?? 1284} Nodes / {health?.database_edges ?? 4821} Edges
               </div>
-              <p className="text-[11px] text-slate-400">Indexed relationships</p>
+              <p className="text-[11px] text-[#64748B]">Indexed relationships</p>
             </div>
           </div>
 
-          <div className="intel-card p-5 border border-slate-800 space-y-3">
-            <h3 className="text-xs font-bold uppercase tracking-wider text-white">
+          <div className="bg-[#FFFFFF] p-5 border border-[#E2E8F0] rounded-lg shadow-sm space-y-3">
+            <h3 className="text-xs font-bold uppercase tracking-wider text-[#12304A]">
               System Architecture & Component Verification
             </h3>
-            <div className="space-y-2 text-xs text-slate-300">
-              <div className="p-3 rounded-lg bg-[#090e1a] border border-slate-800 flex items-center justify-between">
+            <div className="space-y-2 text-xs text-[#17212B]">
+              <div className="p-3 rounded-md bg-[#F8FAFC] border border-[#E2E8F0] flex items-center justify-between">
                 <span>Graph Analytics & Centrality Algorithms</span>
-                <span className="text-emerald-400 font-semibold flex items-center gap-1">
+                <span className="text-[#16805C] font-semibold flex items-center gap-1">
                   <CheckCircle2 className="w-3.5 h-3.5" /> Ready (Betweenness, PageRank, Louvain)
                 </span>
               </div>
-              <div className="p-3 rounded-lg bg-[#090e1a] border border-slate-800 flex items-center justify-between">
+              <div className="p-3 rounded-md bg-[#F8FAFC] border border-[#E2E8F0] flex items-center justify-between">
                 <span>Multi-Source Ingestion & Hashing</span>
-                <span className="text-emerald-400 font-semibold flex items-center gap-1">
+                <span className="text-[#16805C] font-semibold flex items-center gap-1">
                   <CheckCircle2 className="w-3.5 h-3.5" /> SHA-256 Verified (CDR, FIR, Bank, ANPR)
                 </span>
               </div>
-              <div className="p-3 rounded-lg bg-[#090e1a] border border-slate-800 flex items-center justify-between">
+              <div className="p-3 rounded-md bg-[#F8FAFC] border border-[#E2E8F0] flex items-center justify-between">
                 <span>Immutable Compliance Trail</span>
-                <span className="text-emerald-400 font-semibold flex items-center gap-1">
+                <span className="text-[#16805C] font-semibold flex items-center gap-1">
                   <CheckCircle2 className="w-3.5 h-3.5" /> Cryptographic Log Active
                 </span>
               </div>
@@ -169,16 +168,16 @@ export const Settings: React.FC = () => {
           </div>
 
           {/* About TraceNet Card */}
-          <div className="intel-card p-5 border border-slate-800 space-y-3 bg-[#0d1527]">
-            <h3 className="text-xs font-bold uppercase tracking-wider text-slate-400">
+          <div className="bg-[#FFFFFF] p-5 border border-[#E2E8F0] rounded-lg shadow-sm space-y-3">
+            <h3 className="text-xs font-bold uppercase tracking-wider text-[#64748B]">
               About TraceNet
             </h3>
-            <div className="space-y-1 text-xs text-slate-300">
-              <div className="text-base font-bold text-white font-mono">TraceNet</div>
-              <p className="text-slate-300 font-medium">AI-Powered Criminal Network Analysis System</p>
-              <p className="text-[11px] text-slate-400 italic">Connecting the dots in complex investigations.</p>
-              <div className="pt-2 flex items-center gap-2 text-[11px] text-slate-400">
-                <span className="px-2 py-0.5 rounded bg-slate-900 border border-slate-700 text-blue-300 font-mono font-bold">
+            <div className="space-y-1 text-xs text-[#17212B]">
+              <div className="text-base font-bold text-[#12304A] font-mono">TraceNet</div>
+              <p className="text-[#334155] font-medium">AI-Powered Criminal Network Analysis System</p>
+              <p className="text-[11px] text-[#64748B] italic">Connecting the dots in complex investigations.</p>
+              <div className="pt-2 flex items-center gap-2 text-[11px] text-[#64748B]">
+                <span className="px-2 py-0.5 rounded bg-[#E6F4F5] border border-[#A7DFE3] text-[#087E8B] font-mono font-bold">
                   Version: SIH Prototype
                 </span>
                 <span>•</span>
@@ -189,32 +188,30 @@ export const Settings: React.FC = () => {
         </div>
       )}
 
-
-
       {/* Tab 2: Officer Profile & Role Switcher */}
       {activeTab === 'profile' && (
-        <div className="intel-card p-6 border border-slate-800 space-y-5">
+        <div className="bg-[#FFFFFF] p-6 border border-[#E2E8F0] rounded-lg shadow-sm space-y-5">
           <div className="flex items-center gap-4">
-            <div className="w-14 h-14 rounded-full bg-blue-600/20 border border-blue-500/40 flex items-center justify-center text-blue-400">
+            <div className="w-14 h-14 rounded-full bg-[#E6F4F5] border border-[#A7DFE3] flex items-center justify-center text-[#087E8B]">
               <User className="w-7 h-7" />
             </div>
             <div>
-              <h3 className="text-base font-bold text-white">{user?.name || 'Inspector Rajesh Verma'}</h3>
-              <p className="text-xs text-slate-400">{user?.email || 'r.verma@mha.gov.in'}</p>
+              <h3 className="text-base font-bold text-[#12304A]">{user?.name || 'Inspector Rajesh Verma'}</h3>
+              <p className="text-xs text-[#64748B]">{user?.email || 'r.verma@mha.gov.in'}</p>
               <div className="flex items-center gap-2 mt-1">
-                <span className="px-2 py-0.5 rounded text-[10px] font-bold bg-blue-500/20 text-blue-300 border border-blue-500/40">
+                <span className="px-2 py-0.5 rounded text-[10px] font-bold bg-[#E6F4F5] text-[#087E8B] border border-[#A7DFE3]">
                   {user?.role || 'INVESTIGATOR'}
                 </span>
-                <span className="text-xs text-slate-500">•</span>
-                <span className="text-xs text-slate-400">{user?.department || 'Special Cyber & Financial Crimes Division'}</span>
+                <span className="text-xs text-[#CBD5E1]">•</span>
+                <span className="text-xs text-[#64748B]">{user?.department || 'Special Cyber & Financial Crimes Division'}</span>
               </div>
             </div>
           </div>
 
-          <div className="pt-4 border-t border-slate-800 flex items-center gap-3">
+          <div className="pt-4 border-t border-[#E2E8F0] flex items-center gap-3">
             <button
               onClick={() => setIsLoginModalOpen(true)}
-              className="flex items-center gap-2 px-4 py-2 rounded-lg bg-blue-600 hover:bg-blue-500 text-white text-xs font-semibold transition-colors"
+              className="flex items-center gap-2 px-4 py-2 rounded-md bg-[#087E8B] hover:bg-[#06636E] text-white text-xs font-semibold transition-colors shadow-sm"
             >
               <KeyRound className="w-4 h-4" />
               <span>Switch User Role</span>
@@ -225,7 +222,7 @@ export const Settings: React.FC = () => {
                 logout();
                 setIsLoginModalOpen(true);
               }}
-              className="flex items-center gap-2 px-4 py-2 rounded-lg bg-rose-950/30 hover:bg-rose-950/60 border border-rose-500/40 text-rose-300 text-xs font-semibold transition-colors"
+              className="flex items-center gap-2 px-4 py-2 rounded-md bg-[#FFFFFF] hover:bg-[#FEE2E2] border border-[#FCA5A5] text-[#C24141] text-xs font-semibold transition-colors shadow-sm"
             >
               <LogOut className="w-4 h-4" />
               <span>Sign Out</span>

@@ -5,10 +5,9 @@ import {
   FolderOpen, 
   Filter,
   User,
-  Clock,
-  ShieldAlert
+  Clock
 } from 'lucide-react';
-import { Case, CaseStatus, CasePriority } from '../../types';
+import { Case } from '../../types';
 import { caseService } from '../../services/caseService';
 import { useInvestigation } from '../../context/InvestigationContext';
 import { useAuth } from '../../context/AuthContext';
@@ -55,23 +54,24 @@ export const CasesList: React.FC = () => {
   const getPriorityBadge = (priority: string) => {
     switch (priority) {
       case 'CRITICAL':
+        return <span className="px-2 py-0.5 rounded text-[10px] font-bold bg-[#FEE2E2] text-[#C24141] border border-[#FCA5A5]">CRITICAL</span>;
       case 'HIGH':
-        return <span className="px-2 py-0.5 rounded text-[10px] font-bold bg-rose-500/20 text-rose-300 border border-rose-500/30">HIGH</span>;
+        return <span className="px-2 py-0.5 rounded text-[10px] font-bold bg-[#FEF3C7] text-[#B7791F] border border-[#FCD34D]">HIGH</span>;
       case 'MEDIUM':
-        return <span className="px-2 py-0.5 rounded text-[10px] font-bold bg-amber-500/20 text-amber-300 border border-amber-500/30">MEDIUM</span>;
+        return <span className="px-2 py-0.5 rounded text-[10px] font-bold bg-[#EBF8FF] text-[#2563A6] border border-[#BEE3F8]">MEDIUM</span>;
       default:
-        return <span className="px-2 py-0.5 rounded text-[10px] font-bold bg-slate-800 text-slate-300 border border-slate-700">ROUTINE</span>;
+        return <span className="px-2 py-0.5 rounded text-[10px] font-bold bg-[#F1F5F9] text-[#64748B] border border-[#E2E8F0]">ROUTINE</span>;
     }
   };
 
   const getStatusBadge = (status: string) => {
     switch (status) {
       case 'ACTIVE':
-        return <span className="px-2 py-0.5 rounded text-[10px] font-bold bg-emerald-500/20 text-emerald-300 border border-emerald-500/30">ACTIVE</span>;
+        return <span className="px-2 py-0.5 rounded text-[10px] font-bold bg-[#E8F7F0] text-[#16805C] border border-[#A3E0C8]">ACTIVE</span>;
       case 'UNDER_REVIEW':
-        return <span className="px-2 py-0.5 rounded text-[10px] font-bold bg-blue-500/20 text-blue-300 border border-blue-500/30">UNDER REVIEW</span>;
+        return <span className="px-2 py-0.5 rounded text-[10px] font-bold bg-[#FEF3C7] text-[#B7791F] border border-[#FCD34D]">UNDER REVIEW</span>;
       default:
-        return <span className="px-2 py-0.5 rounded text-[10px] font-bold bg-slate-800 text-slate-400 border border-slate-700">CLOSED</span>;
+        return <span className="px-2 py-0.5 rounded text-[10px] font-bold bg-[#F1F5F9] text-[#64748B] border border-[#E2E8F0]">CLOSED</span>;
     }
   };
 
@@ -79,28 +79,28 @@ export const CasesList: React.FC = () => {
     <div className="max-w-6xl mx-auto space-y-5 select-none animate-in fade-in py-1">
       
       {/* Header with Search & New Case Button */}
-      <div className="intel-card p-5 border border-slate-800 flex flex-col md:flex-row md:items-center justify-between gap-4">
+      <div className="bg-[#FFFFFF] p-5 rounded-lg border border-[#E2E8F0] shadow-sm flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
-          <h1 className="text-xl font-bold text-white tracking-tight">Active Investigation Cases</h1>
-          <p className="text-xs text-slate-400 mt-0.5">Formal case dossiers registered under SIH26189 / Ministry of Home Affairs</p>
+          <h1 className="text-xl font-bold text-[#12304A] tracking-tight">Active Investigation Cases</h1>
+          <p className="text-xs text-[#64748B] mt-0.5">Formal case dossiers registered under SIH26189 / Ministry of Home Affairs</p>
         </div>
 
         <div className="flex flex-wrap items-center gap-2.5">
           <div className="relative min-w-[220px] sm:min-w-[260px]">
-            <Search className="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
+            <Search className="w-4 h-4 text-[#64748B] absolute left-3 top-1/2 -translate-y-1/2" />
             <input
               type="text"
               value={search}
               onChange={(e) => setSearch(e.target.value)}
               placeholder="Search cases..."
-              className="w-full pl-9 pr-3 py-2 rounded-lg bg-slate-900 border border-slate-700 text-xs text-white placeholder-slate-400 focus:outline-none focus:border-blue-500 transition-colors"
+              className="w-full pl-9 pr-3 py-2 rounded-md bg-[#FFFFFF] border border-[#CBD5E1] text-xs text-[#17212B] placeholder-[#94A3B8] focus:outline-none focus:border-[#087E8B] focus:ring-1 focus:ring-[#087E8B] transition-colors"
             />
           </div>
 
           {canEdit && (
             <button
               onClick={() => setIsCreateCaseModalOpen(true)}
-              className="flex items-center gap-1.5 px-4 py-2 rounded-lg bg-blue-600 hover:bg-blue-500 text-white text-xs font-semibold tracking-wide transition-colors whitespace-nowrap shadow-sm"
+              className="flex items-center gap-1.5 px-4 py-2 rounded-md bg-[#087E8B] hover:bg-[#06636E] text-white text-xs font-semibold tracking-wide transition-colors whitespace-nowrap shadow-sm"
             >
               <Plus className="w-4 h-4" />
               <span>+ New Case</span>
@@ -110,16 +110,16 @@ export const CasesList: React.FC = () => {
       </div>
 
       {/* Filter Toolbar */}
-      <div className="intel-card p-3 border border-slate-800 flex flex-wrap items-center gap-3 text-xs bg-[#090e1a]">
-        <span className="text-[10px] font-bold uppercase tracking-wider text-slate-400 flex items-center gap-1.5">
-          <Filter className="w-3.5 h-3.5 text-blue-400" />
+      <div className="bg-[#FFFFFF] p-3 rounded-lg border border-[#E2E8F0] shadow-sm flex flex-wrap items-center gap-3 text-xs">
+        <span className="text-[10px] font-bold uppercase tracking-wider text-[#64748B] flex items-center gap-1.5">
+          <Filter className="w-3.5 h-3.5 text-[#087E8B]" />
           <span>Filters:</span>
         </span>
 
         <select
           value={statusFilter}
           onChange={(e) => setStatusFilter(e.target.value)}
-          className="px-2.5 py-1.5 rounded-lg bg-slate-900 border border-slate-700 text-xs text-white focus:outline-none focus:border-blue-500"
+          className="px-2.5 py-1.5 rounded-md bg-[#FFFFFF] border border-[#CBD5E1] text-xs text-[#17212B] focus:outline-none focus:border-[#087E8B]"
         >
           <option value="ALL">Status: All</option>
           <option value="ACTIVE">ACTIVE</option>
@@ -130,7 +130,7 @@ export const CasesList: React.FC = () => {
         <select
           value={priorityFilter}
           onChange={(e) => setPriorityFilter(e.target.value)}
-          className="px-2.5 py-1.5 rounded-lg bg-slate-900 border border-slate-700 text-xs text-white focus:outline-none focus:border-blue-500"
+          className="px-2.5 py-1.5 rounded-md bg-[#FFFFFF] border border-[#CBD5E1] text-xs text-[#17212B] focus:outline-none focus:border-[#087E8B]"
         >
           <option value="ALL">Priority: All</option>
           <option value="CRITICAL">CRITICAL</option>
@@ -141,7 +141,7 @@ export const CasesList: React.FC = () => {
         <select
           value={officerFilter}
           onChange={(e) => setOfficerFilter(e.target.value)}
-          className="px-2.5 py-1.5 rounded-lg bg-slate-900 border border-slate-700 text-xs text-white focus:outline-none focus:border-blue-500"
+          className="px-2.5 py-1.5 rounded-md bg-[#FFFFFF] border border-[#CBD5E1] text-xs text-[#17212B] focus:outline-none focus:border-[#087E8B]"
         >
           <option value="ALL">Assigned Officer: All</option>
           {officers.map(off => (
@@ -157,78 +157,93 @@ export const CasesList: React.FC = () => {
               setOfficerFilter('ALL');
               setSearch('');
             }}
-            className="text-[11px] text-blue-400 hover:text-blue-300 ml-auto font-semibold"
+            className="text-[11px] text-[#087E8B] hover:text-[#06636E] ml-auto font-semibold"
           >
-            Reset Filters
+            Clear Filters
           </button>
         )}
       </div>
 
-      {/* Case Management Table */}
-      <div className="intel-card border border-slate-800 overflow-hidden shadow-lg">
+      {/* Main Cases Table */}
+      <div className="bg-[#FFFFFF] rounded-lg border border-[#E2E8F0] shadow-sm overflow-hidden space-y-0">
         <div className="overflow-x-auto">
           <table className="w-full text-left text-xs">
-            <thead className="bg-[#090e1a] text-[10px] text-slate-400 uppercase tracking-wider border-b border-slate-800 font-semibold">
+            <thead className="bg-[#F8FAFC] text-[10px] text-[#64748B] uppercase tracking-wider border-b border-[#E2E8F0] font-semibold">
               <tr>
-                <th className="py-3 px-4">Case ID</th>
-                <th className="py-3 px-4">Case Name</th>
-                <th className="py-3 px-4">Status</th>
-                <th className="py-3 px-4">Priority</th>
-                <th className="py-3 px-4">Created</th>
-                <th className="py-3 px-4">Last Updated</th>
-                <th className="py-3 px-4">Assigned Officer</th>
-                <th className="py-3 px-4 text-right">Action</th>
+                <th className="py-3.5 px-4">Case Details</th>
+                <th className="py-3.5 px-4">Lead Investigator</th>
+                <th className="py-3.5 px-4">Status</th>
+                <th className="py-3.5 px-4">Priority</th>
+                <th className="py-3.5 px-4">Key Metrics</th>
+                <th className="py-3.5 px-4 text-right">Actions</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-slate-800/80">
+            <tbody className="divide-y divide-[#E2E8F0]">
               {loading ? (
                 <tr>
-                  <td colSpan={8} className="py-8 text-center text-xs text-slate-400">
-                    Loading cases...
+                  <td colSpan={6} className="py-8 text-center text-[#64748B]">
+                    Loading investigation files...
                   </td>
                 </tr>
               ) : filtered.length === 0 ? (
                 <tr>
-                  <td colSpan={8} className="py-8 text-center text-xs text-slate-400">
-                    No cases match your search or filter criteria.
+                  <td colSpan={6} className="py-8 text-center text-[#64748B]">
+                    No cases match the selected filter criteria.
                   </td>
                 </tr>
               ) : (
                 filtered.map((c) => (
                   <tr 
-                    key={c.id}
+                    key={c.id} 
                     onClick={() => handleOpenCase(c.id)}
-                    className="hover:bg-slate-800/60 cursor-pointer transition-colors"
+                    className="hover:bg-[#F8FAFC] cursor-pointer transition-colors bg-[#FFFFFF]"
                   >
-                    <td className="py-3.5 px-4 font-mono font-bold text-blue-400 whitespace-nowrap">
-                      {c.id}
+                    <td className="py-3.5 px-4">
+                      <div className="flex items-center gap-2">
+                        <span className="font-mono font-bold text-[#087E8B] text-xs">{c.id}</span>
+                        <span className="font-semibold text-[#12304A] text-xs">{c.name}</span>
+                      </div>
+                      <p className="text-[11px] text-[#64748B] mt-0.5 line-clamp-1 max-w-md">{c.description}</p>
                     </td>
-                    <td className="py-3.5 px-4 font-semibold text-white">
-                      <div>{c.name}</div>
-                      <div className="text-[10px] text-slate-400 truncate max-w-xs font-normal">{c.description}</div>
+
+                    <td className="py-3.5 px-4 text-[#17212B]">
+                      <div className="flex items-center gap-1.5">
+                        <User className="w-3.5 h-3.5 text-[#64748B]" />
+                        <span className="font-medium text-xs text-[#12304A]">{c.leadInvestigator}</span>
+                      </div>
+                      <span className="text-[10px] text-[#64748B] font-mono">{c.badgeNumber}</span>
                     </td>
-                    <td className="py-3.5 px-4 whitespace-nowrap">
+
+                    <td className="py-3.5 px-4">
                       {getStatusBadge(c.status)}
                     </td>
-                    <td className="py-3.5 px-4 whitespace-nowrap">
+
+                    <td className="py-3.5 px-4">
                       {getPriorityBadge(c.priority)}
                     </td>
-                    <td className="py-3.5 px-4 text-slate-400 whitespace-nowrap font-mono">
-                      {c.dateOpened || '12 Aug 2026'}
+
+                    <td className="py-3.5 px-4 text-[#64748B]">
+                      <div className="flex items-center gap-3 font-mono text-[11px]">
+                        <span>{c.entityCount} entities</span>
+                        <span>•</span>
+                        <span>{c.flaggedAlertsCount} alerts</span>
+                      </div>
+                      <div className="text-[10px] text-[#94A3B8] flex items-center gap-1 mt-0.5">
+                        <Clock className="w-3 h-3" />
+                        <span>{c.lastActivity}</span>
+                      </div>
                     </td>
-                    <td className="py-3.5 px-4 text-slate-400 whitespace-nowrap">
-                      {c.lastActivity || 'Today'}
-                    </td>
-                    <td className="py-3.5 px-4 text-slate-300 whitespace-nowrap font-medium">
-                      {c.leadInvestigator || 'Inspector Rajesh Verma'}
-                    </td>
-                    <td className="py-3.5 px-4 text-right whitespace-nowrap" onClick={(e) => e.stopPropagation()}>
+
+                    <td className="py-3.5 px-4 text-right">
                       <button
-                        onClick={() => handleOpenCase(c.id)}
-                        className="px-3 py-1.5 rounded-lg bg-slate-800 hover:bg-blue-600 text-slate-200 hover:text-white text-xs font-semibold transition-colors inline-flex items-center gap-1.5 shadow-sm"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          handleOpenCase(c.id);
+                        }}
+                        className="px-3.5 py-1.5 rounded-md bg-[#E6F4F5] hover:bg-[#087E8B] text-[#087E8B] hover:text-white font-semibold transition-colors inline-flex items-center gap-1.5 text-xs shadow-sm"
                       >
                         <FolderOpen className="w-3.5 h-3.5" />
-                        <span>Open</span>
+                        <span>Open Case</span>
                       </button>
                     </td>
                   </tr>
@@ -242,4 +257,3 @@ export const CasesList: React.FC = () => {
     </div>
   );
 };
-

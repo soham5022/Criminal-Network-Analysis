@@ -1,19 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { 
   Clock, 
-  Calendar, 
-  FileText, 
-  UserCheck, 
-  Eye, 
-  ClipboardList, 
-  ShieldCheck, 
-  ExternalLink, 
-  MapPin, 
   Search, 
-  Filter,
-  CheckCircle2,
-  AlertTriangle,
-  FileSpreadsheet
+  ExternalLink, 
+  MapPin 
 } from 'lucide-react';
 import { UnifiedCaseEvent, caseHistoryService } from '../../services/caseHistoryService';
 import { useInvestigation } from '../../context/InvestigationContext';
@@ -48,136 +38,135 @@ export const UnifiedCaseTimelineTab: React.FC<UnifiedCaseTimelineTabProps> = ({ 
   const getSourceBadge = (sourceType: string) => {
     switch (sourceType) {
       case 'WITNESS_STATEMENT':
-        return 'bg-blue-500/20 text-blue-300 border-blue-500/30';
+        return 'bg-[#EBF8FF] text-[#12304A] border-[#BEE3F8]';
       case 'INCIDENT_REPORT':
-        return 'bg-amber-500/20 text-amber-300 border-amber-500/30';
+        return 'bg-[#FEF3C7] text-[#B7791F] border-[#FCD34D]';
       case 'EVIDENCE_REGISTRY':
-        return 'bg-cyan-500/20 text-cyan-300 border-cyan-500/30';
+        return 'bg-[#E6F4F5] text-[#087E8B] border-[#A7DFE3]';
       case 'OFFICER_OBSERVATION':
-        return 'bg-emerald-500/20 text-emerald-300 border-emerald-500/30';
+        return 'bg-[#E8F7F0] text-[#16805C] border-[#A3E0C8]';
       case 'ACTION_LOG':
-        return 'bg-purple-500/20 text-purple-300 border-purple-500/30';
+        return 'bg-[#F3E8FF] text-[#7E22CE] border-[#E9D5FF]';
       default:
-        return 'bg-slate-800 text-slate-300 border-slate-700';
+        return 'bg-[#F1F5F9] text-[#64748B] border-[#E2E8F0]';
+    }
+  };
+
+  const handleInspectSource = (ev: UnifiedCaseEvent) => {
+    if (ev.sourceType === 'WITNESS_STATEMENT') {
+      setActiveCaseTab('witnesses');
+    } else if (ev.sourceType === 'EVIDENCE_REGISTRY') {
+      navigateTo('evidence');
+    } else if (ev.sourceType === 'INCIDENT_REPORT') {
+      setActiveCaseTab('overview');
+    } else {
+      setActiveCaseTab('actions');
     }
   };
 
   return (
-    <div className="space-y-5 animate-in fade-in select-none">
+    <div className="space-y-5 animate-in fade-in select-none max-w-6xl">
       
       {/* 1. Header & Filters Bar */}
-      <div className="intel-card p-4 border border-slate-800 rounded-xl bg-[#0d1527] flex flex-col md:flex-row md:items-center justify-between gap-4">
+      <div className="p-4 border border-[#E2E8F0] rounded-lg bg-[#FFFFFF] shadow-sm flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div className="space-y-0.5">
-          <div className="flex items-center gap-2 text-xs font-mono font-semibold text-blue-400">
+          <div className="flex items-center gap-2 text-xs font-semibold text-[#087E8B]">
             <Clock className="w-4 h-4" />
             <span>UNIFIED INVESTIGATION EVENT LOG</span>
           </div>
-          <h2 className="text-base sm:text-lg font-bold text-white tracking-tight">
+          <h2 className="text-base sm:text-lg font-bold text-[#12304A] tracking-tight">
             Case Chronology & Source Attribution Stream
           </h2>
-          <p className="text-xs text-slate-400">
+          <p className="text-xs text-[#64748B]">
             Complete chronological event log linking incidents, witness interviews, evidence collections, and field observations to their verifiable sources.
           </p>
         </div>
 
         <div className="flex flex-wrap items-center gap-2.5">
           <div className="relative min-w-[180px]">
-            <Search className="w-3.5 h-3.5 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
+            <Search className="w-3.5 h-3.5 text-[#64748B] absolute left-3 top-1/2 -translate-y-1/2" />
             <input
               type="text"
               value={search}
               onChange={(e) => setSearch(e.target.value)}
               placeholder="Search event log..."
-              className="w-full pl-8 pr-3 py-1.5 rounded-lg bg-slate-900 border border-slate-700 text-xs text-white placeholder-slate-400 focus:outline-none focus:border-blue-500 font-sans"
+              className="w-full pl-8 pr-3 py-1.5 rounded-md bg-[#FFFFFF] border border-[#CBD5E1] text-xs text-[#17212B] placeholder-[#94A3B8] focus:outline-none focus:border-[#087E8B] font-sans"
             />
           </div>
 
           <select
             value={selectedSourceFilter}
             onChange={(e) => setSelectedSourceFilter(e.target.value)}
-            className="px-3 py-1.5 rounded-lg bg-slate-900 border border-slate-700 text-xs text-white focus:outline-none focus:border-blue-500"
+            className="px-3 py-1.5 rounded-md bg-[#FFFFFF] border border-[#CBD5E1] text-xs text-[#17212B] focus:outline-none focus:border-[#087E8B]"
           >
             <option value="ALL">All Source Types ({events.length})</option>
             <option value="WITNESS_STATEMENT">Witness Statements</option>
-            <option value="OFFICER_OBSERVATION">Officer Observations</option>
             <option value="INCIDENT_REPORT">Incident Reports</option>
-            <option value="ACTION_LOG">Investigation Actions</option>
+            <option value="EVIDENCE_REGISTRY">Evidence Registry</option>
+            <option value="OFFICER_OBSERVATION">Officer Observations</option>
+            <option value="ACTION_LOG">Actions & Directives</option>
           </select>
         </div>
       </div>
 
-      {/* 2. Events Timeline Stream */}
-      {filteredEvents.length === 0 ? (
-        <div className="intel-card p-12 border border-slate-800 rounded-xl bg-[#0c1322] text-center space-y-2">
-          <Clock className="w-8 h-8 text-slate-600 mx-auto" />
-          <h3 className="text-sm font-bold text-white">No Investigation Events Recorded</h3>
-          <p className="text-xs text-slate-400 max-w-md mx-auto">
-            No events match your current filter parameters for this case.
-          </p>
-        </div>
-      ) : (
-        <div className="space-y-3">
-          {filteredEvents.map((ev) => (
-            <div 
-              key={ev.id}
-              className="intel-card p-4 border border-slate-800 rounded-xl bg-[#0c1322] hover:bg-slate-800/40 transition-colors space-y-2.5 text-xs shadow-lg"
-            >
-              <div className="flex flex-wrap items-center justify-between gap-2">
-                <div className="flex items-center gap-2">
-                  <span className={`px-2 py-0.5 rounded text-[9px] font-mono font-bold uppercase border ${getSourceBadge(ev.sourceType)}`}>
-                    {ev.sourceType.replace(/_/g, ' ')}
-                  </span>
-                  <span className="font-bold text-white text-xs sm:text-sm">{ev.title}</span>
-                </div>
+      {/* 2. Unified Events Stream Container */}
+      <div className="p-6 border border-[#E2E8F0] rounded-lg bg-[#FFFFFF] shadow-sm relative space-y-5">
+        
+        {/* Continuous Spine */}
+        <div className="absolute left-8 top-8 bottom-8 w-0.5 bg-[#CBD5E1]" />
 
-                <div className="flex items-center gap-2 text-slate-400 font-mono text-[10px]">
-                  <Calendar className="w-3 h-3 text-slate-500" />
-                  <span>{ev.date} • {ev.time}</span>
-                </div>
+        {filteredEvents.length === 0 ? (
+          <div className="py-12 text-center text-[#64748B] text-xs">
+            No events found matching current filter for case {caseId}.
+          </div>
+        ) : (
+          filteredEvents.map((ev) => (
+            <div key={ev.id} className="relative flex items-start gap-4 group">
+              {/* Event Pin Node */}
+              <div className="w-6 h-6 rounded-full bg-[#FFFFFF] border-2 border-[#087E8B] flex items-center justify-center shrink-0 z-10 shadow-sm mt-1">
+                <div className="w-2 h-2 rounded-full bg-[#087E8B]" />
               </div>
 
-              <p className="text-xs text-slate-300 leading-relaxed font-sans bg-slate-950 p-3 rounded-lg border border-slate-800/80">
-                {ev.description}
-              </p>
+              {/* Event Card */}
+              <div className="flex-1 p-4 rounded-lg bg-[#F8FAFC] group-hover:bg-[#E6F4F5] border border-[#E2E8F0] group-hover:border-[#A7DFE3] transition-all shadow-sm space-y-2">
+                <div className="flex flex-wrap items-center justify-between gap-2 text-xs">
+                  <div className="flex items-center gap-2">
+                    <span className="font-bold text-[#12304A]">{ev.title}</span>
+                    <span className={`px-2 py-0.5 rounded text-[9px] font-mono font-bold uppercase border ${getSourceBadge(ev.sourceType)}`}>
+                      {ev.sourceType.replace(/_/g, ' ')}
+                    </span>
+                  </div>
 
-              {/* Source Attribution & Deep Link Footer */}
-              <div className="flex flex-wrap items-center justify-between gap-2 pt-1 border-t border-slate-800/60 text-[11px]">
-                <div className="flex items-center gap-2 text-slate-400">
-                  <MapPin className="w-3 h-3 text-purple-400 shrink-0" />
-                  <span className="truncate max-w-xs">{ev.location}</span>
+                  <span className="font-mono text-[10px] text-[#64748B]">{ev.date} • {ev.time}</span>
                 </div>
 
-                {/* Explicit Source Chip */}
-                <div className="flex items-center gap-2">
-                  <span className="text-[10px] text-slate-500 font-mono">Verifiable Source:</span>
-                  
-                  {ev.sourceWitnessRef ? (
-                    <button
-                      onClick={() => setActiveCaseTab('witnesses')}
-                      className="px-2 py-0.5 rounded bg-blue-950/60 text-blue-300 hover:text-white border border-blue-500/30 text-[10px] font-mono font-bold flex items-center gap-1 transition-colors"
-                    >
-                      <span>Witness: {ev.sourceWitnessRef}</span>
-                      <ExternalLink className="w-2.5 h-2.5" />
-                    </button>
-                  ) : ev.sourceEvidenceRef ? (
-                    <button
-                      onClick={() => navigateTo('evidence')}
-                      className="px-2 py-0.5 rounded bg-cyan-950/60 text-cyan-300 hover:text-white border border-cyan-500/30 text-[10px] font-mono font-bold flex items-center gap-1 transition-colors"
-                    >
-                      <span>Evidence: {ev.sourceEvidenceRef}</span>
-                      <ExternalLink className="w-2.5 h-2.5" />
-                    </button>
-                  ) : (
-                    <span className="px-2 py-0.5 rounded bg-slate-900 text-slate-400 border border-slate-800 text-[10px] font-mono">
-                      {ev.sourceId}
-                    </span>
-                  )}
+                <p className="text-xs text-[#334155] leading-relaxed font-sans">{ev.description}</p>
+
+                <div className="pt-2 border-t border-[#E2E8F0] flex flex-wrap items-center justify-between gap-2 text-[11px] text-[#64748B]">
+                  <div className="flex items-center gap-3">
+                    {ev.location && (
+                      <span className="flex items-center gap-1">
+                        <MapPin className="w-3 h-3 text-[#7E22CE]" />
+                        <span>{ev.location}</span>
+                      </span>
+                    )}
+                    <span>Source: <strong className="text-[#12304A]">{ev.sourceId}</strong></span>
+                  </div>
+
+                  <button
+                    onClick={() => handleInspectSource(ev)}
+                    className="text-[#087E8B] hover:text-[#06636E] font-semibold flex items-center gap-1"
+                  >
+                    <span>View Source Record</span>
+                    <ExternalLink className="w-3 h-3" />
+                  </button>
                 </div>
               </div>
             </div>
-          ))}
-        </div>
-      )}
+          ))
+        )}
+
+      </div>
 
     </div>
   );

@@ -1,16 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { 
-  AlertTriangle, 
   Check, 
   X, 
-  User, 
-  Network, 
-  FileSpreadsheet, 
-  CheckCircle2,
-  Clock,
-  ExternalLink,
-  ChevronRight,
-  ShieldCheck,
   Eye
 } from 'lucide-react';
 import { Alert, AlertStatus } from '../../types';
@@ -63,11 +54,11 @@ export const AlertsList: React.FC = () => {
   const getStatusBadge = (status: AlertStatus) => {
     switch (status) {
       case 'NEW':
-        return <span className="px-2 py-0.5 rounded text-[10px] font-bold bg-rose-500/20 text-rose-300 border border-rose-500/30">NEW</span>;
+        return <span className="px-2 py-0.5 rounded text-[10px] font-bold bg-[#FEE2E2] text-[#C24141] border border-[#FCA5A5]">NEW</span>;
       case 'INVESTIGATING':
-        return <span className="px-2 py-0.5 rounded text-[10px] font-bold bg-amber-500/20 text-amber-300 border border-amber-500/30">INVESTIGATING</span>;
+        return <span className="px-2 py-0.5 rounded text-[10px] font-bold bg-[#FEF3C7] text-[#B7791F] border border-[#FCD34D]">INVESTIGATING</span>;
       default:
-        return <span className="px-2 py-0.5 rounded text-[10px] font-bold bg-emerald-500/20 text-emerald-300 border border-emerald-500/30">REVIEWED</span>;
+        return <span className="px-2 py-0.5 rounded text-[10px] font-bold bg-[#E8F7F0] text-[#16805C] border border-[#A3E0C8]">REVIEWED</span>;
     }
   };
 
@@ -75,20 +66,20 @@ export const AlertsList: React.FC = () => {
     <div className="max-w-6xl mx-auto py-1 space-y-5 select-none animate-in fade-in">
       
       {/* Header & Filter */}
-      <div className="intel-card p-5 border border-slate-800 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+      <div className="bg-[#FFFFFF] p-5 rounded-lg border border-[#E2E8F0] shadow-sm flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-          <h1 className="text-xl font-bold text-white tracking-tight">Investigation Alerts Queue</h1>
-          <p className="text-xs text-slate-400 mt-0.5">
+          <h1 className="text-xl font-bold text-[#12304A] tracking-tight">Investigation Alerts Queue</h1>
+          <p className="text-xs text-[#64748B] mt-0.5">
             Algorithmic anomaly patterns flagged for officer review and sign-off
           </p>
         </div>
 
         <div className="flex items-center gap-2">
-          <span className="text-xs text-slate-400 font-semibold">Filter:</span>
+          <span className="text-xs text-[#64748B] font-semibold">Filter:</span>
           <select
             value={statusFilter}
             onChange={(e) => setStatusFilter(e.target.value)}
-            className="px-3 py-1.5 rounded-lg bg-slate-900 border border-slate-700 text-xs text-white focus:outline-none focus:border-blue-500"
+            className="px-3 py-1.5 rounded-md bg-[#FFFFFF] border border-[#CBD5E1] text-xs text-[#17212B] focus:outline-none focus:border-[#087E8B]"
           >
             <option value="ALL">All Statuses ({alerts.length})</option>
             <option value="NEW">NEW ({alerts.filter(a => a.status === 'NEW').length})</option>
@@ -99,10 +90,10 @@ export const AlertsList: React.FC = () => {
       </div>
 
       {/* Main Alert Queue Table */}
-      <div className="intel-card border border-slate-800 overflow-hidden shadow-lg">
+      <div className="bg-[#FFFFFF] rounded-lg border border-[#E2E8F0] shadow-sm overflow-hidden space-y-0">
         <div className="overflow-x-auto">
           <table className="w-full text-left text-xs">
-            <thead className="bg-[#090e1a] text-[10px] text-slate-400 uppercase tracking-wider border-b border-slate-800 font-semibold">
+            <thead className="bg-[#F8FAFC] text-[10px] text-[#64748B] uppercase tracking-wider border-b border-[#E2E8F0] font-semibold">
               <tr>
                 <th className="py-3 px-4">Alert ID</th>
                 <th className="py-3 px-4">Detection Type</th>
@@ -112,47 +103,48 @@ export const AlertsList: React.FC = () => {
                 <th className="py-3 px-4 text-right">Action</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-slate-800/80">
+            <tbody className="divide-y divide-[#E2E8F0]">
               {loading ? (
                 <tr>
-                  <td colSpan={6} className="py-8 text-center text-xs text-slate-400">Loading alerts...</td>
+                  <td colSpan={6} className="py-8 text-center text-xs text-[#64748B]">Loading alerts...</td>
                 </tr>
               ) : filteredAlerts.length === 0 ? (
                 <tr>
-                  <td colSpan={6} className="py-8 text-center text-xs text-slate-400">No alerts match the selected filter.</td>
+                  <td colSpan={6} className="py-8 text-center text-xs text-[#64748B]">No alerts in this status filter.</td>
                 </tr>
               ) : (
-                filteredAlerts.map((alt) => {
-                  const targetEntity = alt.relatedEntities?.[0]?.id || (alt.id === 'ALT-9044' ? 'Account_103' : 'Person_044');
+                filteredAlerts.map((alert) => {
+                  const targetEntity = alert.relatedEntities?.[0]?.label || alert.relatedEntities?.[0]?.id || alert.associatedCaseId;
                   return (
-                    <tr 
-                      key={alt.id}
-                      onClick={() => setActiveReviewAlert(alt)}
-                      className={`hover:bg-slate-800/60 cursor-pointer transition-colors ${
-                        activeReviewAlert?.id === alt.id ? 'bg-slate-800/80 border-l-2 border-l-blue-500' : ''
-                      }`}
+                    <tr
+                      key={alert.id}
+                      onClick={() => setActiveReviewAlert(alert)}
+                      className="hover:bg-[#F8FAFC] cursor-pointer transition-colors bg-[#FFFFFF]"
                     >
-                      <td className="py-3.5 px-4 font-mono font-bold text-rose-400 whitespace-nowrap">
-                        {alt.id}
+                      <td className="py-3 px-4 font-mono font-bold text-[#087E8B]">
+                        {alert.id}
                       </td>
-                      <td className="py-3.5 px-4 font-semibold text-white">
-                        {alt.title}
+                      <td className="py-3 px-4 font-semibold text-[#12304A]">
+                        {alert.category || alert.title}
                       </td>
-                      <td className="py-3.5 px-4 font-mono font-bold text-blue-300 whitespace-nowrap">
+                      <td className="py-3 px-4 font-mono text-[#12304A]">
                         {targetEntity}
                       </td>
-                      <td className="py-3.5 px-4 text-slate-300 max-w-sm">
-                        {alt.reason || 'Structural anomaly across 3 modularity clusters.'}
+                      <td className="py-3 px-4 text-[#475569] max-w-sm truncate">
+                        {alert.reason}
                       </td>
-                      <td className="py-3.5 px-4 whitespace-nowrap">
-                        {getStatusBadge(alt.status)}
+                      <td className="py-3 px-4 whitespace-nowrap">
+                        {getStatusBadge(alert.status)}
                       </td>
-                      <td className="py-3.5 px-4 text-right whitespace-nowrap" onClick={(e) => e.stopPropagation()}>
+                      <td className="py-3 px-4 text-right whitespace-nowrap">
                         <button
-                          onClick={() => setActiveReviewAlert(alt)}
-                          className="px-3 py-1.5 rounded-lg bg-blue-600 hover:bg-blue-500 text-white font-semibold text-xs transition-colors inline-flex items-center gap-1 shadow-sm"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            setActiveReviewAlert(alert);
+                          }}
+                          className="px-3 py-1 rounded-md bg-[#E6F4F5] hover:bg-[#087E8B] text-[#087E8B] hover:text-white text-xs font-semibold inline-flex items-center gap-1 transition-colors shadow-sm"
                         >
-                          <Eye className="w-3.5 h-3.5" />
+                          <Eye className="w-3 h-3" />
                           <span>Review</span>
                         </button>
                       </td>
@@ -165,153 +157,57 @@ export const AlertsList: React.FC = () => {
         </div>
       </div>
 
-      {/* Alert Details Drawer (Modal / Side Drawer when reviewing) */}
+      {/* Review Modal Dialog */}
       {activeReviewAlert && (
-        <div className="fixed inset-0 z-50 bg-black/70 backdrop-blur-xs flex items-center justify-end p-0 select-none animate-in fade-in">
-          <div 
-            className="w-full max-w-lg h-full bg-[#0c1322] border-l border-slate-700 shadow-2xl flex flex-col overflow-hidden animate-in slide-in-from-right duration-200"
-            onClick={(e) => e.stopPropagation()}
-          >
-            {/* Drawer Header */}
-            <div className="p-4 sm:p-5 border-b border-slate-800 bg-[#090e1a] flex items-center justify-between">
-              <div className="space-y-0.5">
-                <div className="flex items-center gap-2">
-                  <span className="font-mono text-xs font-bold text-rose-400">{activeReviewAlert.id}</span>
-                  <span className="text-slate-600">•</span>
-                  <span className="text-slate-400 text-xs">{activeReviewAlert.associatedCaseId || 'CASE-1024'}</span>
-                </div>
-                <h2 className="text-base font-bold text-white">{activeReviewAlert.title}</h2>
+        <div className="fixed inset-0 z-50 bg-black/40 backdrop-blur-sm flex items-center justify-center p-4">
+          <div className="w-full max-w-xl bg-[#FFFFFF] rounded-lg border border-[#CBD5E1] shadow-2xl p-5 space-y-4 animate-in fade-in">
+            <div className="flex items-center justify-between border-b border-[#E2E8F0] pb-3">
+              <div className="flex items-center gap-2">
+                <span className="font-mono font-bold text-[#087E8B] text-sm">{activeReviewAlert.id}</span>
+                <span className="text-xs font-bold text-[#12304A]">{activeReviewAlert.category || activeReviewAlert.title}</span>
               </div>
               <button
                 onClick={() => setActiveReviewAlert(null)}
-                className="p-1 rounded-md text-slate-400 hover:text-white hover:bg-slate-800"
+                className="text-[#64748B] hover:text-[#12304A]"
               >
-                <X className="w-5 h-5" />
+                <X className="w-4 h-4" />
               </button>
             </div>
 
-            {/* Drawer Body Content */}
-            <div className="p-5 overflow-y-auto space-y-4 flex-1 text-xs">
-              
-              {/* Status Toggle Bar */}
-              <div className="p-3 rounded-lg bg-[#090e1a] border border-slate-800 space-y-2">
-                <span className="text-[10px] font-bold uppercase tracking-wider text-slate-400 block">
-                  Investigation Status:
-                </span>
-                <div className="grid grid-cols-3 gap-2">
-                  <button
-                    onClick={() => handleUpdateStatus(activeReviewAlert.id, 'NEW')}
-                    className={`py-1.5 rounded-lg font-bold text-xs border transition-all ${
-                      activeReviewAlert.status === 'NEW'
-                        ? 'bg-rose-600 text-white border-rose-500 shadow-sm'
-                        : 'bg-slate-900 border-slate-800 text-slate-400 hover:text-white'
-                    }`}
-                  >
-                    [ NEW ]
-                  </button>
-                  <button
-                    onClick={() => handleUpdateStatus(activeReviewAlert.id, 'INVESTIGATING')}
-                    className={`py-1.5 rounded-lg font-bold text-xs border transition-all ${
-                      activeReviewAlert.status === 'INVESTIGATING'
-                        ? 'bg-amber-600 text-white border-amber-500 shadow-sm'
-                        : 'bg-slate-900 border-slate-800 text-slate-400 hover:text-white'
-                    }`}
-                  >
-                    [ INVESTIGATING ]
-                  </button>
-                  <button
-                    onClick={() => handleUpdateStatus(activeReviewAlert.id, 'REVIEWED')}
-                    className={`py-1.5 rounded-lg font-bold text-xs border transition-all ${
-                      activeReviewAlert.status === 'REVIEWED'
-                        ? 'bg-emerald-600 text-white border-emerald-500 shadow-sm'
-                        : 'bg-slate-900 border-slate-800 text-slate-400 hover:text-white'
-                    }`}
-                  >
-                    [ REVIEWED ]
-                  </button>
+            <div className="space-y-3 text-xs">
+              <div className="p-3 bg-[#F8FAFC] rounded-md border border-[#E2E8F0]">
+                <div className="text-[10px] uppercase font-bold text-[#64748B]">Target Entity / Scope</div>
+                <div className="font-mono font-bold text-sm text-[#12304A] mt-0.5">
+                  {activeReviewAlert.relatedEntities?.[0]?.label || activeReviewAlert.relatedEntities?.[0]?.id || activeReviewAlert.associatedCaseId}
                 </div>
               </div>
 
-              {/* Flagging Reason */}
-              <div className="p-3.5 rounded-lg bg-[#090e1a] border border-slate-800 space-y-1.5">
-                <span className="text-[10px] font-bold uppercase tracking-wider text-slate-400 block">
-                  Flagging Reason
-                </span>
-                <p className="text-slate-200 leading-relaxed font-medium">
-                  {activeReviewAlert.reason || 'Cross-community structural bridge identified between 3 separate network partitions.'}
+              <div className="space-y-1">
+                <div className="text-[10px] uppercase font-bold text-[#64748B]">Reason for Flag</div>
+                <p className="text-xs text-[#17212B] leading-relaxed p-3 bg-[#F8FAFC] rounded-md border border-[#E2E8F0]">
+                  {activeReviewAlert.reason}
                 </p>
               </div>
 
-              {/* Supporting Evidence */}
-              <div className="p-3.5 rounded-lg bg-[#090e1a] border border-slate-800 space-y-2">
-                <div className="flex items-center justify-between">
-                  <span className="text-[10px] font-bold uppercase tracking-wider text-slate-400 block">
-                    Supporting Evidence
-                  </span>
-                  <button
-                    onClick={() => {
-                      if (activeReviewAlert.associatedCaseId) {
-                        setActiveCaseId(activeReviewAlert.associatedCaseId);
-                      }
-                      navigateTo('evidence');
-                    }}
-                    className="text-[10px] font-semibold text-blue-400 hover:text-blue-300 flex items-center gap-1 transition-colors"
-                  >
-                    <span>Open Evidence Registry</span>
-                    <ExternalLink className="w-3 h-3" />
-                  </button>
-                </div>
-                <p className="text-slate-300 leading-relaxed font-mono text-[11px]">
-                  {activeReviewAlert.evidenceRef || 'CDR tower logs, ANPR toll hits, and banking SWIFT transmission records verify cross-cluster coordination.'}
-                </p>
+              <div className="grid grid-cols-2 gap-3 pt-1">
+                <button
+                  onClick={() => {
+                    const target = activeReviewAlert.relatedEntities?.[0]?.id || 'Person_044';
+                    handleInspectEntity(target);
+                  }}
+                  className="py-2 px-3 rounded-md bg-[#FFFFFF] hover:bg-[#F8FAFC] border border-[#CBD5E1] text-[#12304A] text-xs font-semibold text-center transition-colors shadow-sm"
+                >
+                  Inspect in Graph
+                </button>
+                <button
+                  onClick={() => {
+                    handleUpdateStatus(activeReviewAlert.id, 'REVIEWED');
+                  }}
+                  className="py-2 px-3 rounded-md bg-[#087E8B] hover:bg-[#06636E] text-white text-xs font-semibold text-center transition-colors shadow-sm"
+                >
+                  Mark as Reviewed
+                </button>
               </div>
-
-              {/* Analytical Factors */}
-              <div className="p-3.5 rounded-lg bg-[#090e1a] border border-slate-800 space-y-2">
-                <span className="text-[10px] font-bold uppercase tracking-wider text-slate-400 block">
-                  Analytical Factors
-                </span>
-                <div className="space-y-1 text-xs">
-                  <div className="flex justify-between py-1 border-b border-slate-800/60">
-                    <span className="text-slate-400">Betweenness Centrality:</span>
-                    <span className="font-mono text-white font-semibold">0.612 (High)</span>
-                  </div>
-                  <div className="flex justify-between py-1 border-b border-slate-800/60">
-                    <span className="text-slate-400">Bridge Edge Count:</span>
-                    <span className="font-mono text-white font-semibold">7 cross-group connections</span>
-                  </div>
-                  <div className="flex justify-between py-1">
-                    <span className="text-slate-400">Detection Confidence:</span>
-                    <span className="font-mono text-emerald-400 font-semibold">96.4%</span>
-                  </div>
-                </div>
-              </div>
-
-              {/* Recommended Action */}
-              <div className="p-3.5 rounded-lg bg-blue-950/20 border border-blue-500/30 space-y-1.5">
-                <span className="text-[10px] font-bold uppercase tracking-wider text-blue-300 block">
-                  Recommended Investigative Action
-                </span>
-                <p className="text-slate-200 leading-relaxed">
-                  Initiate targeted CDR interception for {activeReviewAlert.relatedEntities?.[0]?.id || 'Person_044'} and inspect linked transaction endpoints.
-                </p>
-              </div>
-
-            </div>
-
-            {/* Drawer Footer Actions */}
-            <div className="p-4 border-t border-slate-800 bg-[#090e1a] space-y-2">
-              <button
-                onClick={() => {
-                  const targetEntity = activeReviewAlert.relatedEntities?.[0]?.id || 'Person_044';
-                  setActiveReviewAlert(null);
-                  handleInspectEntity(targetEntity);
-                }}
-                className="w-full py-2.5 rounded-lg bg-blue-600 hover:bg-blue-500 text-white font-semibold text-xs transition-colors flex items-center justify-center gap-1.5 shadow-sm"
-              >
-                <Network className="w-4 h-4" />
-                <span>Inspect in Link Graph</span>
-              </button>
             </div>
           </div>
         </div>

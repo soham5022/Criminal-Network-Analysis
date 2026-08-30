@@ -64,37 +64,37 @@ export const GlobalSearchModal: React.FC = () => {
   };
 
   return (
-    <div className="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex items-start justify-center pt-20 p-4 animate-in fade-in duration-150 select-none">
+    <div className="fixed inset-0 z-50 bg-black/40 backdrop-blur-sm flex items-start justify-center pt-20 p-4 animate-in fade-in duration-150 select-none">
       <div 
-        className="w-full max-w-2xl intel-card rounded-xl border border-slate-700 bg-[#0c1322] shadow-2xl overflow-hidden flex flex-col max-h-[80vh]"
+        className="w-full max-w-2xl bg-[#FFFFFF] rounded-lg border border-[#CBD5E1] shadow-2xl overflow-hidden flex flex-col max-h-[80vh]"
         onClick={(e) => e.stopPropagation()}
       >
         {/* Search Input Bar */}
-        <div className="p-4 border-b border-slate-800 flex items-center gap-3 bg-[#090e1a]">
-          <Search className="w-5 h-5 text-blue-400 flex-shrink-0" />
+        <div className="p-4 border-b border-[#E2E8F0] flex items-center gap-3 bg-[#FFFFFF]">
+          <Search className="w-5 h-5 text-[#087E8B] flex-shrink-0" />
           <input
             type="text"
             autoFocus
             value={query}
             onChange={(e) => setQuery(e.target.value)}
             placeholder="Search Persons, Phones, Accounts, Locations, Vehicles, Organizations, or Cases..."
-            className="w-full bg-transparent text-white placeholder-slate-400 text-sm focus:outline-none font-sans"
+            className="w-full bg-transparent text-[#12304A] placeholder-[#94A3B8] text-sm focus:outline-none font-sans"
           />
           {query && (
             <button 
               onClick={() => setQuery('')}
-              className="text-slate-400 hover:text-white p-1 rounded"
+              className="text-[#64748B] hover:text-[#12304A] p-1 rounded"
             >
               <X className="w-4 h-4" />
             </button>
           )}
-          <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-slate-800 text-slate-400 border border-slate-700">
+          <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-[#F1F5F9] text-[#64748B] border border-[#CBD5E1]">
             ESC
           </span>
         </div>
 
         {/* Filter Categories Bar */}
-        <div className="px-4 py-2 bg-slate-900 border-b border-slate-800 flex items-center gap-1.5 overflow-x-auto text-xs">
+        <div className="px-4 py-2 bg-[#F8FAFC] border-b border-[#E2E8F0] flex items-center gap-1.5 overflow-x-auto text-xs">
           {[
             { id: 'ALL', label: 'All Items' },
             { id: 'CASE', label: 'Cases' },
@@ -102,94 +102,102 @@ export const GlobalSearchModal: React.FC = () => {
             { id: 'PHONE', label: 'Phones' },
             { id: 'ACCOUNT', label: 'Accounts' },
             { id: 'LOCATION', label: 'Locations' },
-            { id: 'VEHICLE', label: 'Vehicles' },
-            { id: 'ORGANIZATION', label: 'Organizations' }
-          ].map(f => (
+            { id: 'ORGANIZATION', label: 'Organizations' },
+            { id: 'VEHICLE', label: 'Vehicles' }
+          ].map((item) => (
             <button
-              key={f.id}
-              onClick={() => setSelectedFilter(f.id)}
-              className={`px-2.5 py-1 rounded-md text-[11px] font-semibold whitespace-nowrap transition-colors ${
-                selectedFilter === f.id
-                  ? 'bg-blue-600 text-white'
-                  : 'text-slate-400 hover:text-white hover:bg-slate-800'
+              key={item.id}
+              onClick={() => setSelectedFilter(item.id)}
+              className={`px-2.5 py-1 rounded-md text-xs font-semibold whitespace-nowrap transition-colors ${
+                selectedFilter === item.id
+                  ? 'bg-[#E6F4F5] text-[#087E8B] border border-[#A7DFE3]'
+                  : 'text-[#64748B] hover:text-[#12304A] hover:bg-[#FFFFFF]'
               }`}
             >
-              {f.label}
+              {item.label}
             </button>
           ))}
         </div>
 
-        {/* Results List */}
-        <div className="p-3 overflow-y-auto space-y-4 max-h-[60vh]">
+        {/* Results Scroll Area */}
+        <div className="overflow-y-auto p-4 space-y-4 flex-1">
           {/* Cases Results */}
           {filteredCases.length > 0 && (
-            <div className="space-y-1">
-              <div className="px-3 py-1 text-[10px] font-bold uppercase tracking-wider text-slate-500 font-mono">
-                Matching Investigation Cases ({filteredCases.length})
+            <div className="space-y-2">
+              <div className="text-[10px] font-bold uppercase tracking-wider text-[#64748B] flex items-center gap-1.5 px-1">
+                <Folder className="w-3.5 h-3.5 text-[#087E8B]" />
+                <span>Investigation Cases ({filteredCases.length})</span>
               </div>
-              {filteredCases.map(c => (
-                <div
-                  key={c.id}
-                  onClick={() => handleSelectCase(c.id)}
-                  className="p-3 rounded-lg bg-slate-900/60 hover:bg-slate-800 border border-slate-800/80 hover:border-blue-500/50 cursor-pointer flex items-center justify-between transition-colors group"
-                >
-                  <div className="flex items-center gap-3">
-                    <div className="w-8 h-8 rounded-lg bg-blue-600/20 text-blue-400 border border-blue-500/30 flex items-center justify-center font-mono text-xs font-bold">
-                      <Folder className="w-4 h-4" />
-                    </div>
-                    <div>
+              <div className="space-y-1">
+                {filteredCases.map((c) => (
+                  <div
+                    key={c.id}
+                    onClick={() => handleSelectCase(c.id)}
+                    className="p-3 rounded-md bg-[#FFFFFF] hover:bg-[#F8FAFC] border border-[#E2E8F0] cursor-pointer flex items-center justify-between transition-colors group shadow-sm"
+                  >
+                    <div className="space-y-0.5">
                       <div className="flex items-center gap-2">
-                        <span className="font-mono text-xs font-bold text-blue-400">{c.id}</span>
-                        <span className="text-xs font-semibold text-white group-hover:text-blue-300">{c.name}</span>
+                        <span className="font-mono text-xs font-bold text-[#087E8B]">{c.id}</span>
+                        <span className="font-bold text-xs text-[#12304A] group-hover:text-[#087E8B]">{c.name}</span>
+                        <PriorityBadge priority={c.priority} />
                       </div>
-                      <div className="text-[11px] text-slate-400 font-mono">Lead: {c.leadInvestigator}</div>
+                      <p className="text-[11px] text-[#64748B] line-clamp-1">{c.description}</p>
                     </div>
+                    <ArrowRight className="w-4 h-4 text-[#94A3B8] group-hover:text-[#087E8B] group-hover:translate-x-0.5 transition-all flex-shrink-0" />
                   </div>
-                  <ArrowRight className="w-4 h-4 text-slate-500 group-hover:text-blue-400" />
-                </div>
-              ))}
+                ))}
+              </div>
             </div>
           )}
 
           {/* Entities Results */}
           {filteredEntities.length > 0 && (
-            <div className="space-y-1">
-              <div className="px-3 py-1 text-[10px] font-bold uppercase tracking-wider text-slate-500 font-mono">
-                Matching Intelligence Entities ({filteredEntities.length})
+            <div className="space-y-2">
+              <div className="text-[10px] font-bold uppercase tracking-wider text-[#64748B] flex items-center gap-1.5 px-1">
+                <Users className="w-3.5 h-3.5 text-[#2563A6]" />
+                <span>Entities & Leads ({filteredEntities.length})</span>
               </div>
-              {filteredEntities.map(e => (
-                <div
-                  key={e.id}
-                  onClick={() => handleSelectEntity(e.id)}
-                  className="p-3 rounded-lg bg-slate-900/60 hover:bg-slate-800 border border-slate-800/80 hover:border-blue-500/50 cursor-pointer flex items-center justify-between transition-colors group"
-                >
-                  <div className="flex items-center gap-3">
-                    <div className="w-8 h-8 rounded-lg bg-slate-800 text-slate-300 border border-slate-700 flex items-center justify-center font-mono text-xs font-bold">
-                      {e.type.charAt(0)}
+              <div className="space-y-1">
+                {filteredEntities.map((e) => (
+                  <div
+                    key={e.id}
+                    onClick={() => handleSelectEntity(e.id)}
+                    className="p-3 rounded-md bg-[#FFFFFF] hover:bg-[#F8FAFC] border border-[#E2E8F0] cursor-pointer flex items-center justify-between transition-colors group shadow-sm"
+                  >
+                    <div className="flex items-center gap-3">
+                      <div className="space-y-0.5">
+                        <div className="flex items-center gap-2">
+                          <span className="font-bold text-xs text-[#12304A] group-hover:text-[#087E8B]">
+                            {e.label || e.name || e.id}
+                          </span>
+                          <span className="font-mono text-[10px] text-[#64748B]">ID: {e.id}</span>
+                          <EntityTypeBadge type={e.type} />
+                        </div>
+                        <p className="text-[11px] text-[#64748B]">
+                          {e.metadata.alias || e.metadata.description || 'Primary investigation entity record'}
+                        </p>
+                      </div>
                     </div>
-                    <div>
-                      <div className="flex items-center gap-2">
-                        <span className="text-xs font-semibold text-white group-hover:text-blue-300">{e.label || e.name}</span>
-                        <span className="text-[10px] font-mono px-1.5 py-0.2 rounded bg-slate-800 text-slate-400 border border-slate-700">
-                          {e.type}
-                        </span>
-                      </div>
-                      <div className="text-[11px] text-slate-400 truncate max-w-md">
-                        {e.metadata.description || `Entity ID: ${e.id}`}
-                      </div>
+                    <div className="text-right flex items-center gap-2">
+                      <ArrowRight className="w-4 h-4 text-[#94A3B8] group-hover:text-[#087E8B] group-hover:translate-x-0.5 transition-all" />
                     </div>
                   </div>
-                  <ArrowRight className="w-4 h-4 text-slate-500 group-hover:text-blue-400" />
-                </div>
-              ))}
+                ))}
+              </div>
             </div>
           )}
 
           {filteredCases.length === 0 && filteredEntities.length === 0 && (
-            <div className="p-8 text-center text-xs text-slate-500">
-              No matching records found for "{query}".
+            <div className="p-8 text-center text-xs text-[#64748B]">
+              No entities or cases match "{query}". Try searching by FIR, name, phone, or account number.
             </div>
           )}
+        </div>
+
+        {/* Modal Footer */}
+        <div className="p-3 bg-[#F8FAFC] border-t border-[#E2E8F0] flex items-center justify-between text-[11px] text-[#64748B]">
+          <span>TraceNet Global Intelligence Registry</span>
+          <span className="font-mono">Press ESC to dismiss</span>
         </div>
       </div>
     </div>
