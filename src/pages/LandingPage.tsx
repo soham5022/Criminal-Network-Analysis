@@ -98,7 +98,7 @@ export const LandingPage: React.FC = () => {
 
             <h1 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-white tracking-tight leading-tight">
               CONNECTING THE DOTS <br />
-              <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 via-sky-300 to-cyan-400">
+              <span className="text-blue-400">
                 IN COMPLEX INVESTIGATIONS.
               </span>
             </h1>
