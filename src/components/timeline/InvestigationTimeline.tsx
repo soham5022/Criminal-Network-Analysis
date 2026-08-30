@@ -9,172 +9,297 @@ import {
   Search,
   AlertTriangle,
   ExternalLink,
-  Filter
+  Filter,
+  FileText,
+  FileSpreadsheet,
+  UserCheck,
+  Calendar,
+  Eye,
+  ShieldCheck
 } from 'lucide-react';
-import { TimelineEvent } from '../../types';
-import { timelineService } from '../../services/timelineService';
+import { 
+  timelineService, 
+  DetailedTimelineEvent, 
+  TimelineCategory, 
+  TimelineStats 
+} from '../../services/timelineService';
 import { useInvestigation } from '../../context/InvestigationContext';
+import { TimelineEventDetailsModal } from './TimelineEventDetailsModal';
 
 export const InvestigationTimeline: React.FC = () => {
-  const { navigateTo, setSelectedEntityId, activeCaseId } = useInvestigation();
-  const [events, setEvents] = useState<TimelineEvent[]>([]);
-  const [filterType, setFilterType] = useState<string>('ALL');
-  const [filterEntity, setFilterEntity] = useState<string>('');
-  const [isLoading, setIsLoading] = useState<boolean>(true);
+  const { navigateTo, openEntityProfile, activeCaseId } = useInvestigation();
+  const [events, setEvents] = useState<DetailedTimelineEvent[]>([]);
+  const [stats, setStats] = useState<TimelineStats>({
+    totalEvents: 0,
+    evidenceEvents: 0,
+    witnessEvents: 0,
+    investigationEvents: 0,
+    alertEvents: 0
+  });
 
-  const fetchTimeline = async () => {
-    setIsLoading(true);
-    try {
-      const data = await timelineService.getEvents({
-        caseId: activeCaseId || 'CASE-1024',
-        entityId: filterEntity || undefined,
-        relationshipType: filterType !== 'ALL' ? filterType : undefined
-      });
-      setEvents(data);
-    } catch (err) {
-      console.warn('Timeline fetch fallback:', err);
-    } finally {
-      setIsLoading(false);
-    }
+  const [selectedCategory, setSelectedCategory] = useState<TimelineCategory>('ALL');
+  const [search, setSearch] = useState<string>('');
+  const [startDate, setStartDate] = useState<string>('');
+  const [endDate, setEndDate] = useState<string>('');
+  const [selectedEvent, setSelectedEvent] = useState<DetailedTimelineEvent | null>(null);
+
+  const loadTimeline = () => {
+    const caseId = activeCaseId || 'CASE-1024';
+    const data = timelineService.getCaseEvents({
+      caseId,
+      category: selectedCategory,
+      search,
+      startDate: startDate || undefined,
+      endDate: endDate || undefined
+    });
+    setEvents(data);
+    setStats(timelineService.getTimelineStats(caseId));
   };
 
   useEffect(() => {
-    fetchTimeline();
-  }, [filterType, filterEntity, activeCaseId]);
+    loadTimeline();
+  }, [activeCaseId, selectedCategory, search, startDate, endDate]);
 
-  const getEventIcon = (category?: string) => {
+  const categories: { id: TimelineCategory; label: string }[] = [
+    { id: 'ALL', label: 'All Events' },
+    { id: 'INCIDENT', label: 'Incident' },
+    { id: 'WITNESSES', label: 'Witnesses' },
+    { id: 'EVIDENCE', label: 'Evidence' },
+    { id: 'DOCUMENTS', label: 'Documents' },
+    { id: 'COMMUNICATION', label: 'Communication (CDR)' },
+    { id: 'FINANCIAL', label: 'Financial (SWIFT)' },
+    { id: 'LOCATION', label: 'Location (ANPR)' },
+    { id: 'INVESTIGATION', label: 'Investigation' },
+    { id: 'ALERTS', label: 'Alerts' }
+  ];
+
+  const getCategoryIcon = (category: TimelineCategory) => {
     switch (category) {
       case 'COMMUNICATION': return PhoneCall;
-      case 'PHYSICAL_SURVEILLANCE': return MapPin;
       case 'FINANCIAL': return CreditCard;
-      case 'INTELLIGENCE_REPORT': return Building2;
-      default: return Users;
+      case 'LOCATION': return MapPin;
+      case 'WITNESSES': return UserCheck;
+      case 'EVIDENCE': return FileSpreadsheet;
+      case 'DOCUMENTS': return FileText;
+      case 'ALERTS': return AlertTriangle;
+      case 'INCIDENT': return Building2;
+      default: return Clock;
     }
   };
 
-  const handleInspectEntity = (entityId?: string) => {
-    if (!entityId) return;
-    setSelectedEntityId(entityId);
-    navigateTo('network', { entityId });
-  };
-
   return (
-    <div className="max-w-5xl mx-auto py-1 space-y-5 select-none animate-in fade-in">
+    <div className="max-w-6xl mx-auto py-1 space-y-5 select-none animate-in fade-in">
       
-      {/* Filter and Search Bar */}
-      <div className="intel-card p-4 border border-slate-800 flex flex-col sm:flex-row sm:items-center justify-between gap-3 bg-[#0d1527]">
-        <div className="flex items-center gap-2">
-          <Clock className="w-4 h-4 text-blue-400" />
-          <h2 className="text-xs font-bold uppercase tracking-wider text-white">
-            Chronological Multi-Source Event Timeline ({events.length} Events)
-          </h2>
+      {/* 1. Header & Dynamic KPI Tiles */}
+      <div className="intel-card p-5 border border-slate-800 rounded-xl bg-[#0d1527] space-y-4 shadow-xl">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-slate-800/80 pb-3">
+          <div className="space-y-0.5">
+            <div className="flex items-center gap-2">
+              <span className="font-mono text-xs font-bold text-blue-400">{activeCaseId}</span>
+              <span className="text-slate-600">•</span>
+              <span className="text-[10px] font-mono font-bold uppercase tracking-wider text-slate-400">
+                CASE INVESTIGATION TIMELINE
+              </span>
+            </div>
+            <h1 className="text-xl font-bold text-white tracking-tight">
+              Chronological Multi-Source Event Stream
+            </h1>
+          </div>
+
+          <div className="flex items-center gap-2">
+            <span className="text-xs text-slate-400 font-medium">Case Scope:</span>
+            <span className="px-2.5 py-1 rounded-lg bg-blue-950/80 text-blue-300 border border-blue-500/40 text-xs font-mono font-bold">
+              {activeCaseId}
+            </span>
+          </div>
         </div>
 
-        <div className="flex flex-wrap items-center gap-2.5 text-xs">
-          <div className="relative min-w-[200px]">
+        {/* Dynamic 5 KPI Tiles */}
+        <div className="grid grid-cols-2 sm:grid-cols-5 gap-3 font-mono text-xs">
+          <div className="p-3 rounded-lg bg-[#090e1a] border border-slate-800 text-center space-y-0.5">
+            <div className="text-lg font-bold text-blue-400">{stats.totalEvents}</div>
+            <div className="text-[10px] text-slate-400 uppercase font-sans">Total Events</div>
+          </div>
+          <div className="p-3 rounded-lg bg-[#090e1a] border border-slate-800 text-center space-y-0.5">
+            <div className="text-lg font-bold text-purple-400">{stats.evidenceEvents}</div>
+            <div className="text-[10px] text-slate-400 uppercase font-sans">Evidence Events</div>
+          </div>
+          <div className="p-3 rounded-lg bg-[#090e1a] border border-slate-800 text-center space-y-0.5">
+            <div className="text-lg font-bold text-emerald-400">{stats.witnessEvents}</div>
+            <div className="text-[10px] text-slate-400 uppercase font-sans">Witness Events</div>
+          </div>
+          <div className="p-3 rounded-lg bg-[#090e1a] border border-slate-800 text-center space-y-0.5">
+            <div className="text-lg font-bold text-indigo-400">{stats.investigationEvents}</div>
+            <div className="text-[10px] text-slate-400 uppercase font-sans">Investigation Actions</div>
+          </div>
+          <div className="p-3 rounded-lg bg-[#090e1a] border border-slate-800 text-center space-y-0.5">
+            <div className="text-lg font-bold text-amber-400">{stats.alertEvents}</div>
+            <div className="text-[10px] text-slate-400 uppercase font-sans">Alerts</div>
+          </div>
+        </div>
+      </div>
+
+      {/* 2. Filters & Search Bar */}
+      <div className="intel-card p-4 border border-slate-800 rounded-xl bg-[#0c1322] space-y-3">
+        <div className="flex flex-col md:flex-row md:items-center justify-between gap-3">
+          {/* Search */}
+          <div className="relative flex-1 min-w-[240px]">
             <Search className="w-3.5 h-3.5 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
             <input
               type="text"
-              value={filterEntity}
-              onChange={(e) => setFilterEntity(e.target.value)}
-              placeholder="Filter by entity (e.g. Person_044)..."
-              className="w-full pl-8 pr-3 py-1.5 rounded-lg bg-slate-900 border border-slate-700 text-xs text-white placeholder-slate-400 focus:outline-none focus:border-blue-500"
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+              placeholder="Search timeline by entity, witness, evidence ID, location, or keyword..."
+              className="w-full pl-8 pr-3 py-1.5 rounded-lg bg-slate-900 border border-slate-700 text-xs text-white placeholder-slate-400 focus:outline-none focus:border-blue-500 font-sans"
             />
           </div>
 
-          <select
-            value={filterType}
-            onChange={(e) => setFilterType(e.target.value)}
-            className="px-3 py-1.5 rounded-lg bg-slate-900 border border-slate-700 text-xs text-white focus:outline-none focus:border-blue-500"
-          >
-            <option value="ALL">All Event Types</option>
-            <option value="CALLED">Calls (CDR)</option>
-            <option value="TRANSFERRED">Transactions (Swift/UPI)</option>
-            <option value="VISITED">Locations (ANPR/CCTV)</option>
-            <option value="ASSOCIATED_WITH">FIR / Incident Text</option>
-          </select>
+          {/* Date Pickers */}
+          <div className="flex items-center gap-2 text-xs">
+            <span className="text-slate-400 text-[11px] font-semibold">From:</span>
+            <input
+              type="date"
+              value={startDate}
+              onChange={(e) => setStartDate(e.target.value)}
+              className="px-2.5 py-1 rounded-lg bg-slate-900 border border-slate-700 text-xs font-mono text-white focus:outline-none focus:border-blue-500"
+            />
+            <span className="text-slate-400 text-[11px] font-semibold">To:</span>
+            <input
+              type="date"
+              value={endDate}
+              onChange={(e) => setEndDate(e.target.value)}
+              className="px-2.5 py-1 rounded-lg bg-slate-900 border border-slate-700 text-xs font-mono text-white focus:outline-none focus:border-blue-500"
+            />
+            {(startDate || endDate || search) && (
+              <button
+                onClick={() => {
+                  setStartDate('');
+                  setEndDate('');
+                  setSearch('');
+                }}
+                className="px-2.5 py-1 text-slate-400 hover:text-white text-xs underline"
+              >
+                Reset
+              </button>
+            )}
+          </div>
+        </div>
+
+        {/* Category Pills */}
+        <div className="flex items-center gap-1.5 overflow-x-auto pt-1 pb-0.5">
+          {categories.map((cat) => {
+            const isSelected = selectedCategory === cat.id;
+            return (
+              <button
+                key={cat.id}
+                onClick={() => setSelectedCategory(cat.id)}
+                className={`px-3 py-1 rounded-lg text-xs font-semibold whitespace-nowrap transition-colors border ${
+                  isSelected
+                    ? 'bg-blue-600 text-white border-blue-500 shadow-sm'
+                    : 'bg-slate-900 text-slate-400 hover:text-slate-200 border-slate-800'
+                }`}
+              >
+                {cat.label}
+              </button>
+            );
+          })}
         </div>
       </div>
 
-      {/* Vertical Timeline Card Feed */}
-      <div className="intel-card p-6 border border-slate-800 space-y-6">
-        {isLoading ? (
-          <div className="p-8 text-center text-xs text-slate-400">
-            Loading chronological event sequence...
-          </div>
-        ) : events.length === 0 ? (
-          <div className="p-8 text-center text-xs text-slate-400">
-            No events match the specified filter.
-          </div>
-        ) : (
-          <div className="relative border-l border-slate-800 ml-4 space-y-6">
-            {events.map((event, idx) => {
-              const Icon = getEventIcon(event.category);
-              const srcId = event.sourceEntity || event.sourceEntityId || 'Source';
-              const tgtId = event.targetEntity || event.targetEntityId || 'Target';
-              return (
-                <div key={event.id || idx} className="relative pl-6 group">
-                  {/* Timeline Dot Icon */}
-                  <div className={`absolute -left-3 top-1.5 p-1 rounded-full border ${
-                    event.flaggedAnomaly 
-                      ? 'bg-rose-500/20 border-rose-500 text-rose-300' 
-                      : 'bg-slate-900 border-slate-700 text-blue-400'
-                  }`}>
-                    <Icon className="w-3.5 h-3.5" />
-                  </div>
+      {/* 3. Chronological Event Feed */}
+      {events.length === 0 ? (
+        <div className="intel-card p-12 border border-slate-800 rounded-xl bg-[#0c1322] text-center space-y-2">
+          <Clock className="w-8 h-8 text-slate-600 mx-auto" />
+          <h3 className="text-sm font-bold text-white">No Investigation Events Recorded</h3>
+          <p className="text-xs text-slate-400 max-w-md mx-auto">
+            No events match your current filter parameters for {activeCaseId}.
+          </p>
+        </div>
+      ) : (
+        <div className="space-y-3">
+          {events.map((ev) => {
+            const Icon = getCategoryIcon(ev.category);
+            return (
+              <div 
+                key={ev.id}
+                onClick={() => setSelectedEvent(ev)}
+                className="intel-card p-4 border border-slate-800 rounded-xl bg-[#0c1322] hover:bg-slate-800/40 hover:border-slate-700 cursor-pointer transition-all space-y-2.5 text-xs shadow-lg group"
+              >
+                <div className="flex flex-wrap items-center justify-between gap-2">
+                  <div className="flex items-center gap-2.5">
+                    <div className="p-2 rounded-lg bg-slate-900 border border-slate-700 text-blue-400 group-hover:text-white transition-colors">
+                      <Icon className="w-4 h-4" />
+                    </div>
 
-                  {/* Event Detail Card */}
-                  <div className="p-4 rounded-lg bg-[#090e1a] hover:bg-slate-850 border border-slate-800 hover:border-slate-700 transition-colors space-y-2">
-                    <div className="flex items-center justify-between">
+                    <div className="space-y-0.5">
                       <div className="flex items-center gap-2">
-                        <span className="font-mono text-xs font-bold text-blue-400">
-                          {event.timeFormatted || event.timeDisplay || '10:30'} • {event.dateFormatted || event.dateDisplay || '26 Aug 2026'}
+                        <span className="font-mono text-[10px] font-bold text-blue-400">{ev.id}</span>
+                        <span className="px-2 py-0.2 rounded text-[9px] font-mono font-bold bg-slate-900 text-slate-300 border border-slate-700 uppercase">
+                          {ev.category}
                         </span>
-                        {event.flaggedAnomaly && (
-                          <span className="px-2 py-0.2 rounded text-[10px] bg-rose-500/20 border border-rose-500/30 text-rose-300 font-bold flex items-center gap-1">
-                            <AlertTriangle className="w-3 h-3" />
-                            <span>ANOMALY DETECTED</span>
+                        {ev.isAnomaly && (
+                          <span className="px-2 py-0.2 rounded text-[9px] font-mono font-bold bg-rose-500/20 text-rose-300 border border-rose-500/30">
+                            ANOMALY
                           </span>
                         )}
                       </div>
-                      <span className="text-[10px] text-slate-500 font-mono">{event.sourceRecord || event.sourceCategory}</span>
+                      <h4 className="font-bold text-white text-xs sm:text-sm group-hover:text-blue-300 transition-colors">
+                        {ev.title}
+                      </h4>
                     </div>
+                  </div>
 
-                    <div className="flex items-center gap-2 text-xs font-mono text-white">
-                      <button
-                        onClick={() => handleInspectEntity(srcId)}
-                        className="text-blue-300 hover:underline font-bold"
-                      >
-                        {srcId}
-                      </button>
-                      <span className="text-slate-500 font-sans text-xs">→ [{event.relationship}] →</span>
-                      <button
-                        onClick={() => handleInspectEntity(tgtId)}
-                        className="text-blue-300 hover:underline font-bold"
-                      >
-                        {tgtId}
-                      </button>
-                    </div>
+                  <div className="flex items-center gap-2 text-slate-400 font-mono text-[10px]">
+                    <Calendar className="w-3 h-3 text-slate-500" />
+                    <span>{ev.dateFormatted} • {ev.timeFormatted}</span>
+                  </div>
+                </div>
 
-                    <p className="text-xs text-slate-300 font-sans leading-relaxed">
-                      {event.summary || event.description}
-                    </p>
+                <p className="text-xs text-slate-300 leading-relaxed font-sans bg-slate-950 p-3 rounded-lg border border-slate-800/80">
+                  {ev.description}
+                </p>
 
-                    {event.metadata && (
-                      <div className="pt-2 border-t border-slate-800/80 flex flex-wrap items-center gap-4 text-[11px] text-slate-400 font-mono">
-                        {event.metadata.duration && <span>Duration: <strong className="text-slate-300">{event.metadata.duration}</strong></span>}
-                        {event.metadata.amount && <span>Amount: <strong className="text-emerald-400">{event.metadata.amount}</strong></span>}
-                        {event.metadata.location && <span>Location: <strong className="text-purple-300">{event.metadata.location}</strong></span>}
-                        {event.metadata.tower && <span>Tower: <strong className="text-slate-300">{event.metadata.tower}</strong></span>}
+                {/* Footer Bar */}
+                <div className="flex flex-wrap items-center justify-between gap-2 pt-1 border-t border-slate-800/60 text-[11px]">
+                  <div className="flex items-center gap-3 text-slate-400">
+                    {ev.location && (
+                      <div className="flex items-center gap-1">
+                        <MapPin className="w-3 h-3 text-purple-400 shrink-0" />
+                        <span className="truncate max-w-xs">{ev.location}</span>
+                      </div>
+                    )}
+                    {ev.primaryEntityLabel && (
+                      <div className="flex items-center gap-1 font-semibold text-slate-300">
+                        <Users className="w-3 h-3 text-blue-400" />
+                        <span>{ev.primaryEntityLabel}</span>
                       </div>
                     )}
                   </div>
+
+                  <div className="flex items-center gap-2">
+                    <span className="text-[10px] text-slate-500 font-mono">Source:</span>
+                    <span className="px-2 py-0.5 rounded bg-blue-950/40 text-blue-300 border border-blue-500/20 text-[10px] font-mono font-bold">
+                      {ev.sourceType}: {ev.sourceId}
+                    </span>
+                    <button className="px-2 py-0.5 rounded bg-slate-800 group-hover:bg-blue-600 text-slate-300 group-hover:text-white text-[10px] font-semibold flex items-center gap-1 transition-colors">
+                      <Eye className="w-2.5 h-2.5" />
+                      <span>Inspect</span>
+                    </button>
+                  </div>
                 </div>
-              );
-            })}
-          </div>
-        )}
-      </div>
+              </div>
+            );
+          })}
+        </div>
+      )}
+
+      {/* 4. Event Details Modal */}
+      {selectedEvent && (
+        <TimelineEventDetailsModal
+          event={selectedEvent}
+          onClose={() => setSelectedEvent(null)}
+        />
+      )}
 
     </div>
   );
