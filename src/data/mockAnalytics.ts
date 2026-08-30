@@ -92,21 +92,21 @@ export const mockActivityTrends: ActivityDataPoint[] = [
 ];
 
 export const mockEntityDistribution: EntityDistributionDataPoint[] = [
-  { type: 'PERSON', name: 'Persons', count: 486, percentage: 37.8, color: '#38bdf8' },
-  { type: 'PHONE', name: 'Phones / SIMs', count: 324, percentage: 25.2, color: '#10b981' },
-  { type: 'ACCOUNT', name: 'Accounts / Ledgers', count: 218, percentage: 17.0, color: '#f59e0b' },
-  { type: 'LOCATION', name: 'Locations & Hubs', count: 128, percentage: 10.0, color: '#a855f7' },
-  { type: 'ORGANIZATION', name: 'Organizations', count: 76, percentage: 5.9, color: '#6366f1' },
-  { type: 'VEHICLE', name: 'Vehicles / Assets', count: 52, percentage: 4.1, color: '#f43f5e' }
+  { type: 'PERSON', name: 'Persons', count: 486, percentage: 37.8, color: '#12304A' },
+  { type: 'PHONE', name: 'Phones / SIMs', count: 324, percentage: 25.2, color: '#087E8B' },
+  { type: 'ACCOUNT', name: 'Accounts / Ledgers', count: 218, percentage: 17.0, color: '#2563A6' },
+  { type: 'LOCATION', name: 'Locations & Hubs', count: 128, percentage: 10.0, color: '#7E22CE' },
+  { type: 'ORGANIZATION', name: 'Organizations', count: 76, percentage: 5.9, color: '#234E70' },
+  { type: 'VEHICLE', name: 'Vehicles / Assets', count: 52, percentage: 4.1, color: '#B7791F' }
 ];
 
 export const mockRelationshipDistribution: RelationshipDistributionDataPoint[] = [
-  { type: 'CALLED', name: 'Called (Telephony/VOIP)', count: 1842, avgConfidence: 0.94, color: '#38bdf8' },
-  { type: 'TRANSFERRED', name: 'Transferred (Financial)', count: 1120, avgConfidence: 0.97, color: '#f59e0b' },
-  { type: 'VISITED', name: 'Visited (Geo/ANPR)', count: 785, avgConfidence: 0.91, color: '#a855f7' },
-  { type: 'ASSOCIATED_WITH', name: 'Associated With (Corp)', count: 460, avgConfidence: 0.89, color: '#6366f1' },
-  { type: 'OWNED', name: 'Owned (Asset/SIM)', count: 342, avgConfidence: 0.95, color: '#10b981' },
-  { type: 'MET', name: 'Met (Physical Rendezvous)', count: 272, avgConfidence: 0.88, color: '#f43f5e' }
+  { type: 'CALLED', name: 'Called (Telephony/VOIP)', count: 1842, avgConfidence: 0.94, color: '#087E8B' },
+  { type: 'TRANSFERRED', name: 'Transferred (Financial)', count: 1120, avgConfidence: 0.97, color: '#2563A6' },
+  { type: 'VISITED', name: 'Visited (Geo/ANPR)', count: 785, avgConfidence: 0.91, color: '#7E22CE' },
+  { type: 'ASSOCIATED_WITH', name: 'Associated With (Corp)', count: 460, avgConfidence: 0.89, color: '#234E70' },
+  { type: 'OWNED', name: 'Owned (Asset/SIM)', count: 342, avgConfidence: 0.95, color: '#16805C' },
+  { type: 'MET', name: 'Met (Physical Rendezvous)', count: 272, avgConfidence: 0.88, color: '#B7791F' }
 ];
 
 export const mockCommunityClusters: CommunityClusterMetric[] = [

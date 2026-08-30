@@ -36,31 +36,31 @@ export const NetworkControlBar: React.FC<NetworkControlBarProps> = ({
   onResetFilters
 }) => {
   const entityTypeOptions: { type: EntityType; label: string; icon: React.ElementType; color: string }[] = [
-    { type: 'PERSON', label: 'Persons', icon: Users, color: 'text-cyan-400' },
-    { type: 'PHONE', label: 'Phones', icon: Phone, color: 'text-emerald-400' },
-    { type: 'ACCOUNT', label: 'Accounts', icon: CreditCard, color: 'text-amber-400' },
-    { type: 'LOCATION', label: 'Locations', icon: MapPin, color: 'text-purple-400' },
-    { type: 'ORGANIZATION', label: 'Orgs', icon: Building2, color: 'text-indigo-400' },
-    { type: 'VEHICLE', label: 'Vehicles', icon: Car, color: 'text-rose-400' }
+    { type: 'PERSON', label: 'Persons', icon: Users, color: 'text-[#12304A]' },
+    { type: 'PHONE', label: 'Phones', icon: Phone, color: 'text-[#087E8B]' },
+    { type: 'ACCOUNT', label: 'Accounts', icon: CreditCard, color: 'text-[#2563A6]' },
+    { type: 'LOCATION', label: 'Locations', icon: MapPin, color: 'text-[#7E22CE]' },
+    { type: 'ORGANIZATION', label: 'Orgs', icon: Building2, color: 'text-[#234E70]' },
+    { type: 'VEHICLE', label: 'Vehicles', icon: Car, color: 'text-[#B7791F]' }
   ];
 
   return (
-    <div className="intel-card p-3 rounded-xl border border-slate-800 space-y-2.5">
+    <div className="bg-[#FFFFFF] p-3 rounded-lg border border-[#E2E8F0] shadow-sm space-y-2.5">
       <div className="flex flex-wrap items-center justify-between gap-3">
         {/* Entity Search Input */}
         <div className="relative flex-1 min-w-[200px] max-w-sm">
-          <Search className="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
+          <Search className="w-4 h-4 text-[#64748B] absolute left-3 top-1/2 -translate-y-1/2" />
           <input
             type="text"
             value={searchQuery}
             onChange={(e) => onSearchChange(e.target.value)}
             placeholder="Filter entities (e.g. Person_044, Account_103)..."
-            className="w-full pl-9 pr-3 py-1.5 rounded-lg bg-slate-900/90 border border-slate-800 text-xs font-mono text-white placeholder-slate-500 focus:outline-none focus:border-cyan-500/50"
+            className="w-full pl-9 pr-8 py-1.5 rounded-md bg-[#FFFFFF] border border-[#CBD5E1] text-xs font-mono text-[#17212B] placeholder-[#94A3B8] focus:outline-none focus:border-[#087E8B]"
           />
           {searchQuery && (
             <button
               onClick={() => onSearchChange('')}
-              className="absolute right-2.5 top-1/2 -translate-y-1/2 text-slate-400 hover:text-white"
+              className="absolute right-2.5 top-1/2 -translate-y-1/2 text-[#64748B] hover:text-[#12304A]"
             >
               <X className="w-3.5 h-3.5" />
             </button>
@@ -69,11 +69,11 @@ export const NetworkControlBar: React.FC<NetworkControlBarProps> = ({
 
         {/* Community Cluster Filter */}
         <div className="flex items-center gap-2 text-xs">
-          <span className="text-slate-400 font-mono text-[11px] hidden sm:inline">Cluster:</span>
+          <span className="text-[#64748B] font-mono text-[11px] hidden sm:inline">Cluster:</span>
           <select
             value={selectedCommunity}
             onChange={(e) => onCommunityChange(e.target.value)}
-            className="px-2.5 py-1.5 rounded-lg bg-slate-900 border border-slate-800 text-xs font-mono text-white focus:outline-none focus:border-cyan-500"
+            className="px-2.5 py-1.5 rounded-md bg-[#FFFFFF] border border-[#CBD5E1] text-xs font-mono text-[#17212B] focus:outline-none focus:border-[#087E8B]"
           >
             <option value="ALL">All Communities</option>
             <option value="Cluster 01">Cluster 01 (Executive Ring)</option>
@@ -86,7 +86,7 @@ export const NetworkControlBar: React.FC<NetworkControlBarProps> = ({
 
         {/* Confidence Threshold Slider */}
         <div className="flex items-center gap-2 text-xs">
-          <span className="text-slate-400 font-mono text-[11px] hidden md:inline">Min Confidence:</span>
+          <span className="text-[#64748B] font-mono text-[11px] hidden md:inline">Min Confidence:</span>
           <input
             type="range"
             min="0.5"
@@ -94,15 +94,15 @@ export const NetworkControlBar: React.FC<NetworkControlBarProps> = ({
             step="0.05"
             value={minConfidence}
             onChange={(e) => onConfidenceChange(parseFloat(e.target.value))}
-            className="w-24 h-1 bg-slate-800 rounded-lg appearance-none cursor-pointer accent-cyan-400"
+            className="w-24 h-1 bg-[#CBD5E1] rounded-lg appearance-none cursor-pointer accent-[#087E8B]"
           />
-          <span className="font-mono text-cyan-300 w-8">{minConfidence.toFixed(2)}</span>
+          <span className="font-mono text-[#087E8B] font-bold w-8">{minConfidence.toFixed(2)}</span>
         </div>
 
         {/* Reset Filter Button */}
         <button
           onClick={onResetFilters}
-          className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg bg-slate-900 hover:bg-slate-800 border border-slate-800 text-xs font-mono text-slate-300 transition-colors"
+          className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-md bg-[#F8FAFC] hover:bg-[#E2E8F0] border border-[#CBD5E1] text-xs font-mono text-[#64748B] hover:text-[#12304A] transition-colors"
           title="Reset All Graph Filters"
         >
           <RotateCcw className="w-3.5 h-3.5" />
@@ -111,8 +111,8 @@ export const NetworkControlBar: React.FC<NetworkControlBarProps> = ({
       </div>
 
       {/* Entity Type Toggle Chips */}
-      <div className="flex flex-wrap items-center gap-2 pt-1 border-t border-slate-800/80">
-        <span className="text-[10px] font-mono text-slate-400 uppercase tracking-wider mr-1">Types:</span>
+      <div className="flex flex-wrap items-center gap-2 pt-1 border-t border-[#E2E8F0]">
+        <span className="text-[10px] font-mono text-[#64748B] uppercase tracking-wider mr-1">Types:</span>
         {entityTypeOptions.map((opt) => {
           const Icon = opt.icon;
           const isSelected = selectedEntityTypes.includes(opt.type);
@@ -122,8 +122,8 @@ export const NetworkControlBar: React.FC<NetworkControlBarProps> = ({
               onClick={() => onToggleEntityType(opt.type)}
               className={`flex items-center gap-1.5 px-2.5 py-1 rounded-md text-xs font-mono transition-all ${
                 isSelected
-                  ? 'bg-slate-800 text-white border border-cyan-500/50 shadow-sm'
-                  : 'bg-slate-950/60 text-slate-400 border border-slate-800 hover:text-slate-200'
+                  ? 'bg-[#E6F4F5] text-[#087E8B] border border-[#A7DFE3] font-bold shadow-sm'
+                  : 'bg-[#FFFFFF] text-[#64748B] border border-[#E2E8F0] hover:bg-[#F8FAFC] hover:text-[#12304A]'
               }`}
             >
               <Icon className={`w-3 h-3 ${opt.color}`} />

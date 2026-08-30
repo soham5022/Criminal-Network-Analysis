@@ -9,24 +9,23 @@ import {
   ResponsiveContainer,
   Legend
 } from 'recharts';
-import { Activity, Sparkles } from 'lucide-react';
+import { Activity } from 'lucide-react';
 import { mockActivityTrends } from '../../data/mockAnalytics';
 
 export const ActivityChart: React.FC = () => {
   return (
-    <div className="intel-card p-5 rounded-xl border border-slate-800 space-y-4">
+    <div className="bg-[#FFFFFF] p-5 rounded-lg border border-[#E2E8F0] shadow-sm space-y-4">
       <div className="flex items-center justify-between">
         <div>
-          <h3 className="text-sm font-bold text-white uppercase tracking-wider flex items-center gap-2">
-            <Activity className="w-4 h-4 text-cyan-400" />
+          <h3 className="text-sm font-bold text-[#12304A] uppercase tracking-wider flex items-center gap-2">
+            <Activity className="w-4 h-4 text-[#087E8B]" />
             <span>Investigation Activity (Last 30 Days)</span>
           </h3>
-          <p className="text-xs text-slate-400 mt-0.5">
+          <p className="text-xs text-[#64748B] mt-0.5">
             Aggregated ingestion events across CDR intercepts, banking transactions, and geo-sightings.
           </p>
         </div>
-        <div className="hidden sm:flex items-center gap-2 px-2.5 py-1 rounded-full bg-slate-900 border border-slate-800 text-[11px] font-mono text-cyan-400">
-          <Sparkles className="w-3 h-3 animate-pulse" />
+        <div className="hidden sm:flex items-center gap-2 px-2.5 py-1 rounded-full bg-[#E6F4F5] border border-[#A7DFE3] text-[11px] font-mono text-[#087E8B] font-bold">
           <span>Real-Time Event Stream</span>
         </div>
       </div>
@@ -36,42 +35,42 @@ export const ActivityChart: React.FC = () => {
           <AreaChart data={mockActivityTrends} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
             <defs>
               <linearGradient id="cdrGradient" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="5%" stopColor="#06b6d4" stopOpacity={0.4}/>
-                <stop offset="95%" stopColor="#06b6d4" stopOpacity={0.0}/>
+                <stop offset="5%" stopColor="#087E8B" stopOpacity={0.25}/>
+                <stop offset="95%" stopColor="#087E8B" stopOpacity={0.0}/>
               </linearGradient>
               <linearGradient id="finGradient" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="5%" stopColor="#f59e0b" stopOpacity={0.4}/>
-                <stop offset="95%" stopColor="#f59e0b" stopOpacity={0.0}/>
+                <stop offset="5%" stopColor="#2563A6" stopOpacity={0.25}/>
+                <stop offset="95%" stopColor="#2563A6" stopOpacity={0.0}/>
               </linearGradient>
               <linearGradient id="anomalyGradient" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="5%" stopColor="#f43f5e" stopOpacity={0.6}/>
-                <stop offset="95%" stopColor="#f43f5e" stopOpacity={0.0}/>
+                <stop offset="5%" stopColor="#C24141" stopOpacity={0.3}/>
+                <stop offset="95%" stopColor="#C24141" stopOpacity={0.0}/>
               </linearGradient>
             </defs>
-            <CartesianGrid strokeDasharray="3 3" stroke="#1e293b" vertical={false} />
+            <CartesianGrid strokeDasharray="3 3" stroke="#E2E8F0" vertical={false} />
             <XAxis 
               dataKey="dayDisplay" 
-              stroke="#64748b" 
+              stroke="#64748B" 
               fontSize={11} 
               tickLine={false}
-              axisLine={{ stroke: '#1e293b' }}
+              axisLine={{ stroke: '#CBD5E1' }}
               fontFamily="JetBrains Mono, monospace"
             />
             <YAxis 
-              stroke="#64748b" 
+              stroke="#64748B" 
               fontSize={11} 
               tickLine={false}
-              axisLine={{ stroke: '#1e293b' }}
+              axisLine={{ stroke: '#CBD5E1' }}
               fontFamily="JetBrains Mono, monospace"
             />
             <Tooltip 
               contentStyle={{ 
-                backgroundColor: '#0c1424', 
-                borderColor: '#1e2e4e', 
-                borderRadius: '8px',
+                backgroundColor: '#FFFFFF', 
+                borderColor: '#CBD5E1', 
+                borderRadius: '6px',
                 fontSize: '12px',
-                color: '#f8fafc',
-                boxShadow: '0 10px 25px -5px rgba(0, 0, 0, 0.8)'
+                color: '#12304A',
+                boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1)'
               }}
               itemStyle={{ padding: '2px 0' }}
             />
@@ -79,13 +78,13 @@ export const ActivityChart: React.FC = () => {
               verticalAlign="top" 
               height={36} 
               iconType="circle"
-              wrapperStyle={{ fontSize: '11px', fontFamily: 'JetBrains Mono, monospace' }}
+              wrapperStyle={{ fontSize: '11px', fontFamily: 'JetBrains Mono, monospace', color: '#475569' }}
             />
             <Area 
               type="monotone" 
               dataKey="cdrEvents" 
               name="CDR Records" 
-              stroke="#06b6d4" 
+              stroke="#087E8B" 
               strokeWidth={2}
               fillOpacity={1} 
               fill="url(#cdrGradient)" 
@@ -94,7 +93,7 @@ export const ActivityChart: React.FC = () => {
               type="monotone" 
               dataKey="financialTransactions" 
               name="Bank Transfers" 
-              stroke="#f59e0b" 
+              stroke="#2563A6" 
               strokeWidth={2}
               fillOpacity={1} 
               fill="url(#finGradient)" 
@@ -103,7 +102,7 @@ export const ActivityChart: React.FC = () => {
               type="monotone" 
               dataKey="flaggedAnomalies" 
               name="Flagged Anomalies" 
-              stroke="#f43f5e" 
+              stroke="#C24141" 
               strokeWidth={2}
               fillOpacity={1} 
               fill="url(#anomalyGradient)" 

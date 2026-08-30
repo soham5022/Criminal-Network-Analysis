@@ -636,7 +636,7 @@ export const CytoscapeGraph: React.FC<CytoscapeGraphProps> = ({
   };
 
   return (
-    <div className="relative w-full h-full min-h-[540px] bg-[#070d18] rounded-xl overflow-hidden border border-slate-800 shadow-2xl flex flex-col select-none">
+    <div className="relative w-full h-full min-h-[540px] bg-[#FAFCFD] rounded-lg overflow-hidden border border-[#E2E8F0] shadow-sm flex flex-col select-none">
       
       {/* Subtle Tactical Grid Pattern Overlay */}
       <div 
