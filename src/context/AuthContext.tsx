@@ -1,5 +1,6 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { authService, User, UserRole } from '../services/authService';
+import { auditService } from '../services/auditService';
 
 interface AuthContextType {
   user: User | null;
@@ -48,11 +49,40 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const canViewAudit = isAdmin || isInvestigator;
 
   const login = async (email: string, password: string) => {
-    const res = await authService.login(email, password);
-    setUser(res.user);
+    try {
+      const res = await authService.login(email, password);
+      setUser(res.user);
+      auditService.logAction({
+        action: 'LOGIN',
+        actionLabel: 'User Authentication Successful',
+        module: 'Authentication',
+        status: 'SUCCESS',
+        details: `User ${res.user.name} (${res.user.role}) authenticated via official credentials.`,
+        user: res.user
+      });
+    } catch (err: any) {
+      auditService.logAction({
+        action: 'FAILED_LOGIN',
+        actionLabel: 'Failed Authentication Attempt',
+        module: 'Authentication',
+        status: 'FAILED',
+        details: `Failed authentication attempt for email ${email}.`
+      });
+      throw err;
+    }
   };
 
   const logout = () => {
+    if (user) {
+      auditService.logAction({
+        action: 'LOGOUT',
+        actionLabel: 'User Signed Out of Session',
+        module: 'Authentication',
+        status: 'SUCCESS',
+        details: `User ${user.name} (${user.role}) signed out.`,
+        user
+      });
+    }
     authService.clearSession();
     setUser(null);
   };

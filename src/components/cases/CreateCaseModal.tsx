@@ -12,6 +12,7 @@ import {
 import { useInvestigation } from '../../context/InvestigationContext';
 import { useAuth } from '../../context/AuthContext';
 import { caseService } from '../../services/caseService';
+import { auditService } from '../../services/auditService';
 import { CasePriority } from '../../types';
 
 export const CreateCaseModal: React.FC = () => {
@@ -43,6 +44,25 @@ export const CreateCaseModal: React.FC = () => {
         lead_investigator: leadInvestigator,
         tags
       });
+
+      auditService.logAction({
+        action: 'CREATED_CASE',
+        actionLabel: 'Registered New Case Record',
+        module: 'Cases',
+        caseId: newCase.id,
+        recordId: newCase.id,
+        recordType: 'CASE',
+        recordLabel: newCase.name,
+        status: 'SUCCESS',
+        details: `New case ${newCase.id} (${newCase.name}) registered with Priority: ${priority}.`,
+        user: user ? {
+          id: user.id,
+          name: user.name,
+          badge_number: user.badge_number,
+          role: user.role
+        } : undefined
+      });
+
       setIsCreateCaseModalOpen(false);
       navigateTo('case-details', { caseId: newCase.id, tab: 'overview' });
     } catch (err: any) {

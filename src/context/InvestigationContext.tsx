@@ -1,5 +1,6 @@
 import React, { createContext, useContext, useState, ReactNode } from 'react';
 import { EntityType, AnalyticalPriority } from '../types';
+import { auditService } from '../services/auditService';
 
 export type AppPage = 
   | 'landing'
@@ -102,6 +103,18 @@ export const InvestigationProvider: React.FC<{ children: ReactNode }> = ({ child
     setCurrentPage('case-details');
     setActiveCaseTab('entities');
     window.scrollTo({ top: 0, behavior: 'smooth' });
+
+    auditService.logAction({
+      action: 'VIEWED_ENTITY',
+      actionLabel: 'Inspected 360° Entity Profile',
+      module: 'Entities',
+      caseId: activeCaseId,
+      recordId: entityId,
+      recordType: 'PERSON',
+      recordLabel: entityId,
+      status: 'SUCCESS',
+      details: `Investigator opened 360° intelligence dossier for entity ${entityId}.`
+    });
   };
 
   const closeEntityProfile = () => {
@@ -115,6 +128,7 @@ export const InvestigationProvider: React.FC<{ children: ReactNode }> = ({ child
     tab?: CaseWorkspaceTab;
     openProfile?: boolean;
   }) => {
+    const targetCaseId = options?.caseId || activeCaseId;
     if (options?.caseId) setActiveCaseId(options.caseId);
     if (options?.entityId !== undefined) {
       setSelectedEntityId(options.entityId);
@@ -132,6 +146,48 @@ export const InvestigationProvider: React.FC<{ children: ReactNode }> = ({ child
       setCurrentPage(page);
     }
     window.scrollTo({ top: 0, behavior: 'smooth' });
+
+    // Log key operational navigations
+    if (page === 'case-details' || (page === 'cases' && options?.caseId)) {
+      auditService.logAction({
+        action: 'VIEWED_CASE',
+        actionLabel: 'Opened Case Investigation Dossier',
+        module: 'Cases',
+        caseId: targetCaseId,
+        recordId: targetCaseId,
+        recordType: 'CASE',
+        recordLabel: targetCaseId,
+        status: 'SUCCESS',
+        details: `Investigator accessed case dossier for ${targetCaseId}.`
+      });
+    } else if (page === 'evidence') {
+      auditService.logAction({
+        action: 'VIEWED_EVIDENCE',
+        actionLabel: 'Accessed Digital Evidence Registry',
+        module: 'Evidence',
+        caseId: targetCaseId,
+        status: 'SUCCESS',
+        details: `Investigator accessed Digital Evidence Registry for ${targetCaseId}.`
+      });
+    } else if (page === 'network') {
+      auditService.logAction({
+        action: 'VIEWED_NETWORK',
+        actionLabel: 'Opened Network Knowledge Graph',
+        module: 'Network',
+        caseId: targetCaseId,
+        status: 'SUCCESS',
+        details: `Investigator opened multi-source network analysis for ${targetCaseId}.`
+      });
+    } else if (page === 'reports') {
+      auditService.logAction({
+        action: 'VIEWED_REPORT',
+        actionLabel: 'Accessed Case Intelligence Reports',
+        module: 'Reports',
+        caseId: targetCaseId,
+        status: 'SUCCESS',
+        details: `Investigator accessed case report generator for ${targetCaseId}.`
+      });
+    }
   };
 
   const togglePresentationMode = () => {

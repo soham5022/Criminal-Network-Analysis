@@ -3,6 +3,7 @@ import { evidenceRegistryService, EvidenceRecord } from './evidenceRegistryServi
 import { caseRecordsService, CaseDocument } from './caseRecordsService';
 import { timelineService, DetailedTimelineEvent } from './timelineService';
 import { alertService } from './alertService';
+import { auditService } from './auditService';
 import { caseService } from './caseService';
 import { Alert, Case } from '../types';
 
@@ -187,6 +188,18 @@ export const reportService = {
       caseReports.unshift(newReport);
       all[caseId] = caseReports;
       localStorage.setItem(STORAGE_KEY_REPORTS, JSON.stringify(all));
+
+      auditService.logAction({
+        action: 'GENERATED_REPORT',
+        actionLabel: 'Generated Formal Case Intelligence Briefing',
+        module: 'Reports',
+        caseId: newReport.caseId,
+        recordId: newReport.id,
+        recordType: 'REPORT',
+        recordLabel: newReport.title,
+        status: 'SUCCESS',
+        details: `Compiled formal report ${newReport.id} (v${newReport.version}.0) for ${newReport.caseId} (${newReport.reportType}).`
+      });
     } catch {}
 
     return newReport;

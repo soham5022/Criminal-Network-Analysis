@@ -362,10 +362,23 @@ export const EvidenceDetailsModal: React.FC<EvidenceDetailsModalProps> = ({
 
             {/* Section D: Chain of Custody Audit Stream */}
             <div className="intel-card p-4 border border-slate-800 rounded-xl bg-[#090e1a] space-y-3">
-              <span className="text-[10px] font-bold uppercase tracking-wider text-slate-400 flex items-center gap-1.5">
-                <History className="w-3.5 h-3.5 text-amber-400" />
-                <span>Chain of Custody Audit Stream</span>
-              </span>
+              <div className="flex items-center justify-between">
+                <span className="text-[10px] font-bold uppercase tracking-wider text-slate-400 flex items-center gap-1.5">
+                  <History className="w-3.5 h-3.5 text-amber-400" />
+                  <span>Chain of Custody & Access History</span>
+                </span>
+
+                <button
+                  onClick={() => {
+                    onClose();
+                    navigateTo('audit');
+                  }}
+                  className="px-2.5 py-1 rounded bg-slate-900 hover:bg-slate-800 border border-slate-700 text-slate-300 hover:text-white text-[10px] font-semibold flex items-center gap-1 transition-colors"
+                >
+                  <ShieldCheck className="w-3 h-3 text-cyan-400" />
+                  <span>View Full System Audit Trail</span>
+                </button>
+              </div>
 
               <div className="space-y-2">
                 {currentEvidence.chainOfCustody.map((custody, idx) => (

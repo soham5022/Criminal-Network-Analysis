@@ -16,6 +16,7 @@ import { useInvestigation } from '../context/InvestigationContext';
 import { useAuth } from '../context/AuthContext';
 import { caseService } from '../services/caseService';
 import { alertService } from '../services/alertService';
+import { auditService, AuditEvent } from '../services/auditService';
 import { Case, Alert } from '../types';
 
 export const Overview: React.FC = () => {
@@ -24,7 +25,12 @@ export const Overview: React.FC = () => {
 
   const [cases, setCases] = useState<Case[]>([]);
   const [alerts, setAlerts] = useState<Alert[]>([]);
+  const [recentAudits, setRecentAudits] = useState<AuditEvent[]>([]);
   const [search, setSearch] = useState<string>('');
+
+  const loadAudits = () => {
+    setRecentAudits(auditService.getAuditLogs({ limit: 6 }));
+  };
 
   useEffect(() => {
     Promise.all([
@@ -36,6 +42,12 @@ export const Overview: React.FC = () => {
         setAlerts(a);
       })
       .catch(err => console.warn('Dashboard data fallback:', err));
+
+    loadAudits();
+    const unsubscribe = auditService.subscribe(() => {
+      loadAudits();
+    });
+    return () => unsubscribe();
   }, []);
 
   const handleSearchSubmit = (e: React.FormEvent) => {
@@ -362,6 +374,64 @@ export const Overview: React.FC = () => {
               )}
             </tbody>
           </table>
+        </div>
+      </div>
+
+      {/* 5. Real-Time Investigation Activity Ledger */}
+      <div className="intel-card border border-slate-800 overflow-hidden space-y-0 shadow-lg">
+        <div className="p-4 bg-[#090e1a] border-b border-slate-800 flex items-center justify-between">
+          <div className="flex items-center gap-2">
+            <ShieldCheck className="w-4 h-4 text-cyan-400" />
+            <h2 className="text-xs font-bold uppercase tracking-wider text-white">
+              Recent Investigation Activity (Audit Ledger)
+            </h2>
+          </div>
+          <button
+            onClick={() => navigateTo('audit')}
+            className="text-xs font-semibold text-blue-400 hover:text-blue-300 flex items-center gap-1 transition-colors"
+          >
+            <span>View Full Audit Log</span>
+            <ArrowRight className="w-3.5 h-3.5" />
+          </button>
+        </div>
+
+        <div className="divide-y divide-slate-800/80">
+          {recentAudits.length === 0 ? (
+            <div className="p-6 text-center text-xs text-slate-500 font-mono">
+              No recent investigation actions recorded.
+            </div>
+          ) : (
+            recentAudits.map((ev) => (
+              <div
+                key={ev.id}
+                onClick={() => navigateTo('audit')}
+                className="p-3.5 hover:bg-slate-800/60 cursor-pointer transition-colors flex items-center justify-between gap-4 text-xs"
+              >
+                <div className="flex items-center gap-3 min-w-0">
+                  <div className="w-2 h-2 rounded-full bg-blue-400 shrink-0" />
+                  <div className="min-w-0 space-y-0.5">
+                    <div className="flex items-center gap-2">
+                      <span className="font-semibold text-white truncate">{ev.actionLabel}</span>
+                      <span className="text-[9px] font-mono px-1.5 py-0.2 rounded bg-slate-900 text-slate-400 border border-slate-700 uppercase font-bold">
+                        {ev.module}
+                      </span>
+                      {ev.caseId && (
+                        <span className="text-[10px] font-mono font-bold text-blue-400">
+                          {ev.caseId}
+                        </span>
+                      )}
+                    </div>
+                    <p className="text-[11px] text-slate-400 truncate">{ev.details}</p>
+                  </div>
+                </div>
+
+                <div className="text-right shrink-0 text-[11px] font-mono text-slate-400">
+                  <div>{ev.userName.split(' ')[0]} ({ev.userBadge})</div>
+                  <div className="text-[10px] text-slate-500">{ev.timeFormatted}</div>
+                </div>
+              </div>
+            ))
+          )}
         </div>
       </div>
 

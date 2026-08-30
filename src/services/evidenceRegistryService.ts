@@ -1,4 +1,5 @@
 import { EntityType } from '../types';
+import { auditService } from './auditService';
 
 export type EvidenceType = 
   | 'DOCUMENT'
@@ -606,6 +607,18 @@ export const evidenceRegistryService = {
       const list: EvidenceRecord[] = stored ? JSON.parse(stored) : [...INITIAL_SYNTHETIC_EVIDENCE];
       list.unshift(newRecord);
       localStorage.setItem(STORAGE_KEY_EVIDENCE, JSON.stringify(list));
+      
+      auditService.logAction({
+        action: 'REGISTERED_EVIDENCE',
+        actionLabel: 'Registered Evidence in Digital Ledger',
+        module: 'Evidence',
+        caseId: newRecord.caseId,
+        recordId: newRecord.id,
+        recordType: 'EVIDENCE',
+        recordLabel: newRecord.title,
+        status: 'SUCCESS',
+        details: `Evidence item ${newRecord.id} (${newRecord.title}) registered by ${newRecord.registeringOfficer}.`
+      });
     } catch (err) {
       console.warn('Failed to persist registered evidence:', err);
     }
@@ -665,6 +678,19 @@ export const evidenceRegistryService = {
 
       list[recordIndex] = updatedRecord;
       localStorage.setItem(STORAGE_KEY_EVIDENCE, JSON.stringify(list));
+
+      auditService.logAction({
+        action: 'UPLOADED_SOFT_COPY',
+        actionLabel: 'Uploaded Certified Evidence Soft-Copy',
+        module: 'Evidence',
+        caseId: updatedRecord.caseId,
+        recordId: updatedRecord.id,
+        recordType: 'EVIDENCE',
+        recordLabel: updatedRecord.title,
+        status: 'SUCCESS',
+        details: `Uploaded certified soft copy ${fileData.filename} (v${versionNumber}) stamped with SHA-256 seal.`
+      });
+
       return updatedRecord;
     } catch (err) {
       console.warn('Failed to upload soft copy:', err);
@@ -697,6 +723,18 @@ export const evidenceRegistryService = {
       record.chainOfCustody.unshift(verifyCustodyEvent);
       list[recordIndex] = record;
       localStorage.setItem(STORAGE_KEY_EVIDENCE, JSON.stringify(list));
+
+      auditService.logAction({
+        action: 'VERIFIED_INTEGRITY',
+        actionLabel: 'Verified Evidence SHA-256 Bitwise Seal',
+        module: 'Evidence',
+        caseId: record.caseId,
+        recordId: record.id,
+        recordType: 'EVIDENCE',
+        recordLabel: record.title,
+        status: 'SUCCESS',
+        details: `SHA-256 cryptographic bitwise seal verified for ${record.id} (${record.title}).`
+      });
 
       return {
         verified: true,

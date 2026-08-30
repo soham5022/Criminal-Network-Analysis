@@ -22,6 +22,7 @@ import {
   WitnessStatement, 
   caseHistoryService 
 } from '../../services/caseHistoryService';
+import { auditService } from '../../services/auditService';
 import { useInvestigation } from '../../context/InvestigationContext';
 import { StatementViewerModal } from './StatementViewerModal';
 
@@ -89,6 +90,18 @@ export const WitnessManagementTab: React.FC<WitnessManagementTabProps> = ({ case
     });
 
     if (updated) {
+      auditService.logAction({
+        action: 'RECORDED_STATEMENT',
+        actionLabel: 'Recorded Witness Supplementary Statement',
+        module: 'Witnesses',
+        caseId: caseId,
+        recordId: selectedWitness.id,
+        recordType: 'WITNESS',
+        recordLabel: selectedWitness.name,
+        status: 'SUCCESS',
+        details: `Recorded Section 161 CrPC supplementary statement for witness ${selectedWitness.name} (${selectedWitness.id}).`
+      });
+
       loadWitnesses();
       setShowAddStatementModal(false);
       setNewStatementSummary('');

@@ -11,6 +11,7 @@ import {
   StickyNote,
   UploadCloud,
   ShieldAlert,
+  ShieldCheck,
   User,
   UserCheck,
   ClipboardList
@@ -84,9 +85,20 @@ export const CaseDetailsHeader: React.FC<CaseDetailsHeaderProps> = ({ caseData }
             </h1>
           </div>
 
-          <div className="flex items-center gap-2 text-xs text-slate-300 bg-[#090e1a] px-3 py-1.5 rounded-lg border border-slate-800 font-medium">
-            <User className="w-3.5 h-3.5 text-blue-400" />
-            <span>Lead IO: <strong className="text-white">{caseData.leadInvestigator || 'Inspector Rajesh Verma'}</strong></span>
+          <div className="flex items-center gap-2">
+            <button
+              onClick={() => navigateTo('audit')}
+              className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-slate-900 hover:bg-slate-800 border border-slate-700 text-slate-300 hover:text-white text-xs font-semibold transition-colors"
+              title="View immutable audit ledger for this case"
+            >
+              <ShieldCheck className="w-3.5 h-3.5 text-cyan-400" />
+              <span>View Audit Activity</span>
+            </button>
+
+            <div className="flex items-center gap-2 text-xs text-slate-300 bg-[#090e1a] px-3 py-1.5 rounded-lg border border-slate-800 font-medium">
+              <User className="w-3.5 h-3.5 text-blue-400" />
+              <span>Lead IO: <strong className="text-white">{caseData.leadInvestigator || 'Inspector Rajesh Verma'}</strong></span>
+            </div>
           </div>
         </div>
 
