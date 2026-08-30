@@ -24,7 +24,7 @@ export const CommunityZoneOverlay: React.FC<CommunityZoneOverlayProps> = ({
   return (
     <>
       {/* Dynamic Spatial Region Headers / Bounding Guides */}
-      <div className="absolute top-3 right-4 z-10 flex flex-wrap items-center gap-1.5 pointer-events-auto select-none max-w-md justify-end">
+      <div className="absolute top-3 left-1/2 -translate-x-1/2 z-10 hidden md:flex items-center gap-2 pointer-events-auto select-none">
         {communityStats.map((comm) => {
           const isSelected = activeCommunity === comm.id || hoveredComm === comm.id;
           return (
