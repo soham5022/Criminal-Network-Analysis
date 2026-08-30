@@ -48,11 +48,12 @@ export const networkService = {
     minConfidence?: number;
     selectedCommunity?: string;
   }): Promise<NetworkGraphPayload> {
-    const caseId = filter?.caseId || 'CASE-1024';
+    const caseId = filter?.caseId || 'ALL';
 
     try {
       // 1. Fetch live graph from FastAPI backend
-      const response = await fetchApi<NetworkGraphPayload>(`/network/${caseId}`);
+      const endpoint = caseId === 'ALL' ? '/network' : `/network/${caseId}`;
+      const response = await fetchApi<NetworkGraphPayload>(endpoint);
       
       let nodes = response.nodes || [];
       let edges = response.edges || [];
@@ -91,7 +92,7 @@ export const networkService = {
       let entities = [...mockEntities];
       let relationships = [...mockRelationships];
 
-      if (filter?.caseId) {
+      if (filter?.caseId && filter.caseId !== 'ALL') {
         entities = entities.filter(e => e.associatedCaseIds.includes(filter.caseId!));
       }
 

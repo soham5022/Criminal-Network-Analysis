@@ -3,6 +3,7 @@ import { useInvestigation } from '../context/InvestigationContext';
 import { networkService, NetworkGraphPayload } from '../services/networkService';
 import { entityService } from '../services/entityService';
 import { Entity, EntityType } from '../types';
+import { mockCases } from '../data/mockCases';
 import { CytoscapeGraph } from '../components/network/CytoscapeGraph';
 import { EntityIntelligencePanel } from '../components/network/EntityIntelligencePanel';
 import { 
@@ -21,7 +22,8 @@ import {
 } from '../components/network/communityLayout';
 
 export const NetworkAnalysis: React.FC = () => {
-  const { selectedEntityId, setSelectedEntityId, activeCaseId, navigateTo } = useInvestigation();
+  const { selectedEntityId, setSelectedEntityId, activeCaseId, setActiveCaseId, navigateTo } = useInvestigation();
+  const [scopeCaseId, setScopeCaseId] = useState<string>('ALL');
   const [graphData, setGraphData] = useState<NetworkGraphPayload | null>(null);
   const [selectedEntity, setSelectedEntity] = useState<Entity | null>(null);
   const [searchQuery, setSearchQuery] = useState<string>('');
@@ -51,7 +53,7 @@ export const NetworkAnalysis: React.FC = () => {
     setLoading(true);
     try {
       const data = await networkService.getGraphData({
-        caseId: activeCaseId,
+        caseId: scopeCaseId,
         entityTypes: activeFilterTypes,
         minConfidence: 0.7
       });
@@ -65,7 +67,7 @@ export const NetworkAnalysis: React.FC = () => {
 
   useEffect(() => {
     fetchGraph();
-  }, [activeCaseId, activeFilterTypes]);
+  }, [scopeCaseId, activeFilterTypes]);
 
   useEffect(() => {
     const targetId = selectedEntityId || bridgeNodeId || 'Person_044';
@@ -171,15 +173,37 @@ export const NetworkAnalysis: React.FC = () => {
       
       {/* 1. NETWORK OVERVIEW Header Status Bar */}
       <div className="bg-[#FFFFFF] px-4 py-2.5 rounded-lg border border-[#E2E8F0] flex flex-wrap items-center justify-between gap-3 text-xs shadow-sm">
-        <div className="flex items-center gap-2">
-          <div className="p-1 rounded-md bg-[#E6F4F5] text-[#087E8B] border border-[#A7DFE3]">
-            <Network className="w-3.5 h-3.5" />
+        <div className="flex items-center gap-2.5 flex-wrap">
+          <div className="flex items-center gap-2">
+            <div className="p-1 rounded-md bg-[#E6F4F5] text-[#087E8B] border border-[#A7DFE3]">
+              <Network className="w-3.5 h-3.5" />
+            </div>
+            <span className="font-bold uppercase tracking-wider text-[#12304A]">
+              SCOPE:
+            </span>
           </div>
-          <span className="font-bold uppercase tracking-wider text-[#12304A]">
-            NETWORK OVERVIEW:
-          </span>
-          <span className="text-[#64748B] font-medium font-mono">
-            {totalNodesCount} Entities • {totalEdgesCount} Relationships • {totalCommunitiesCount} Communities
+
+          <select
+            value={scopeCaseId}
+            onChange={(e) => {
+              const val = e.target.value;
+              setScopeCaseId(val);
+              if (val !== 'ALL') {
+                setActiveCaseId(val);
+              }
+            }}
+            className="px-2.5 py-1 rounded-md bg-[#F8FAFC] border border-[#CBD5E1] text-xs font-semibold text-[#12304A] focus:outline-none focus:border-[#087E8B] shadow-sm cursor-pointer"
+          >
+            <option value="ALL">🌐 ALL CASES (Global Multi-Case Synthesis)</option>
+            {mockCases.map((c) => (
+              <option key={c.id} value={c.id}>
+                📁 {c.id} — {c.name}
+              </option>
+            ))}
+          </select>
+
+          <span className="text-[#64748B] font-medium font-mono hidden md:inline">
+            • {totalNodesCount} Entities • {totalEdgesCount} Relationships • {totalCommunitiesCount} Communities
           </span>
         </div>
 

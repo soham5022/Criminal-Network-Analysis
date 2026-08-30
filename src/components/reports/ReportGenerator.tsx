@@ -12,9 +12,10 @@ import {
 } from 'lucide-react';
 import { useInvestigation } from '../../context/InvestigationContext';
 import { reportService, CaseReport, ReportConfig } from '../../services/reportService';
+import { mockCases } from '../../data/mockCases';
 
 export const ReportGenerator: React.FC = () => {
-  const { activeCaseId, openEntityProfile } = useInvestigation();
+  const { activeCaseId, setActiveCaseId, openEntityProfile } = useInvestigation();
   const [reports, setReports] = useState<CaseReport[]>([]);
   const [activeReport, setActiveReport] = useState<CaseReport | null>(null);
   const [viewMode, setViewMode] = useState<'list' | 'report'>('list');
@@ -356,13 +357,30 @@ export const ReportGenerator: React.FC = () => {
           </p>
         </div>
 
-        <button
-          onClick={() => setShowGenerateModal(true)}
-          className="flex items-center gap-1.5 px-4 py-2 rounded-md bg-[#087E8B] hover:bg-[#06636E] text-white text-xs font-bold transition-all shadow-sm shrink-0"
-        >
-          <Plus className="w-4 h-4" />
-          <span>Generate Case Report</span>
-        </button>
+        <div className="flex items-center gap-3">
+          <div className="flex items-center gap-2">
+            <span className="text-xs text-[#64748B] font-medium">Case:</span>
+            <select
+              value={activeCaseId}
+              onChange={(e) => setActiveCaseId(e.target.value)}
+              className="px-2.5 py-1.5 rounded-md bg-[#F8FAFC] border border-[#CBD5E1] text-xs font-semibold text-[#12304A] focus:outline-none focus:border-[#087E8B] shadow-sm cursor-pointer"
+            >
+              {mockCases.map((c) => (
+                <option key={c.id} value={c.id}>
+                  📁 {c.id} — {c.name}
+                </option>
+              ))}
+            </select>
+          </div>
+
+          <button
+            onClick={() => setShowGenerateModal(true)}
+            className="flex items-center gap-1.5 px-4 py-2 rounded-md bg-[#087E8B] hover:bg-[#06636E] text-white text-xs font-bold transition-all shadow-sm shrink-0"
+          >
+            <Plus className="w-4 h-4" />
+            <span>Generate Case Report</span>
+          </button>
+        </div>
       </div>
 
       {/* Reports Cards */}

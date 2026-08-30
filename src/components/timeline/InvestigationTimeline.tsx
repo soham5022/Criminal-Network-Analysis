@@ -21,10 +21,11 @@ import {
   TimelineStats 
 } from '../../services/timelineService';
 import { useInvestigation } from '../../context/InvestigationContext';
+import { mockCases } from '../../data/mockCases';
 import { TimelineEventDetailsModal } from './TimelineEventDetailsModal';
 
 export const InvestigationTimeline: React.FC = () => {
-  const { navigateTo, openEntityProfile, activeCaseId } = useInvestigation();
+  const { navigateTo, openEntityProfile, activeCaseId, setActiveCaseId } = useInvestigation();
   const [events, setEvents] = useState<DetailedTimelineEvent[]>([]);
   const [stats, setStats] = useState<TimelineStats>({
     totalEvents: 0,
@@ -105,9 +106,17 @@ export const InvestigationTimeline: React.FC = () => {
 
           <div className="flex items-center gap-2">
             <span className="text-xs text-[#64748B] font-medium">Case Scope:</span>
-            <span className="px-2.5 py-1 rounded-md bg-[#E6F4F5] text-[#087E8B] border border-[#A7DFE3] text-xs font-mono font-bold">
-              {activeCaseId}
-            </span>
+            <select
+              value={activeCaseId}
+              onChange={(e) => setActiveCaseId(e.target.value)}
+              className="px-2.5 py-1 rounded-md bg-[#F8FAFC] border border-[#CBD5E1] text-xs font-semibold text-[#12304A] focus:outline-none focus:border-[#087E8B] shadow-sm cursor-pointer"
+            >
+              {mockCases.map((c) => (
+                <option key={c.id} value={c.id}>
+                  📁 {c.id} — {c.name}
+                </option>
+              ))}
+            </select>
           </div>
         </div>
 

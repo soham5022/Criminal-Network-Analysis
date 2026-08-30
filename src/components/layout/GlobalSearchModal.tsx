@@ -33,10 +33,12 @@ export const GlobalSearchModal: React.FC = () => {
     if (!q) return true;
     return (
       e.id.toLowerCase().includes(q) ||
-      e.label.toLowerCase().includes(q) ||
+      (e.label && e.label.toLowerCase().includes(q)) ||
+      (e.name && e.name.toLowerCase().includes(q)) ||
       String(e.community).toLowerCase().includes(q) ||
-      (e.metadata.alias && e.metadata.alias.toLowerCase().includes(q)) ||
-      (e.metadata.description && e.metadata.description.toLowerCase().includes(q))
+      (e.metadata?.alias && e.metadata.alias.toLowerCase().includes(q)) ||
+      (e.metadata?.carrierOrBank && e.metadata.carrierOrBank.toLowerCase().includes(q)) ||
+      (e.metadata?.description && e.metadata.description.toLowerCase().includes(q))
     );
   });
 

@@ -118,10 +118,65 @@ export const reportService = {
       const stored = localStorage.getItem(STORAGE_KEY_REPORTS);
       if (stored) {
         const all: Record<string, CaseReport[]> = JSON.parse(stored);
-        if (all[caseId]) return all[caseId];
+        if (all[caseId] && all[caseId].length > 0) return all[caseId];
       }
     } catch {}
-    return INITIAL_REPORTS[caseId] || [];
+
+    if (INITIAL_REPORTS[caseId] && INITIAL_REPORTS[caseId].length > 0) {
+      return INITIAL_REPORTS[caseId];
+    }
+
+    const incident = caseHistoryService.getIncidentDetails(caseId);
+    const defaultReport: CaseReport = {
+      id: `RPT-2026-${caseId.replace(/\D/g, '') || '0099'}`,
+      caseId: caseId,
+      caseTitle: incident?.incidentType || `Case ${caseId}`,
+      reportType: 'Comprehensive Investigation Summary',
+      title: `Intelligence Briefing: ${incident?.incidentType || caseId}`,
+      createdDate: '30 Aug 2026',
+      createdTime: '10:00 IST',
+      createdBy: incident?.reportingOfficer || 'Inspector Rajesh Verma',
+      badgeNumber: 'MHA-INT-8902',
+      version: 1,
+      status: 'READY',
+      config: {
+        caseId: caseId,
+        reportType: 'Comprehensive Investigation Summary',
+        reportTitle: `Intelligence Briefing: ${incident?.incidentType || caseId}`,
+        includeSummary: true,
+        includeEntities: true,
+        includeWitnesses: true,
+        includeDocuments: true,
+        includeEvidence: true,
+        includeTimeline: true,
+        includeNetwork: true,
+        includeAlerts: true,
+        includeActions: true,
+        includeObservations: true,
+        includeSources: true
+      },
+      participants: caseHistoryService.getParticipants(caseId),
+      witnesses: caseHistoryService.getWitnesses(caseId),
+      documents: caseRecordsService.getDocumentsByCaseId(caseId),
+      evidence: evidenceRegistryService.getEvidenceByCase(caseId),
+      timeline: timelineService.getCaseEvents({ caseId }).slice(0, 10),
+      actions: caseHistoryService.getActions(caseId),
+      observations: caseHistoryService.getObservations(caseId),
+      alerts: [],
+      networkSummary: {
+        totalEntities: 36,
+        relationships: 112,
+        communities: 3,
+        bridgeLeads: [
+          `Key operational leads mapped for ${caseId}.`,
+          'Temporal synchronization verified across communication and location registries.'
+        ]
+      },
+      executiveSummary: `Official intelligence briefing for ${caseId} (${incident?.incidentType || 'Investigation inquiry'}). Evidentiary records and operational findings have been synthesized for law enforcement review.`,
+      disclaimer: 'TraceNet provides analytical assistance based on available records. Analytical findings are investigative leads and do not determine legal guilt or innocence. Final decisions remain with authorized personnel.'
+    };
+
+    return [defaultReport];
   },
 
   getReportById(caseId: string, reportId: string): CaseReport | undefined {

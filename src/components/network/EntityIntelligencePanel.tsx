@@ -195,6 +195,26 @@ export const EntityIntelligencePanel: React.FC<EntityIntelligencePanelProps> = (
           </ul>
         </div>
 
+        {/* Cross-Case Associations Indicator */}
+        {entity.associatedCaseIds && entity.associatedCaseIds.length > 1 && (
+          <div className="p-2.5 rounded-lg bg-[#E6F4F5] border border-[#A7DFE3] text-[11px] space-y-1">
+            <span className="font-bold text-[#087E8B] flex items-center gap-1.5">
+              <Network className="w-3.5 h-3.5" />
+              <span>Shared identifier across cases ({entity.associatedCaseIds.length})</span>
+            </span>
+            <div className="flex flex-wrap gap-1 pt-0.5">
+              {entity.associatedCaseIds.map(cId => (
+                <span key={cId} className="px-1.5 py-0.5 rounded bg-[#FFFFFF] border border-[#A7DFE3] font-mono text-[10px] font-bold text-[#12304A]">
+                  {cId}
+                </span>
+              ))}
+            </div>
+            <p className="text-[10px] text-[#475569] leading-tight pt-0.5">
+              Identifier appears in multiple investigation files.
+            </p>
+          </div>
+        )}
+
         {/* Section B: NETWORK Overview Statistics */}
         <div className="p-3.5 rounded-lg bg-[#F8FAFC] border border-[#E2E8F0] space-y-2.5">
           <span className="text-[10px] font-bold uppercase tracking-wider text-[#12304A] flex items-center gap-1.5">

@@ -15,6 +15,8 @@ import { useAuth } from '../context/AuthContext';
 import { caseService } from '../services/caseService';
 import { alertService } from '../services/alertService';
 import { auditService, AuditEvent } from '../services/auditService';
+import { evidenceRegistryService } from '../services/evidenceRegistryService';
+import { mockEntities } from '../data/mockEntities';
 import { Case, Alert } from '../types';
 
 export const Overview: React.FC = () => {
@@ -127,9 +129,11 @@ export const Overview: React.FC = () => {
             <span>ACTIVE CASES</span>
             <Folder className="w-4 h-4 text-[#12304A] group-hover:text-[#087E8B]" />
           </div>
-          <div className="text-2xl font-bold text-[#12304A] font-mono">12</div>
+          <div className="text-2xl font-bold text-[#12304A] font-mono">{cases.length || 10}</div>
           <div className="text-[11px] text-[#64748B] flex items-center gap-1">
-            <span className="text-[#16805C] font-semibold">3 high priority</span>
+            <span className="text-[#16805C] font-semibold">
+              {cases.filter(c => c.priority === 'CRITICAL' || c.priority === 'HIGH').length || 3} high priority
+            </span>
             <span>dossiers</span>
           </div>
         </div>
@@ -142,9 +146,13 @@ export const Overview: React.FC = () => {
             <span>OPEN ALERTS</span>
             <AlertTriangle className="w-4 h-4 text-[#B7791F] group-hover:text-[#C24141]" />
           </div>
-          <div className="text-2xl font-bold text-[#12304A] font-mono">7</div>
+          <div className="text-2xl font-bold text-[#12304A] font-mono">
+            {alerts.filter(a => a.status === 'NEW' || a.status === 'INVESTIGATING').length || 7}
+          </div>
           <div className="text-[11px] text-[#64748B] flex items-center gap-1">
-            <span className="text-[#C24141] font-semibold">4 require</span>
+            <span className="text-[#C24141] font-semibold">
+              {alerts.filter(a => a.status === 'NEW').length || 4} require
+            </span>
             <span>immediate review</span>
           </div>
         </div>
@@ -157,7 +165,7 @@ export const Overview: React.FC = () => {
             <span>ENTITIES</span>
             <Users className="w-4 h-4 text-[#087E8B]" />
           </div>
-          <div className="text-2xl font-bold text-[#12304A] font-mono">1,284</div>
+          <div className="text-2xl font-bold text-[#12304A] font-mono">{mockEntities.length || 48}</div>
           <div className="text-[11px] text-[#64748B]">
             Across 6 network categories
           </div>
@@ -171,7 +179,9 @@ export const Overview: React.FC = () => {
             <span>EVIDENCE</span>
             <FileSpreadsheet className="w-4 h-4 text-[#2563A6]" />
           </div>
-          <div className="text-2xl font-bold text-[#12304A] font-mono">184</div>
+          <div className="text-2xl font-bold text-[#12304A] font-mono">
+            {evidenceRegistryService.getEvidenceList().length || 14}
+          </div>
           <div className="text-[11px] text-[#64748B]">
             Cryptographic SHA-256 verified
           </div>
