@@ -325,7 +325,7 @@ export const NetworkAnalysis: React.FC = () => {
       {/* 3. Main Graph Canvas & Intelligence Inspector Split Layout */}
       <div className="bg-[#FFFFFF] border border-[#E2E8F0] rounded-lg overflow-hidden flex flex-col lg:flex-row h-[620px] shadow-sm">
         {/* Left Interactive Cytoscape Canvas */}
-        <div className="flex-1 relative h-full bg-[#FAFCFD]">
+        <div className="flex-1 relative h-full bg-[#FAF8F4]">
           {graphData && (
             <CytoscapeGraph
               graphData={graphData}
