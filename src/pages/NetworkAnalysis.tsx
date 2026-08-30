@@ -5,7 +5,6 @@ import { entityService } from '../services/entityService';
 import { Entity, EntityType } from '../types';
 import { CytoscapeGraph } from '../components/network/CytoscapeGraph';
 import { EntityIntelligencePanel } from '../components/network/EntityIntelligencePanel';
-import { NetworkLegend } from '../components/network/NetworkLegend';
 import { 
   Search, 
   RotateCcw,
@@ -325,7 +324,7 @@ export const NetworkAnalysis: React.FC = () => {
       {/* 3. Main Graph Canvas & Intelligence Inspector Split Layout */}
       <div className="bg-[#FFFFFF] border border-[#E2E8F0] rounded-lg overflow-hidden flex flex-col lg:flex-row h-[620px] shadow-sm">
         {/* Left Interactive Cytoscape Canvas */}
-        <div className="flex-1 relative h-full bg-[#FAF8F4]">
+        <div className="flex-1 relative h-full bg-[#FAFCFD]">
           {graphData && (
             <CytoscapeGraph
               graphData={graphData}
@@ -350,9 +349,6 @@ export const NetworkAnalysis: React.FC = () => {
           onViewEvidence={() => navigateTo('evidence', { entityId: selectedEntity?.id || 'Person_044' })}
         />
       </div>
-
-      {/* 4. Bottom Collapsible Legend */}
-      <NetworkLegend />
 
     </div>
   );

@@ -15,18 +15,12 @@ export interface CommunityInfo {
 }
 
 const PALETTE = [
-  // 1. Terracotta family
-  { color: '#B85C38', borderColor: '#944424', badgeBg: 'bg-[#FBEBE5] text-[#944424] border-[#E8C9BD]' },
-  // 2. Mustard / Amber family
-  { color: '#B58A32', borderColor: '#916A1E', badgeBg: 'bg-[#FAF3E4] text-[#916A1E] border-[#EAE0C5]' },
-  // 3. Warm Olive family
-  { color: '#777548', borderColor: '#5C5A32', badgeBg: 'bg-[#F4F4EB] text-[#5C5A32] border-[#DFDEC9]' },
-  // 4. Warm Brown family
-  { color: '#735548', borderColor: '#553C32', badgeBg: 'bg-[#F5EFEF] text-[#553C32] border-[#DDD3CE]' },
-  // 5. Dusty Rose family
-  { color: '#9A6262', borderColor: '#7A4A4A', badgeBg: 'bg-[#F9ECEC] text-[#7A4A4A] border-[#E8D0D0]' },
-  // 6. Warm Slate/Gray family
-  { color: '#766F67', borderColor: '#5B554E', badgeBg: 'bg-[#F2EFEA] text-[#5B554E] border-[#D8D0C7]' }
+  { color: '#38bdf8', borderColor: 'rgba(56, 189, 248, 0.3)', badgeBg: 'bg-cyan-500/20 text-cyan-300 border-cyan-500/40' },
+  { color: '#fbbf24', borderColor: 'rgba(251, 191, 36, 0.3)', badgeBg: 'bg-amber-500/20 text-amber-300 border-amber-500/40' },
+  { color: '#34d399', borderColor: 'rgba(52, 211, 153, 0.3)', badgeBg: 'bg-emerald-500/20 text-emerald-300 border-emerald-500/40' },
+  { color: '#818cf8', borderColor: 'rgba(129, 140, 248, 0.3)', badgeBg: 'bg-indigo-500/20 text-indigo-300 border-indigo-500/40' },
+  { color: '#f472b6', borderColor: 'rgba(244, 114, 182, 0.3)', badgeBg: 'bg-pink-500/20 text-pink-300 border-pink-500/40' },
+  { color: '#a78bfa', borderColor: 'rgba(167, 139, 250, 0.3)', badgeBg: 'bg-purple-500/20 text-purple-300 border-purple-500/40' }
 ];
 
 /**
@@ -85,7 +79,7 @@ export function detectDynamicCommunities(
 ): CommunityInfo[] {
   if (nodes.length === 0) return [];
 
-  const { bridgeNodeId } = analyzeGraphTopology(nodes, edges);
+  const { bridgeNodeId, adjList } = analyzeGraphTopology(nodes, edges);
 
   // Group nodes by community tag or graph structure
   const rawCommunityMap = new Map<string, string[]>();

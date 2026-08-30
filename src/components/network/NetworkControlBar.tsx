@@ -36,12 +36,12 @@ export const NetworkControlBar: React.FC<NetworkControlBarProps> = ({
   onResetFilters
 }) => {
   const entityTypeOptions: { type: EntityType; label: string; icon: React.ElementType; color: string }[] = [
-    { type: 'PERSON', label: 'Persons', icon: Users, color: 'text-[#B85C38]' },
-    { type: 'PHONE', label: 'Phones', icon: Phone, color: 'text-[#C46A32]' },
-    { type: 'ACCOUNT', label: 'Accounts', icon: CreditCard, color: 'text-[#B58A32]' },
-    { type: 'LOCATION', label: 'Locations', icon: MapPin, color: 'text-[#777548]' },
-    { type: 'ORGANIZATION', label: 'Orgs', icon: Building2, color: 'text-[#735548]' },
-    { type: 'VEHICLE', label: 'Vehicles', icon: Car, color: 'text-[#9A6262]' }
+    { type: 'PERSON', label: 'Persons', icon: Users, color: 'text-[#12304A]' },
+    { type: 'PHONE', label: 'Phones', icon: Phone, color: 'text-[#087E8B]' },
+    { type: 'ACCOUNT', label: 'Accounts', icon: CreditCard, color: 'text-[#2563A6]' },
+    { type: 'LOCATION', label: 'Locations', icon: MapPin, color: 'text-[#7E22CE]' },
+    { type: 'ORGANIZATION', label: 'Orgs', icon: Building2, color: 'text-[#234E70]' },
+    { type: 'VEHICLE', label: 'Vehicles', icon: Car, color: 'text-[#B7791F]' }
   ];
 
   return (
@@ -54,8 +54,8 @@ export const NetworkControlBar: React.FC<NetworkControlBarProps> = ({
             type="text"
             value={searchQuery}
             onChange={(e) => onSearchChange(e.target.value)}
-            placeholder="Filter entities (e.g. Rahul Sharma, ACCT-8849-103)..."
-            className="w-full pl-9 pr-8 py-1.5 rounded-md bg-[#FFFFFF] border border-[#CBD5E1] text-xs font-mono text-[#17212B] placeholder-[#94A3B8] focus:outline-none focus:border-[#16805C]"
+            placeholder="Filter entities (e.g. Person_044, Account_103)..."
+            className="w-full pl-9 pr-8 py-1.5 rounded-md bg-[#FFFFFF] border border-[#CBD5E1] text-xs font-mono text-[#17212B] placeholder-[#94A3B8] focus:outline-none focus:border-[#087E8B]"
           />
           {searchQuery && (
             <button
@@ -73,7 +73,7 @@ export const NetworkControlBar: React.FC<NetworkControlBarProps> = ({
           <select
             value={selectedCommunity}
             onChange={(e) => onCommunityChange(e.target.value)}
-            className="px-2.5 py-1.5 rounded-md bg-[#FFFFFF] border border-[#CBD5E1] text-xs font-mono text-[#17212B] focus:outline-none focus:border-[#16805C]"
+            className="px-2.5 py-1.5 rounded-md bg-[#FFFFFF] border border-[#CBD5E1] text-xs font-mono text-[#17212B] focus:outline-none focus:border-[#087E8B]"
           >
             <option value="ALL">All Communities</option>
             <option value="Cluster 01">Cluster 01 (Executive Ring)</option>
@@ -94,9 +94,9 @@ export const NetworkControlBar: React.FC<NetworkControlBarProps> = ({
             step="0.05"
             value={minConfidence}
             onChange={(e) => onConfidenceChange(parseFloat(e.target.value))}
-            className="w-24 h-1 bg-[#CBD5E1] rounded-lg appearance-none cursor-pointer accent-[#16805C]"
+            className="w-24 h-1 bg-[#CBD5E1] rounded-lg appearance-none cursor-pointer accent-[#087E8B]"
           />
-          <span className="font-mono text-[#16805C] font-bold w-8">{minConfidence.toFixed(2)}</span>
+          <span className="font-mono text-[#087E8B] font-bold w-8">{minConfidence.toFixed(2)}</span>
         </div>
 
         {/* Reset Filter Button */}
@@ -122,8 +122,8 @@ export const NetworkControlBar: React.FC<NetworkControlBarProps> = ({
               onClick={() => onToggleEntityType(opt.type)}
               className={`flex items-center gap-1.5 px-2.5 py-1 rounded-md text-xs font-mono transition-all ${
                 isSelected
-                  ? 'bg-[#FBEBE5] text-[#944424] border border-[#E8C9BD] font-bold shadow-sm'
-                  : 'bg-[#FFFFFF] text-[#64748B] border border-[#E2E8F0] hover:bg-[#FAF8F4] hover:text-[#12304A]'
+                  ? 'bg-[#E6F4F5] text-[#087E8B] border border-[#A7DFE3] font-bold shadow-sm'
+                  : 'bg-[#FFFFFF] text-[#64748B] border border-[#E2E8F0] hover:bg-[#F8FAFC] hover:text-[#12304A]'
               }`}
             >
               <Icon className={`w-3 h-3 ${opt.color}`} />
