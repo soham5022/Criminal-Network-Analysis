@@ -16,11 +16,12 @@ import {
   FileText, 
   Network, 
   ShieldCheck,
-  ExternalLink
+  ExternalLink,
+  Folder
 } from 'lucide-react';
 import { Entity, EntityType } from '../../types';
 import { useInvestigation } from '../../context/InvestigationContext';
-
+import { mockCases } from '../../data/mockCases';
 import { calculateAttentionScore } from './communityLayout';
 
 interface EntityIntelligencePanelProps {
@@ -195,25 +196,52 @@ export const EntityIntelligencePanel: React.FC<EntityIntelligencePanelProps> = (
           </ul>
         </div>
 
-        {/* Cross-Case Associations Indicator */}
-        {entity.associatedCaseIds && entity.associatedCaseIds.length > 1 && (
-          <div className="p-2.5 rounded-lg bg-[#E6F4F5] border border-[#A7DFE3] text-[11px] space-y-1">
-            <span className="font-bold text-[#087E8B] flex items-center gap-1.5">
-              <Network className="w-3.5 h-3.5" />
-              <span>Shared identifier across cases ({entity.associatedCaseIds.length})</span>
+        {/* Cases Associated With Section */}
+        <div className="p-3.5 rounded-lg bg-[#F8FAFC] border border-[#E2E8F0] space-y-2">
+          <div className="flex items-center justify-between">
+            <span className="text-[10px] font-bold uppercase tracking-wider text-[#12304A] flex items-center gap-1.5">
+              <Folder className="w-3.5 h-3.5 text-[#087E8B]" />
+              <span>Cases Associated With ({entity.associatedCaseIds?.length || 1})</span>
             </span>
-            <div className="flex flex-wrap gap-1 pt-0.5">
-              {entity.associatedCaseIds.map(cId => (
-                <span key={cId} className="px-1.5 py-0.5 rounded bg-[#FFFFFF] border border-[#A7DFE3] font-mono text-[10px] font-bold text-[#12304A]">
-                  {cId}
-                </span>
-              ))}
-            </div>
-            <p className="text-[10px] text-[#475569] leading-tight pt-0.5">
-              Identifier appears in multiple investigation files.
-            </p>
+            {entity.associatedCaseIds && entity.associatedCaseIds.length > 1 && (
+              <span className="px-1.5 py-0.5 rounded text-[9px] font-bold bg-[#E6F4F5] text-[#087E8B] border border-[#A7DFE3]">
+                CROSS-CASE ({entity.associatedCaseIds.length})
+              </span>
+            )}
           </div>
-        )}
+
+          <div className="space-y-1.5">
+            {(entity.associatedCaseIds || [activeCaseId]).map((cId) => {
+              const cData = mockCases.find(c => c.id === cId);
+              return (
+                <div
+                  key={cId}
+                  onClick={() => navigateTo('case-details', { caseId: cId, tab: 'overview' })}
+                  className="p-2 rounded bg-[#FFFFFF] hover:bg-[#E6F4F5] border border-[#E2E8F0] hover:border-[#A7DFE3] cursor-pointer flex items-center justify-between transition-all group shadow-sm"
+                >
+                  <div className="min-w-0">
+                    <div className="flex items-center gap-1.5">
+                      <span className="font-mono text-xs font-bold text-[#087E8B]">{cId}</span>
+                      <span className="text-xs font-semibold text-[#12304A] truncate group-hover:text-[#087E8B]">
+                        {cData?.name || 'Case Investigation Dossier'}
+                      </span>
+                    </div>
+                    <span className="text-[10px] text-[#64748B] block truncate">
+                      {cData?.department || 'Investigation Bureau'}
+                    </span>
+                  </div>
+                  <ChevronRight className="w-3.5 h-3.5 text-[#94A3B8] group-hover:text-[#087E8B] flex-shrink-0" />
+                </div>
+              );
+            })}
+          </div>
+
+          {entity.associatedCaseIds && entity.associatedCaseIds.length > 1 && (
+            <p className="text-[10px] text-[#64748B] italic pt-1 border-t border-[#E2E8F0]">
+              Shared identifier across cases. Record appears in multiple investigations.
+            </p>
+          )}
+        </div>
 
         {/* Section B: NETWORK Overview Statistics */}
         <div className="p-3.5 rounded-lg bg-[#F8FAFC] border border-[#E2E8F0] space-y-2.5">

@@ -215,5 +215,82 @@ export const mockRelationships: Relationship[] = [
     confidence: 0.98,
     sourceType: 'INCIDENT_FIR',
     notes: 'Lease agreement on warehouse facility.'
+  },
+  {
+    id: 'rel_020',
+    source: 'Person_052',
+    target: 'Phone_021',
+    type: 'ASSOCIATED_WITH',
+    timestamp: '2026-07-05 11:30:00',
+    confidence: 0.91,
+    sourceType: 'RETAILER_LEDGER',
+    notes: 'Retail vendor SIM activation batch record.'
+  },
+  {
+    id: 'rel_021',
+    source: 'Organization_X',
+    target: 'Location_C',
+    type: 'ASSOCIATED_WITH',
+    timestamp: '2026-08-08 14:00:00',
+    confidence: 0.93,
+    sourceType: 'PORT_MANIFEST',
+    notes: 'Consignee on maritime bills of lading at Eastern Docklands.'
+  },
+  {
+    id: 'rel_022',
+    source: 'Account_103',
+    target: 'Account_304',
+    type: 'TRANSFERRED',
+    timestamp: '2026-08-12 16:45:00',
+    confidence: 0.97,
+    amount: 49500,
+    currency: 'INR',
+    sourceType: 'BANKING_SWIFT',
+    notes: 'Structured Hawala book settlement transfer.'
+  },
+  {
+    id: 'rel_023',
+    source: 'Phone_021',
+    target: 'Phone_088',
+    type: 'CALLED',
+    timestamp: '2026-08-18 19:20:00',
+    confidence: 0.89,
+    frequency: 11,
+    sourceType: 'CDR',
+    notes: 'Hardware IMEI handshake between primary burner and clone profile.'
+  },
+  {
+    id: 'rel_024',
+    source: 'Phone_092',
+    target: 'Person_001',
+    type: 'CALLED',
+    timestamp: '2026-08-21 13:10:00',
+    confidence: 0.92,
+    frequency: 4,
+    sourceType: 'VOIP_INTERCEPT',
+    notes: 'Inbound virtual proxy routing threat calls.'
+  },
+  {
+    id: 'rel_025',
+    source: 'Vehicle_033',
+    target: 'Location_A',
+    type: 'VISITED',
+    timestamp: '2026-08-24 23:45:00',
+    confidence: 0.95,
+    frequency: 8,
+    sourceType: 'ANPR_CAMERA',
+    notes: 'Duplicate plate toll hit at Thane West perimeter.'
+  },
+  {
+    id: 'rel_026',
+    source: 'Account_512',
+    target: 'Account_103',
+    type: 'TRANSFERRED',
+    timestamp: '2026-08-27 17:30:00',
+    confidence: 0.96,
+    amount: 47800,
+    currency: 'INR',
+    sourceType: 'CRYPTO_SETTLEMENT',
+    notes: 'Decentralized mixer cash-out into intermediary account.'
   }
 ];

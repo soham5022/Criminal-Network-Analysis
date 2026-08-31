@@ -53,12 +53,15 @@ interface InvestigationContextType {
     priority?: AnalyticalPriority;
     community?: string;
   };
+  networkScopeCases: string[];
+  setNetworkScopeCases: (cases: string[]) => void;
   navigateTo: (page: AppPage, options?: { 
     caseId?: string; 
     entityId?: string; 
     alertId?: string; 
     tab?: CaseWorkspaceTab;
     openProfile?: boolean;
+    networkScopeCases?: string[];
   }) => void;
   setActiveCaseId: (caseId: string) => void;
   setSelectedEntityId: (entityId: string | null) => void;
@@ -91,6 +94,7 @@ export const InvestigationProvider: React.FC<{ children: ReactNode }> = ({ child
   const [isLoginModalOpen, setIsLoginModalOpen] = useState<boolean>(false);
   const [isPresentationMode, setIsPresentationMode] = useState<boolean>(false);
   const [isEntityProfileOpen, setIsEntityProfileOpen] = useState<boolean>(false);
+  const [networkScopeCases, setNetworkScopeCases] = useState<string[]>(['ALL']);
   const [activeEntityFilter, setActiveEntityFilter] = useState<{
     type?: EntityType;
     priority?: AnalyticalPriority;
@@ -127,6 +131,7 @@ export const InvestigationProvider: React.FC<{ children: ReactNode }> = ({ child
     alertId?: string;
     tab?: CaseWorkspaceTab;
     openProfile?: boolean;
+    networkScopeCases?: string[];
   }) => {
     const targetCaseId = options?.caseId || activeCaseId;
     if (options?.caseId) setActiveCaseId(options.caseId);
@@ -138,6 +143,16 @@ export const InvestigationProvider: React.FC<{ children: ReactNode }> = ({ child
     }
     if (options?.alertId !== undefined) setSelectedAlertId(options.alertId);
     if (options?.tab) setActiveCaseTab(options.tab);
+
+    if (page === 'network') {
+      if (options?.networkScopeCases) {
+        setNetworkScopeCases(options.networkScopeCases);
+      } else if (options?.caseId) {
+        setNetworkScopeCases([options.caseId]);
+      } else {
+        setNetworkScopeCases(['ALL']);
+      }
+    }
     
     // Normalize aliases
     if (page === 'overview') {
@@ -210,6 +225,8 @@ export const InvestigationProvider: React.FC<{ children: ReactNode }> = ({ child
         isPresentationMode,
         isEntityProfileOpen,
         activeEntityFilter,
+        networkScopeCases,
+        setNetworkScopeCases,
         navigateTo,
         setActiveCaseId,
         setSelectedEntityId,

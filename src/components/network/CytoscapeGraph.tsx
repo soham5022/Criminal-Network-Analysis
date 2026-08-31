@@ -30,9 +30,11 @@ import { PathFinderModal } from './PathFinderModal';
 import { GraphReferencePopover } from './GraphReferencePopover';
 
 interface CytoscapeGraphProps {
-  graphData: NetworkGraphPayload;
+  graphData?: NetworkGraphPayload | null;
   selectedEntityId: string | null;
+  bridgeNodeId?: string | null;
   onSelectEntity: (entityId: string | null) => void;
+  className?: string;
   isExpanded?: boolean;
   onToggleExpand?: () => void;
   onReset?: () => void;
@@ -48,7 +50,9 @@ interface CytoscapeGraphProps {
 export const CytoscapeGraph: React.FC<CytoscapeGraphProps> = ({
   graphData,
   selectedEntityId,
+  bridgeNodeId,
   onSelectEntity,
+  className,
   isExpanded = false,
   onToggleExpand,
   onReset,
@@ -72,8 +76,11 @@ export const CytoscapeGraph: React.FC<CytoscapeGraphProps> = ({
   const [activeCommunityFilter, setActiveCommunityFilter] = useState<string | null>(null);
   const [activePathSteps, setActivePathSteps] = useState<{ from: string; to: string; type: string }[] | null>(null);
 
-  const communityStats = detectDynamicCommunities(graphData.nodes, graphData.edges);
-  const { bridgeNodeId } = analyzeGraphTopology(graphData.nodes, graphData.edges);
+  const safeNodes = graphData?.nodes || [];
+  const safeEdges = graphData?.edges || [];
+  const communityStats = detectDynamicCommunities(safeNodes, safeEdges);
+  const { bridgeNodeId: detectedBridgeId } = analyzeGraphTopology(safeNodes, safeEdges);
+  const effectiveBridgeId = bridgeNodeId || detectedBridgeId;
 
   // Initialize Cytoscape Instance
   useEffect(() => {
@@ -176,6 +183,16 @@ export const CytoscapeGraph: React.FC<CytoscapeGraphProps> = ({
             'shape': 'round-diamond',
             'width': 36,
             'height': 36
+          }
+        },
+
+        // Cross-case shared identifier indicator
+        {
+          selector: 'node[?isCrossCase]',
+          style: {
+            'border-width': 2.5,
+            'border-style': 'dashed',
+            'border-color': '#087E8B'
           }
         },
 
@@ -369,7 +386,7 @@ export const CytoscapeGraph: React.FC<CytoscapeGraphProps> = ({
       ],
       layout: {
         name: 'preset',
-        positions: getDynamicCommunityPositions(graphData.nodes, graphData.edges)
+        positions: getDynamicCommunityPositions(safeNodes, safeEdges)
       }
     });
 
@@ -430,9 +447,12 @@ export const CytoscapeGraph: React.FC<CytoscapeGraphProps> = ({
     const cy = cyRef.current;
     if (!cy) return;
 
+    const currentNodes = graphData?.nodes || [];
+    const currentEdges = graphData?.edges || [];
+
     // 1. Filter Nodes based on entity type and investigation modes
-    let filteredNodes = graphData.nodes.filter(n => 
-      activeFilterTypes.includes(n.data.type as EntityType) || n.data.id === bridgeNodeId || n.data.id === selectedEntityId
+    let filteredNodes = currentNodes.filter(n => 
+      activeFilterTypes.includes(n.data.type as EntityType) || n.data.id === effectiveBridgeId || n.data.id === selectedEntityId
     );
 
     // If Community view filter is active
@@ -440,23 +460,23 @@ export const CytoscapeGraph: React.FC<CytoscapeGraphProps> = ({
       const targetComm = communityStats.find(c => c.id === activeCommunityFilter);
       if (targetComm) {
         const commNodeSet = new Set(targetComm.nodeIds);
-        filteredNodes = filteredNodes.filter(n => commNodeSet.has(n.data.id) || n.data.id === bridgeNodeId);
+        filteredNodes = filteredNodes.filter(n => commNodeSet.has(n.data.id) || n.data.id === effectiveBridgeId);
       }
     }
 
     // If Bridge View is enabled: show bridge node and its direct cross-community links
-    if (isBridgeView && bridgeNodeId) {
-      const bridgeNeighbors = new Set<string>([bridgeNodeId]);
-      graphData.edges.forEach(e => {
-        if (e.data.source === bridgeNodeId) bridgeNeighbors.add(e.data.target);
-        if (e.data.target === bridgeNodeId) bridgeNeighbors.add(e.data.source);
+    if (isBridgeView && effectiveBridgeId) {
+      const bridgeNeighbors = new Set<string>([effectiveBridgeId]);
+      currentEdges.forEach(e => {
+        if (e.data.source === effectiveBridgeId) bridgeNeighbors.add(e.data.target);
+        if (e.data.target === effectiveBridgeId) bridgeNeighbors.add(e.data.source);
       });
       filteredNodes = filteredNodes.filter(n => bridgeNeighbors.has(n.data.id));
     }
 
     // If Story Mode is enabled: prioritize top central nodes dynamically
     if (isStoryMode) {
-      const topCentralNodes = [...graphData.nodes]
+      const topCentralNodes = [...currentNodes]
         .sort((a, b) => (b.data.betweenness || 0) - (a.data.betweenness || 0))
         .slice(0, 8)
         .map(n => n.data.id);
@@ -465,14 +485,14 @@ export const CytoscapeGraph: React.FC<CytoscapeGraphProps> = ({
     }
 
     const validNodeIds = new Set(filteredNodes.map(n => n.data.id));
-    let filteredEdges = graphData.edges.filter(e => 
+    let filteredEdges = currentEdges.filter(e => 
       validNodeIds.has(e.data.source) && validNodeIds.has(e.data.target)
     );
 
     // If Bridge View: only edges connected to the bridge node
-    if (isBridgeView && bridgeNodeId) {
+    if (isBridgeView && effectiveBridgeId) {
       filteredEdges = filteredEdges.filter(e => 
-        e.data.source === bridgeNodeId || e.data.target === bridgeNodeId
+        e.data.source === effectiveBridgeId || e.data.target === effectiveBridgeId
       );
     }
 
@@ -753,7 +773,7 @@ export const CytoscapeGraph: React.FC<CytoscapeGraphProps> = ({
       <PathFinderModal
         isOpen={showPathFinder}
         onClose={() => setShowPathFinder(false)}
-        nodes={graphData.nodes}
+        nodes={safeNodes}
         sourceId={selectedEntityId || 'Person_044'}
         targetId="Account_103"
         onFindPath={handleFindPath}

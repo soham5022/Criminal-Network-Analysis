@@ -17,9 +17,22 @@ import { ReportGenerator } from '../components/reports/ReportGenerator';
 import { LoadingSkeleton } from '../components/common/LoadingSkeleton';
 
 export const CaseDetails: React.FC = () => {
-  const { activeCaseId, activeCaseTab, isEntityProfileOpen, selectedEntityId, closeEntityProfile } = useInvestigation();
+  const { 
+    activeCaseId, 
+    activeCaseTab, 
+    isEntityProfileOpen, 
+    selectedEntityId, 
+    closeEntityProfile,
+    setNetworkScopeCases
+  } = useInvestigation();
   const [caseData, setCaseData] = useState<Case | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
+
+  useEffect(() => {
+    if (activeCaseTab === 'network' || activeCaseTab === 'investigation') {
+      setNetworkScopeCases([activeCaseId]);
+    }
+  }, [activeCaseId, activeCaseTab, setNetworkScopeCases]);
 
   useEffect(() => {
     const load = async () => {
