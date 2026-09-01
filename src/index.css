@@ -117,3 +117,249 @@
   background: #FAFCFD;
   border-radius: 0.375rem;
 }
+
+/* ============================================================
+   OFFICIAL REPORT PRINT STYLESHEET
+   @media print: hide entire TraceNet app shell,
+   show only .official-report as a clean law-enforcement document.
+   ============================================================ */
+
+@media print {
+  /* Reset page */
+  @page {
+    margin: 20mm 18mm 20mm 18mm;
+    size: A4 portrait;
+  }
+
+  /* Kill every application shell element */
+  body > *:not(#tracenet-print-root),
+  .app-shell,
+  .tracenet-sidebar,
+  .tracenet-header,
+  .tracenet-topbar,
+  .tracenet-breadcrumbs,
+  .tracenet-navigation,
+  .tracenet-actions,
+  nav, aside,
+  header,
+  [class*="sidebar"],
+  [class*="topbar"],
+  [class*="header"],
+  [class*="breadcrumb"],
+  [class*="DemoBanner"],
+  [class*="GlobalSearch"],
+  [class*="DataIngestion"],
+  [class*="LoginModal"],
+  [class*="CreateCase"],
+  [class*="no-print"] {
+    display: none !important;
+    visibility: hidden !important;
+  }
+
+  /* Show ONLY the official report */
+  #tracenet-print-root {
+    display: block !important;
+    visibility: visible !important;
+    position: absolute !important;
+    top: 0 !important;
+    left: 0 !important;
+    width: 100% !important;
+    background: white !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    z-index: 99999 !important;
+  }
+
+  .official-report {
+    display: block !important;
+    visibility: visible !important;
+    background: white !important;
+    color: #17212B !important;
+    font-family: 'Times New Roman', Georgia, 'DejaVu Serif', serif !important;
+    font-size: 11pt !important;
+    line-height: 1.6 !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    box-shadow: none !important;
+    border: none !important;
+    border-radius: 0 !important;
+    width: 100% !important;
+  }
+
+  /* Official report content styling for print */
+  .official-report * {
+    color-adjust: exact !important;
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+
+  .official-report .rpt-header {
+    border-bottom: 2px solid #12304A !important;
+    padding-bottom: 12pt !important;
+    margin-bottom: 16pt !important;
+    text-align: center !important;
+  }
+
+  .official-report .rpt-header-banner {
+    font-size: 9pt !important;
+    font-weight: 700 !important;
+    letter-spacing: 0.12em !important;
+    text-transform: uppercase !important;
+    color: #087E8B !important;
+    display: block !important;
+    margin-bottom: 4pt !important;
+  }
+
+  .official-report .rpt-title {
+    font-size: 18pt !important;
+    font-weight: 700 !important;
+    color: #12304A !important;
+    margin: 6pt 0 !important;
+  }
+
+  .official-report .rpt-meta-row {
+    font-family: 'Courier New', Courier, monospace !important;
+    font-size: 9pt !important;
+    color: #475569 !important;
+    margin-top: 4pt !important;
+  }
+
+  .official-report .rpt-metadata-grid {
+    display: grid !important;
+    grid-template-columns: repeat(4, 1fr) !important;
+    gap: 8pt !important;
+    background: #F8FAFC !important;
+    border: 1pt solid #CBD5E1 !important;
+    padding: 8pt !important;
+    margin: 12pt 0 !important;
+    font-size: 9pt !important;
+  }
+
+  .official-report .rpt-section {
+    margin-top: 16pt !important;
+    page-break-inside: avoid !important;
+  }
+
+  .official-report .rpt-section-heading {
+    font-size: 10pt !important;
+    font-weight: 700 !important;
+    text-transform: uppercase !important;
+    letter-spacing: 0.08em !important;
+    color: #12304A !important;
+    border-bottom: 1pt solid #CBD5E1 !important;
+    padding-bottom: 3pt !important;
+    margin-bottom: 8pt !important;
+  }
+
+  .official-report .rpt-prose {
+    font-size: 10pt !important;
+    color: #334155 !important;
+    background: #F8FAFC !important;
+    border: 1pt solid #E2E8F0 !important;
+    padding: 8pt !important;
+    margin: 6pt 0 !important;
+    line-height: 1.6 !important;
+  }
+
+  .official-report .rpt-info-grid {
+    display: grid !important;
+    grid-template-columns: 1fr 1fr !important;
+    gap: 6pt !important;
+    margin-bottom: 8pt !important;
+  }
+
+  .official-report .rpt-info-cell {
+    background: #F8FAFC !important;
+    border: 1pt solid #E2E8F0 !important;
+    padding: 6pt !important;
+  }
+
+  .official-report .rpt-label {
+    font-size: 8pt !important;
+    font-weight: 700 !important;
+    text-transform: uppercase !important;
+    letter-spacing: 0.08em !important;
+    color: #64748B !important;
+    display: block !important;
+    margin-bottom: 2pt !important;
+  }
+
+  .official-report .rpt-value {
+    font-size: 10pt !important;
+    font-weight: 600 !important;
+    color: #12304A !important;
+  }
+
+  .official-report .rpt-participant-grid {
+    display: grid !important;
+    grid-template-columns: repeat(3, 1fr) !important;
+    gap: 6pt !important;
+    margin: 6pt 0 !important;
+  }
+
+  .official-report .rpt-participant-card {
+    background: #F8FAFC !important;
+    border: 1pt solid #E2E8F0 !important;
+    padding: 6pt !important;
+    page-break-inside: avoid !important;
+    font-size: 9pt !important;
+  }
+
+  .official-report .rpt-witness-card {
+    background: #F8FAFC !important;
+    border: 1pt solid #E2E8F0 !important;
+    padding: 8pt !important;
+    margin-bottom: 6pt !important;
+    page-break-inside: avoid !important;
+  }
+
+  .official-report .rpt-statement-card {
+    background: white !important;
+    border: 1pt solid #CBD5E1 !important;
+    padding: 6pt !important;
+    margin-top: 4pt !important;
+    font-size: 9.5pt !important;
+    page-break-inside: avoid !important;
+  }
+
+  .official-report .rpt-evidence-row {
+    display: flex !important;
+    justify-content: space-between !important;
+    align-items: center !important;
+    background: #F8FAFC !important;
+    border: 1pt solid #E2E8F0 !important;
+    padding: 5pt 8pt !important;
+    margin-bottom: 3pt !important;
+    font-size: 9pt !important;
+    page-break-inside: avoid !important;
+  }
+
+  .official-report .rpt-disclaimer {
+    margin-top: 20pt !important;
+    padding: 8pt !important;
+    border: 1pt solid #CBD5E1 !important;
+    background: #F8FAFC !important;
+    font-size: 8.5pt !important;
+    color: #475569 !important;
+    font-style: italic !important;
+    page-break-inside: avoid !important;
+  }
+
+  .official-report .rpt-footer {
+    margin-top: 16pt !important;
+    padding-top: 8pt !important;
+    border-top: 1pt solid #CBD5E1 !important;
+    display: flex !important;
+    justify-content: space-between !important;
+    font-size: 8pt !important;
+    font-family: 'Courier New', monospace !important;
+    color: #64748B !important;
+    page-break-inside: avoid !important;
+  }
+
+  /* Page breaks between major report sections */
+  .rpt-page-break-before {
+    page-break-before: always !important;
+  }
+}
+

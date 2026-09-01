@@ -92,6 +92,9 @@ export const AppLayout: React.FC = () => {
       <DataIngestionModal />
       <LoginModal />
       <CreateCaseModal />
+
+      {/* Print Root — populated by handlePrint() in ReportGenerator. Hidden on screen. */}
+      <div id="tracenet-print-root" style={{ display: 'none' }} aria-hidden="true" />
     </div>
   );
 };
