@@ -140,33 +140,46 @@ Official evidentiary attachment and documentation registered by the investigatin
 ];
 
 export const RegisterRecordModal: React.FC<RegisterRecordModalProps> = ({
-  initialCaseId = 'CASE-1024',
+  initialCaseId = mockCases[0]?.id || 'CASE-1024',
   onClose,
   onSuccess
 }) => {
   const { activeCaseId, setActiveCaseId } = useInvestigation();
   
-  const [selectedCaseId, setSelectedCaseId] = useState<string>(initialCaseId || activeCaseId || 'CASE-1024');
+  const [selectedCaseId, setSelectedCaseId] = useState<string>(initialCaseId || activeCaseId || mockCases[0]?.id || 'CASE-1024');
   const [documentType, setDocumentType] = useState<CaseDocumentType>('FIR');
   const [title, setTitle] = useState<string>('First Information Report (Initial Filing)');
-  const [firNumber, setFirNumber] = useState<string>('FIR-2026-DEL-0412');
-  const [policeStation, setPoliceStation] = useState<string>('Special Cyber & Financial Crimes Division, Central Delhi');
-  const [investigatingOfficer, setInvestigatingOfficer] = useState<string>('Inspector Rajesh Verma');
+  const [firNumber, setFirNumber] = useState<string>(`FIR-2026-${(initialCaseId || '1024').replace(/\D/g, '')}-01`);
+  const [policeStation, setPoliceStation] = useState<string>(
+    mockCases.find(c => c.id === selectedCaseId)?.department || 'Special Cyber & Financial Crimes Division, Central Delhi'
+  );
+  const [investigatingOfficer, setInvestigatingOfficer] = useState<string>(
+    mockCases.find(c => c.id === selectedCaseId)?.leadInvestigator || 'Inspector Rajesh Verma'
+  );
   const [summary, setSummary] = useState<string>('Formal legal document registered in case repository.');
   const [content, setContent] = useState<string>('');
-  const [selectedEntityId, setSelectedEntityId] = useState<string>('Person_044');
+  
+  // Available entities for case
+  const availableEntities = mockEntities.filter(e => e.associatedCaseIds.includes(selectedCaseId));
+  const [selectedEntityId, setSelectedEntityId] = useState<string>(
+    availableEntities[0]?.id || mockEntities[0]?.id || ''
+  );
   const [pageCount, setPageCount] = useState<number>(3);
   
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
 
-  // Sync FIR and Police station when case changes
+  // Sync FIR, police station and default entity when case changes
   useEffect(() => {
     const caseObj = mockCases.find(c => c.id === selectedCaseId);
     if (caseObj) {
       setFirNumber(`FIR-2026-${selectedCaseId.replace(/\D/g, '')}-01`);
       setPoliceStation(caseObj.department || 'Central Crime Investigation Division');
       setInvestigatingOfficer(caseObj.leadInvestigator || 'Inspector Rajesh Verma');
+    }
+    const caseEnts = mockEntities.filter(e => e.associatedCaseIds.includes(selectedCaseId));
+    if (caseEnts.length > 0) {
+      setSelectedEntityId(caseEnts[0].id);
     }
   }, [selectedCaseId]);
 
@@ -381,7 +394,7 @@ export const RegisterRecordModal: React.FC<RegisterRecordModalProps> = ({
                 onChange={(e) => setSelectedEntityId(e.target.value)}
                 className="w-full px-3 py-2 rounded-md bg-[#F8FAFC] border border-[#CBD5E1] font-medium text-[#12304A] focus:outline-none focus:border-[#087E8B]"
               >
-                {mockEntities.map(ent => (
+                {(availableEntities.length > 0 ? availableEntities : mockEntities).map(ent => (
                   <option key={ent.id} value={ent.id}>
                     {ent.label || ent.name || ent.id} ({ent.id} • {ent.type})
                   </option>

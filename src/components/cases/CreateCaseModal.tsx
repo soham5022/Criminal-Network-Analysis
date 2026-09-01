@@ -12,7 +12,7 @@ import { auditService } from '../../services/auditService';
 import { CasePriority } from '../../types';
 
 export const CreateCaseModal: React.FC = () => {
-  const { isCreateCaseModalOpen, setIsCreateCaseModalOpen, navigateTo } = useInvestigation();
+  const { isCreateCaseModalOpen, setIsCreateCaseModalOpen, navigateTo, setActiveCaseId } = useInvestigation();
   const { user } = useAuth();
 
   const [name, setName] = useState<string>('');
@@ -59,6 +59,7 @@ export const CreateCaseModal: React.FC = () => {
         } : undefined
       });
 
+      setActiveCaseId(newCase.id);
       setIsCreateCaseModalOpen(false);
       navigateTo('case-details', { caseId: newCase.id, tab: 'overview' });
     } catch (err: any) {

@@ -345,7 +345,7 @@ export const EvidenceRegistryView: React.FC<EvidenceRegistryViewProps> = ({
         <EvidenceRegistrationModal
           onClose={() => setShowRegisterModal(false)}
           onSuccess={handleRegisterSuccess}
-          initialCaseId={selectedCaseFilter !== 'ALL' ? selectedCaseFilter : 'CASE-1024'}
+          initialCaseId={selectedCaseFilter !== 'ALL' ? selectedCaseFilter : (activeCaseId && activeCaseId !== 'ALL' ? activeCaseId : (mockCases[0]?.id || 'CASE-1024'))}
         />
       )}
 

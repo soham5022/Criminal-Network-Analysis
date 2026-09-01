@@ -43,26 +43,31 @@ const POLICE_STATIONS = [
 export const EvidenceRegistrationModal: React.FC<EvidenceRegistrationModalProps> = ({
   onClose,
   onSuccess,
-  initialCaseId = 'CASE-1024'
+  initialCaseId = mockCases[0]?.id || 'CASE-1024'
 }) => {
   const [caseId, setCaseId] = useState<string>(initialCaseId);
-  const [firNumber, setFirNumber] = useState<string>(
-    initialCaseId === 'CASE-1024' ? 'FIR-2026-DEL-0412' : `FIR-2026-${initialCaseId.replace(/\D/g, '')}-01`
-  );
+  const [firNumber, setFirNumber] = useState<string>(`FIR-2026-${initialCaseId.replace(/\D/g, '')}-01`);
   const [title, setTitle] = useState<string>('');
   const [evidenceType, setEvidenceType] = useState<EvidenceType>('DOCUMENT');
   const [description, setDescription] = useState<string>('');
   const [collectedDate, setCollectedDate] = useState<string>(new Date().toISOString().slice(0, 10));
   const [collectedTime, setCollectedTime] = useState<string>('14:30 IST');
-  const [policeStation, setPoliceStation] = useState<string>(POLICE_STATIONS[0]);
-  const [registeringOfficer, setRegisteringOfficer] = useState<string>('Inspector Rajesh Verma');
+  const [policeStation, setPoliceStation] = useState<string>(
+    mockCases.find(c => c.id === initialCaseId)?.department || POLICE_STATIONS[0]
+  );
+  const [registeringOfficer, setRegisteringOfficer] = useState<string>(
+    mockCases.find(c => c.id === initialCaseId)?.leadInvestigator || 'Inspector Rajesh Verma'
+  );
   const [badgeNumber, setBadgeNumber] = useState<string>('MHA-INT-8902');
-  const [location, setLocation] = useState<string>('Thane West Logistics Hub');
-  const [source, setSource] = useState<string>('Perimeter Checkpoint Gate 2');
+  const [location, setLocation] = useState<string>('Perimeter Checkpoint Security Office');
+  const [source, setSource] = useState<string>('Official Panchnama Seizure');
   const [remarks, setRemarks] = useState<string>('Sealed and indexed in accordance with departmental evidentiary standards.');
   
-  // Selected related entity
-  const [selectedEntityId, setSelectedEntityId] = useState<string>('Person_044');
+  // Available entities for selected case
+  const availableEntities = mockEntities.filter(e => e.associatedCaseIds.includes(caseId));
+  const [selectedEntityId, setSelectedEntityId] = useState<string>(
+    availableEntities[0]?.id || mockEntities[0]?.id || ''
+  );
 
   // Digital soft copy attachment toggle
   const [attachSoftCopy, setAttachSoftCopy] = useState<boolean>(false);
@@ -70,7 +75,7 @@ export const EvidenceRegistrationModal: React.FC<EvidenceRegistrationModalProps>
   const [initialContent, setInitialContent] = useState<string>(
     `CENTRAL POLICE DIGITAL EVIDENCE REGISTRY
 CERTIFIED SOFT COPY RECORD
-CASE FILE: CASE-1024
+CASE FILE: ${caseId}
 
 EVIDENCE TITLE: Document scan attachment
 REGISTRATION DATE: ${new Date().toISOString().slice(0, 10)}
@@ -85,6 +90,18 @@ REGISTERING OFFICER: Inspector Rajesh Verma (MHA-INT-8902)
   const handleCaseChange = (newCaseId: string) => {
     setCaseId(newCaseId);
     setFirNumber(`FIR-2026-${newCaseId.replace(/\D/g, '')}-01`);
+    const caseObj = mockCases.find(c => c.id === newCaseId);
+    if (caseObj) {
+      setPoliceStation(caseObj.department || POLICE_STATIONS[0]);
+      setRegisteringOfficer(caseObj.leadInvestigator || 'Inspector Rajesh Verma');
+    }
+    const caseEnts = mockEntities.filter(e => e.associatedCaseIds.includes(newCaseId));
+    if (caseEnts.length > 0) {
+      setSelectedEntityId(caseEnts[0].id);
+    }
+    setInitialContent(
+      `CENTRAL POLICE DIGITAL EVIDENCE REGISTRY\nCERTIFIED SOFT COPY RECORD\nCASE FILE: ${newCaseId}\n\nEVIDENCE TITLE: Document scan attachment\nREGISTRATION DATE: ${new Date().toISOString().slice(0, 10)}\n\n[SYNTHETIC DEMO EVIDENCE — FOR SIH26189 PROTOTYPE EVALUATION ONLY]`
+    );
   };
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -97,7 +114,7 @@ REGISTERING OFFICER: Inspector Rajesh Verma (MHA-INT-8902)
     setIsSubmitting(true);
     setError(null);
 
-    const relatedEnt = mockEntities.find(e => e.id === selectedEntityId);
+    const relatedEnt = mockEntities.find(e => e.id === selectedEntityId) || availableEntities[0] || mockEntities[0];
     const relatedEntitiesList = relatedEnt ? [
       {
         id: relatedEnt.id,
@@ -105,14 +122,7 @@ REGISTERING OFFICER: Inspector Rajesh Verma (MHA-INT-8902)
         type: relatedEnt.type as EntityType,
         role: 'Key Linked Subject'
       }
-    ] : [
-      {
-        id: 'Person_044',
-        label: 'Rahul Sharma',
-        type: 'PERSON' as EntityType,
-        role: 'Key Linked Subject'
-      }
-    ];
+    ] : [];
 
     setTimeout(() => {
       const newRecord = evidenceRegistryService.registerEvidence({

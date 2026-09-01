@@ -42,7 +42,7 @@ export const InvestigationTimeline: React.FC = () => {
   const [selectedEvent, setSelectedEvent] = useState<DetailedTimelineEvent | null>(null);
 
   const loadTimeline = () => {
-    const caseId = activeCaseId || 'CASE-1024';
+    const caseId = activeCaseId || mockCases[0]?.id || 'CASE-1024';
     const data = timelineService.getCaseEvents({
       caseId,
       category: selectedCategory,

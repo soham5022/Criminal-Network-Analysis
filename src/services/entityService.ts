@@ -97,7 +97,7 @@ export const entityService = {
       if (filter?.type) result = result.filter(e => e.type === filter.type);
       if (filter?.priority) result = result.filter(e => e.analyticalPriority === filter.priority);
       if (filter?.community) result = result.filter(e => e.community === filter.community);
-      if (filter?.caseId) result = result.filter(e => e.associatedCaseIds.includes(filter.caseId!));
+      if (filter?.caseId && filter.caseId !== 'ALL') result = result.filter(e => e.associatedCaseIds.includes(filter.caseId!));
       if (filter?.search) {
         const q = filter.search.toLowerCase();
         result = result.filter(e => 

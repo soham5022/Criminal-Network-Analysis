@@ -141,7 +141,11 @@ export const NetworkAnalysis: React.FC = () => {
   }, [selectedCaseIds, activeEntityTypes, activeRelationshipTypes, connectionDepth]);
 
   useEffect(() => {
-    const targetId = selectedEntityId || bridgeNodeId || 'Person_044';
+    const targetId = selectedEntityId || bridgeNodeId;
+    if (!targetId) {
+      setSelectedEntity(null);
+      return;
+    }
     entityService.getEntityById(targetId)
       .then(ent => {
         if (ent) {
@@ -155,13 +159,13 @@ export const NetworkAnalysis: React.FC = () => {
             degree: 10,
             betweenness: 0.5,
             risk_score: 0.75,
-            caseId: selectedCaseIds[0] || 'CASE-1024',
-            associatedCaseIds: ['CASE-1024']
+            caseId: selectedCaseIds[0] !== 'ALL' ? selectedCaseIds[0] : (activeCaseId || 'CASE-1024'),
+            associatedCaseIds: selectedCaseIds[0] !== 'ALL' ? [selectedCaseIds[0]] : (activeCaseId ? [activeCaseId] : ['CASE-1024'])
           } as Entity);
         }
       })
       .catch(() => setSelectedEntity(null));
-  }, [selectedEntityId, bridgeNodeId, selectedCaseIds]);
+  }, [selectedEntityId, bridgeNodeId, selectedCaseIds, activeCaseId]);
 
   // Autocomplete Suggestions
   const searchSuggestions = useMemo(() => {
@@ -291,7 +295,7 @@ export const NetworkAnalysis: React.FC = () => {
     setNetworkScopeCases(['ALL']);
     setActiveEntityTypes(['PERSON', 'PHONE', 'ACCOUNT', 'LOCATION', 'ORGANIZATION', 'VEHICLE']);
     setActiveRelationshipTypes(['CALLED', 'TRANSFERRED', 'VISITED', 'OWNED', 'MET', 'ASSOCIATED_WITH']);
-    setSelectedEntityId(bridgeNodeId || 'Person_044');
+    setSelectedEntityId(bridgeNodeId || null);
     fetchGraph();
   };
 

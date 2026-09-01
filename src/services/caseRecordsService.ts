@@ -629,6 +629,63 @@ Bank statements indicate micro-layering transactions designed to evade mandatory
   }
 ];
 
+let inMemoryCustomDocs: CaseDocument[] = [];
+let inMemoryCustomCaseRecords: CaseRecordItem[] = [];
+
+function getCustomCaseRecords(): CaseRecordItem[] {
+  try {
+    let cases: any[] = [];
+    if (typeof localStorage !== 'undefined') {
+      const stored = localStorage.getItem('tracenet_custom_cases_v1');
+      if (stored) cases = JSON.parse(stored);
+    }
+    const fromStorage: CaseRecordItem[] = cases.map(c => ({
+      id: c.id,
+      firNumber: `FIR-2026-${c.id.replace(/\D/g, '')}-01`,
+      title: c.name,
+      caseType: c.tags?.[0] || 'Active Criminal Investigation',
+      policeStation: c.department || 'Special Cyber & Financial Crimes Division, Central Delhi',
+      investigatingOfficer: c.leadInvestigator || 'Inspector Rajesh Verma',
+      badgeNumber: c.badgeNumber || 'MHA-INT-8902',
+      dateRegistered: c.dateOpened || 'Recent',
+      lastUpdated: c.lastActivity || 'Just now',
+      status: c.status || 'ACTIVE',
+      priority: c.priority || 'HIGH',
+      description: c.description || 'Custom investigation dossier.',
+      documentCount: 0,
+      entityCount: c.entityCount || 0,
+      evidenceCount: 0,
+      locationsCount: 0,
+      vehiclesCount: 0,
+      alertsCount: 0,
+      tags: c.tags || []
+    }));
+
+    // Merge in-memory and storage without duplicates
+    const combined = [...inMemoryCustomCaseRecords];
+    for (const item of fromStorage) {
+      if (!combined.some(c => c.id === item.id)) {
+        combined.push(item);
+      }
+    }
+    return combined;
+  } catch {
+    return inMemoryCustomCaseRecords;
+  }
+}
+
+function getStoredCustomDocs(): CaseDocument[] {
+  try {
+    if (typeof localStorage !== 'undefined') {
+      const customDocs = localStorage.getItem(STORAGE_KEY_CUSTOM_DOCS);
+      if (customDocs) return JSON.parse(customDocs);
+    }
+    return inMemoryCustomDocs;
+  } catch {
+    return inMemoryCustomDocs;
+  }
+}
+
 export const caseRecordsService = {
   getCaseRecords(filter?: {
     search?: string;
@@ -637,7 +694,8 @@ export const caseRecordsService = {
     status?: string;
     priority?: string;
   }): CaseRecordItem[] {
-    let result = [...SYNTHETIC_CASE_RECORDS];
+    const customRecords = getCustomCaseRecords();
+    let result = [...customRecords, ...SYNTHETIC_CASE_RECORDS];
 
     if (filter?.status && filter.status !== 'ALL') {
       result = result.filter(c => c.status === filter.status);
@@ -669,22 +727,15 @@ export const caseRecordsService = {
   },
 
   getCaseRecordById(caseId: string): CaseRecordItem | undefined {
-    return SYNTHETIC_CASE_RECORDS.find(c => c.id.toLowerCase() === caseId.toLowerCase());
+    const all = [...getCustomCaseRecords(), ...SYNTHETIC_CASE_RECORDS];
+    return all.find(c => c.id.toLowerCase() === caseId.toLowerCase());
   },
 
   getDocumentsByCaseId(caseId: string): CaseDocument[] {
     let list = SYNTHETIC_CASE_DOCUMENTS.filter(d => d.caseId.toLowerCase() === caseId.toLowerCase());
-
-    try {
-      const customDocs = localStorage.getItem(STORAGE_KEY_CUSTOM_DOCS);
-      if (customDocs) {
-        const parsed: CaseDocument[] = JSON.parse(customDocs);
-        const filtered = parsed.filter(d => d.caseId.toLowerCase() === caseId.toLowerCase());
-        list = [...filtered, ...list];
-      }
-    } catch {}
-
-    return list;
+    const customDocs = getStoredCustomDocs();
+    const filtered = customDocs.filter(d => d.caseId.toLowerCase() === caseId.toLowerCase());
+    return [...filtered, ...list];
   },
 
   getDocumentById(docId: string): CaseDocument | undefined {
@@ -694,14 +745,8 @@ export const caseRecordsService = {
 
   getAllDocuments(): CaseDocument[] {
     let list = [...SYNTHETIC_CASE_DOCUMENTS];
-    try {
-      const customDocs = localStorage.getItem(STORAGE_KEY_CUSTOM_DOCS);
-      if (customDocs) {
-        const parsed: CaseDocument[] = JSON.parse(customDocs);
-        list = [...parsed, ...list];
-      }
-    } catch {}
-    return list;
+    const customDocs = getStoredCustomDocs();
+    return [...customDocs, ...list];
   },
 
   getRelatedCases(caseId: string): RelatedCaseReference[] {
@@ -715,7 +760,7 @@ export const caseRecordsService = {
           sharedEntityId: 'Phone_021',
           sharedEntityLabel: '+91 XXXXX 28471',
           sharedEntityType: 'PHONE',
-          correlationReason: 'Shared burner mobile line logged across both case intercepts.'
+          correlationReason: 'Direct telecommunication intercept overlap on Sector 14 cell tower grid.'
         },
         {
           caseId: 'CASE-1042',
@@ -725,7 +770,7 @@ export const caseRecordsService = {
           sharedEntityId: 'Vehicle_017',
           sharedEntityLabel: 'MH-04-XX-2847',
           sharedEntityType: 'VEHICLE',
-          correlationReason: 'Transport vehicle logged transiting between case warehouses.'
+          correlationReason: 'Observed nocturnal courier transit between Sector 4 yard and Vashi safehouse.'
         },
         {
           caseId: 'CASE-1057',
@@ -735,12 +780,33 @@ export const caseRecordsService = {
           sharedEntityId: 'Organization_X',
           sharedEntityLabel: 'Meridian Logistics Pvt. Ltd.',
           sharedEntityType: 'ORGANIZATION',
-          correlationReason: 'Common corporate entity holding bank accounts in both probes.'
+          correlationReason: 'Parent holding company linked to shell clearing accounts.'
         }
       ];
-    }
-
-    if (caseId.toUpperCase() === 'CASE-1031') {
+    } else if (caseId.toUpperCase() === 'CASE-1031') {
+      return [
+        {
+          caseId: 'CASE-1024',
+          caseTitle: 'Operation Meridian',
+          firNumber: 'FIR-2026-DEL-0412',
+          policeStation: 'Special Cyber & Financial Crimes Division, Central Delhi',
+          sharedEntityId: 'Phone_021',
+          sharedEntityLabel: '+91 XXXXX 28471',
+          sharedEntityType: 'PHONE',
+          correlationReason: 'Primary target device matched across both telecommunication wiretaps.'
+        },
+        {
+          caseId: 'CASE-1082',
+          caseTitle: 'Project Blackthorn',
+          firNumber: 'FIR-2026-PUN-0104',
+          policeStation: 'Special Cyber Task Force, Pune',
+          sharedEntityId: 'Phone_088',
+          sharedEntityLabel: '+91 XXXXX 99014',
+          sharedEntityType: 'PHONE',
+          correlationReason: 'Simultaneous IMEI rotation detected on multi-channel hardware box.'
+        }
+      ];
+    } else if (caseId.toUpperCase() === 'CASE-1042') {
       return [
         {
           caseId: 'CASE-1024',
@@ -770,15 +836,23 @@ export const caseRecordsService = {
       integrityHash: `c7e4a1b9${Date.now()}996fb92427ae41e4649b934ca495991b7852${doc.caseId.replace(/\D/g, '')}`
     };
 
+    const list = getStoredCustomDocs();
+    list.unshift(newDoc);
+    inMemoryCustomDocs = list;
     try {
-      const stored = localStorage.getItem(STORAGE_KEY_CUSTOM_DOCS);
-      const list: CaseDocument[] = stored ? JSON.parse(stored) : [];
-      list.unshift(newDoc);
-      localStorage.setItem(STORAGE_KEY_CUSTOM_DOCS, JSON.stringify(list));
+      if (typeof localStorage !== 'undefined') {
+        localStorage.setItem(STORAGE_KEY_CUSTOM_DOCS, JSON.stringify(list));
+      }
     } catch (err) {
-      console.warn('Failed to persist custom document:', err);
+      console.warn('Failed to persist custom document to localStorage:', err);
     }
 
     return newDoc;
+  },
+
+  addCaseRecordItem(item: CaseRecordItem): void {
+    if (!inMemoryCustomCaseRecords.some(c => c.id === item.id)) {
+      inMemoryCustomCaseRecords.unshift(item);
+    }
   }
 };

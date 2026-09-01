@@ -223,7 +223,7 @@ export const CaseRecordsList: React.FC<CaseRecordsListProps> = ({ onSelectCase }
       {/* Register Record Modal */}
       {showRegisterModal && (
         <RegisterRecordModal
-          initialCaseId={activeCaseId || 'CASE-1024'}
+          initialCaseId={activeCaseId || records[0]?.id || 'CASE-1024'}
           onClose={() => setShowRegisterModal(false)}
           onSuccess={(newDoc) => {
             setShowRegisterModal(false);

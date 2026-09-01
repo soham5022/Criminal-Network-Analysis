@@ -78,10 +78,10 @@ export const Overview: React.FC = () => {
 
   const handleReviewAlert = (alert: Alert) => {
     if (alert.associatedCaseId) setActiveCaseId(alert.associatedCaseId);
-    const entityId = alert.relatedEntities?.[0]?.id || 'Person_044';
-    setSelectedEntityId(entityId);
+    const entityId = alert.relatedEntities?.[0]?.id || null;
+    if (entityId) setSelectedEntityId(entityId);
     setSelectedAlertId(alert.id);
-    navigateTo('alerts', { alertId: alert.id, entityId, caseId: alert.associatedCaseId });
+    navigateTo('alerts', { alertId: alert.id, entityId: entityId || undefined, caseId: alert.associatedCaseId });
   };
 
   return (

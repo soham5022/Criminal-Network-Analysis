@@ -52,9 +52,9 @@ export const Header: React.FC = () => {
   }, [activeCaseId]);
 
   const activeCase = cases.find(c => c.id === activeCaseId) || cases[0] || {
-    id: 'CASE-1024',
-    name: 'Operation Meridian',
-    description: 'Cross-source investigation involving communication, financial and location records.'
+    id: activeCaseId || 'CASE-1024',
+    name: 'Investigation Dossier',
+    description: 'Multi-source case investigation.'
   };
   const newAlerts = alerts.filter(a => a.status === 'NEW');
 

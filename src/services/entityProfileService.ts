@@ -184,8 +184,9 @@ const SYNTHETIC_DEMO_NAMES: Record<string, { name: string; aliases: string[]; oc
 };
 
 export const entityProfileService = {
-  get360Profile(entityId: string, caseId: string = 'CASE-1024'): EntityDossier {
+  get360Profile(entityId: string, caseId?: string): EntityDossier {
     const baseEntity = mockEntities.find(e => e.id.toLowerCase() === entityId.toLowerCase());
+    const effectiveCaseId = caseId || baseEntity?.associatedCaseIds?.[0] || 'CASE-1024';
     const entityType: EntityType = baseEntity?.type || (
       entityId.startsWith('Phone') ? 'PHONE' :
       entityId.startsWith('Account') ? 'ACCOUNT' :
@@ -449,7 +450,7 @@ export const entityProfileService = {
       occupation: demoDemo.occupation,
       organization: 'Meridian Logistics Pvt. Ltd.',
       caseStatus: 'Under Active Investigation',
-      primaryCaseId: caseId,
+      primaryCaseId: effectiveCaseId,
       allInvolvedCases: [
         { caseId: 'CASE-1024', caseName: 'Operation Meridian', role: 'Bridge Node & Primary Logistics Coordinator' },
         { caseId: 'CASE-1031', caseName: 'Project Shadowline', role: 'Burner SIM Counterparty' }

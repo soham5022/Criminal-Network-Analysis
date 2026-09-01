@@ -84,7 +84,7 @@ const InvestigationContext = createContext<InvestigationContextType | undefined>
 export const InvestigationProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
   const [currentPage, setCurrentPage] = useState<AppPage>('dashboard');
   const [activeCaseId, setActiveCaseId] = useState<string>('CASE-1024');
-  const [selectedEntityId, setSelectedEntityId] = useState<string | null>('Person_044');
+  const [selectedEntityId, setSelectedEntityId] = useState<string | null>(null);
   const [selectedAlertId, setSelectedAlertId] = useState<string | null>(null);
   const [activeCaseTab, setActiveCaseTab] = useState<CaseWorkspaceTab>('overview');
   const [searchQuery, setSearchQuery] = useState<string>('');

@@ -815,20 +815,33 @@ CORPORATE HOLDER: Meridian Logistics Pvt. Ltd.
   }
 ];
 
+let inMemoryEvidence: EvidenceRecord[] = [...INITIAL_SYNTHETIC_EVIDENCE];
+
+function getStoredEvidence(): EvidenceRecord[] {
+  try {
+    if (typeof localStorage !== 'undefined') {
+      const stored = localStorage.getItem(STORAGE_KEY_EVIDENCE);
+      if (stored) return JSON.parse(stored);
+      localStorage.setItem(STORAGE_KEY_EVIDENCE, JSON.stringify(INITIAL_SYNTHETIC_EVIDENCE));
+    }
+    return inMemoryEvidence;
+  } catch {
+    return inMemoryEvidence;
+  }
+}
+
+function saveStoredEvidence(list: EvidenceRecord[]): void {
+  inMemoryEvidence = list;
+  try {
+    if (typeof localStorage !== 'undefined') {
+      localStorage.setItem(STORAGE_KEY_EVIDENCE, JSON.stringify(list));
+    }
+  } catch {}
+}
+
 export const evidenceRegistryService = {
   getEvidenceList(filters?: EvidenceFilterOptions): EvidenceRecord[] {
-    let list: EvidenceRecord[] = [];
-    try {
-      const stored = localStorage.getItem(STORAGE_KEY_EVIDENCE);
-      if (stored) {
-        list = JSON.parse(stored);
-      } else {
-        list = [...INITIAL_SYNTHETIC_EVIDENCE];
-        localStorage.setItem(STORAGE_KEY_EVIDENCE, JSON.stringify(list));
-      }
-    } catch {
-      list = [...INITIAL_SYNTHETIC_EVIDENCE];
-    }
+    let list = getStoredEvidence();
 
     if (filters?.caseId && filters.caseId !== 'ALL') {
       list = list.filter(e => e.caseId.toLowerCase() === filters.caseId!.toLowerCase());
@@ -954,12 +967,11 @@ export const evidenceRegistryService = {
       chainOfCustody: initialCustody
     };
 
+    const list = getStoredEvidence();
+    list.unshift(newRecord);
+    saveStoredEvidence(list);
+    
     try {
-      const stored = localStorage.getItem(STORAGE_KEY_EVIDENCE);
-      const list: EvidenceRecord[] = stored ? JSON.parse(stored) : [...INITIAL_SYNTHETIC_EVIDENCE];
-      list.unshift(newRecord);
-      localStorage.setItem(STORAGE_KEY_EVIDENCE, JSON.stringify(list));
-      
       auditService.logAction({
         action: 'REGISTERED_EVIDENCE',
         actionLabel: 'Registered Evidence in Digital Ledger',
