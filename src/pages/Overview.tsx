@@ -218,83 +218,51 @@ export const Overview: React.FC = () => {
               </tr>
             </thead>
             <tbody className="divide-y divide-[#E2E8F0]">
-              <tr 
-                onClick={() => handleOpenCase('CASE-1024')} 
-                className="hover:bg-[#F8FAFC] cursor-pointer transition-colors bg-[#FFFFFF]"
-              >
-                <td className="py-3 px-4 font-mono font-bold text-[#087E8B]">CASE-1024</td>
-                <td className="py-3 px-4 font-semibold text-[#12304A]">Operation Meridian</td>
-                <td className="py-3 px-4">
-                  <span className="px-2 py-0.5 rounded text-[10px] font-bold bg-[#FEE2E2] text-[#C24141] border border-[#FCA5A5]">
-                    Critical
-                  </span>
-                </td>
-                <td className="py-3 px-4 text-[#64748B]">Today (12 mins ago)</td>
-                <td className="py-3 px-4 text-right">
-                  <button
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      handleOpenCase('CASE-1024');
-                    }}
-                    className="px-3 py-1 rounded-md bg-[#E6F4F5] hover:bg-[#087E8B] text-[#087E8B] hover:text-white font-semibold transition-colors inline-flex items-center gap-1 text-[11px]"
+              {cases.length === 0 ? (
+                <tr>
+                  <td colSpan={5} className="py-6 text-center text-[#64748B]">
+                    No cases loaded in repository.
+                  </td>
+                </tr>
+              ) : (
+                cases.slice(0, 5).map((c) => (
+                  <tr 
+                    key={c.id}
+                    onClick={() => handleOpenCase(c.id)} 
+                    className="hover:bg-[#F8FAFC] cursor-pointer transition-colors bg-[#FFFFFF]"
                   >
-                    <FolderOpen className="w-3 h-3" />
-                    <span>Open</span>
-                  </button>
-                </td>
-              </tr>
-
-              <tr 
-                onClick={() => handleOpenCase('CASE-1031')} 
-                className="hover:bg-[#F8FAFC] cursor-pointer transition-colors bg-[#FFFFFF]"
-              >
-                <td className="py-3 px-4 font-mono font-bold text-[#087E8B]">CASE-1031</td>
-                <td className="py-3 px-4 font-semibold text-[#12304A]">Project Shadowline</td>
-                <td className="py-3 px-4">
-                  <span className="px-2 py-0.5 rounded text-[10px] font-bold bg-[#FEF3C7] text-[#B7791F] border border-[#FCD34D]">
-                    High
-                  </span>
-                </td>
-                <td className="py-3 px-4 text-[#64748B]">Yesterday</td>
-                <td className="py-3 px-4 text-right">
-                  <button
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      handleOpenCase('CASE-1031');
-                    }}
-                    className="px-3 py-1 rounded-md bg-[#E6F4F5] hover:bg-[#087E8B] text-[#087E8B] hover:text-white font-semibold transition-colors inline-flex items-center gap-1 text-[11px]"
-                  >
-                    <FolderOpen className="w-3 h-3" />
-                    <span>Open</span>
-                  </button>
-                </td>
-              </tr>
-
-              <tr 
-                onClick={() => handleOpenCase('CASE-1042')} 
-                className="hover:bg-[#F8FAFC] cursor-pointer transition-colors bg-[#FFFFFF]"
-              >
-                <td className="py-3 px-4 font-mono font-bold text-[#087E8B]">CASE-1042</td>
-                <td className="py-3 px-4 font-semibold text-[#12304A]">Transit Fleet Route Anomaly</td>
-                <td className="py-3 px-4">
-                  <span className="px-2 py-0.5 rounded text-[10px] font-bold bg-[#EBF8FF] text-[#2563A6] border border-[#BEE3F8]">
-                    Medium
-                  </span>
-                </td>
-                <td className="py-3 px-4 text-[#64748B]">2 days ago</td>
-                <td className="py-3 px-4 text-right">
-                  <button
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      handleOpenCase('CASE-1042');
-                    }}
-                    className="px-3 py-1 rounded-md bg-[#E6F4F5] hover:bg-[#087E8B] text-[#087E8B] hover:text-white font-semibold transition-colors inline-flex items-center gap-1 text-[11px]"
-                  >
-                    <FolderOpen className="w-3 h-3" />
-                    <span>Open</span>
-                  </button>
-                </td>
-              </tr>
+                    <td className="py-3.5 px-4 font-mono font-bold text-[#087E8B]">{c.id}</td>
+                    <td className="py-3.5 px-4 font-semibold text-[#12304A]">
+                      <div>{c.name}</div>
+                      <div className="text-[10px] text-[#64748B] font-normal truncate max-w-sm">{c.department || c.description}</div>
+                    </td>
+                    <td className="py-3.5 px-4">
+                      <span className={`px-2 py-0.5 rounded text-[10px] font-bold border ${
+                        c.priority === 'CRITICAL'
+                          ? 'bg-[#FEE2E2] text-[#C24141] border-[#FCA5A5]'
+                          : c.priority === 'HIGH'
+                          ? 'bg-[#FEF3C7] text-[#B7791F] border-[#FCD34D]'
+                          : 'bg-[#EBF8FF] text-[#2563A6] border-[#BEE3F8]'
+                      }`}>
+                        {c.priority}
+                      </span>
+                    </td>
+                    <td className="py-3.5 px-4 text-[#64748B] text-[11px]">{c.lastActivity || 'Recent'}</td>
+                    <td className="py-3.5 px-4 text-right">
+                      <button
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          handleOpenCase(c.id);
+                        }}
+                        className="px-3.5 py-1.5 rounded-md bg-[#E6F4F5] hover:bg-[#087E8B] text-[#087E8B] hover:text-white font-semibold transition-colors inline-flex items-center gap-1 text-xs shadow-sm"
+                      >
+                        <FolderOpen className="w-3.5 h-3.5" />
+                        <span>Open Case</span>
+                      </button>
+                    </td>
+                  </tr>
+                ))
+              )}
             </tbody>
           </table>
         </div>

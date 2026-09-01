@@ -17,6 +17,7 @@ import {
 import { useInvestigation } from '../../context/InvestigationContext';
 import { DocumentViewerModal } from './DocumentViewerModal';
 import { DocumentUploadModal } from './DocumentUploadModal';
+import { RegisterRecordModal } from './RegisterRecordModal';
 
 interface CaseRecordDetailViewProps {
   caseId: string;
@@ -415,10 +416,10 @@ export const CaseRecordDetailView: React.FC<CaseRecordDetailViewProps> = ({ case
       )}
 
       {isUploadModalOpen && (
-        <DocumentUploadModal
-          caseId={caseId}
+        <RegisterRecordModal
+          initialCaseId={caseId}
           onClose={() => setIsUploadModalOpen(false)}
-          onSuccess={() => {
+          onSuccess={(newDoc) => {
             setIsUploadModalOpen(false);
             loadData();
           }}

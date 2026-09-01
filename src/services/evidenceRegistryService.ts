@@ -460,6 +460,358 @@ Vehicle backed into private loading bay at 04:18 IST. Two sealed consignment car
         notes: 'Field surveillance log transcribed and registered.'
       }
     ]
+  },
+  {
+    id: 'EVD-2026-000228',
+    caseId: 'CASE-1057',
+    firNumber: 'FIR-2026-BLR-0342',
+    title: 'Offshore Swift Wire Clearance Slips',
+    evidenceType: 'TRANSACTION_RECORD',
+    description: 'Certified SWIFT wire transfer confirmations linking shell accounts to overseas intermediary entities.',
+    collectedDate: '2026-08-26',
+    collectedTime: '10:00 IST',
+    policeStation: 'Economic Offenses & Fraud Analytics Unit, Bengaluru',
+    registeringOfficer: 'Inspector Ananya Rao',
+    badgeNumber: 'MHA-INT-9912',
+    relatedEntities: [
+      { id: 'Organization_X', label: 'Meridian Logistics Pvt. Ltd.', type: 'ORGANIZATION', role: 'Account Holder' },
+      { id: 'Account_103', label: 'Account ending 4821', type: 'ACCOUNT', role: 'Originating Account' }
+    ],
+    location: 'Reserve Bank Nodal Center, Bengaluru',
+    source: 'Financial Intelligence Unit Export',
+    remarks: 'Transaction volume exceeds reported operational turnover by 340%.',
+    status: 'VERIFIED',
+    hasDigitalCopy: true,
+    digitalDocument: {
+      filename: 'SWIFT_Transfer_Confirmation_CASE1057.pdf',
+      fileType: 'application/pdf',
+      fileSize: '1.8 MB',
+      uploadDate: '26 Aug 2026, 11:15 IST',
+      uploader: 'Inspector Ananya Rao (MHA-INT-9912)',
+      version: '1.0',
+      integrityHash: 'd8e4f5a198fc1c149afbf4c8996fb92427ae41e4649b934ca495991b78521057',
+      previewAvailable: true,
+      content: `FINANCIAL INTELLIGENCE UNIT — TRANSACTION RECORD
+CASE: CASE-1057 // PROJECT CROSSLINK
+
+SWIFT INWARD REMITTANCE CONFIRMATION
+ENTITY: Meridian Logistics Pvt. Ltd.
+AMOUNT: USD 142,000.00
+CORRESPONDENT: Global Trade Intermediary Clearing Bank
+
+[SYNTHETIC DEMO EVIDENCE — FOR SIH26189 PROTOTYPE EVALUATION ONLY]`
+    },
+    previousVersions: [],
+    chainOfCustody: [
+      {
+        id: 'CUST-01',
+        action: 'Evidence Registered',
+        officer: 'Inspector Ananya Rao',
+        badge: 'MHA-INT-9912',
+        timestamp: '26 Aug 2026, 10:30 IST',
+        notes: 'SWIFT slips extracted from regulatory FIU gateway.'
+      }
+    ]
+  },
+  {
+    id: 'EVD-2026-000239',
+    caseId: 'CASE-1068',
+    firNumber: 'FIR-2026-KOL-0209',
+    title: 'Container Seal & Customs Manifest - Kolkata Docks',
+    evidenceType: 'DOCUMENT',
+    description: 'Customs manifest and physical cargo inspection log certifying tamper seal mismatch on maritime container.',
+    collectedDate: '2026-08-25',
+    collectedTime: '16:00 IST',
+    policeStation: 'Coastal & Maritime Security Division, Kolkata',
+    registeringOfficer: 'ACP Debabrata Mukherjee',
+    badgeNumber: 'MHA-INT-3301',
+    relatedEntities: [
+      { id: 'Location_C', label: 'Dock Terminal Yard 4', type: 'LOCATION', role: 'Seizure Dock' },
+      { id: 'Person_044', label: 'Rahul Sharma', type: 'PERSON', role: 'Notified Consignee' }
+    ],
+    location: 'Dock Terminal Yard 4, Kolkata Port',
+    source: 'Port Customs Physical Panchnama',
+    remarks: 'Physical inspection confirms misdeclared electronics hardware.',
+    status: 'VERIFIED',
+    hasDigitalCopy: true,
+    digitalDocument: {
+      filename: 'Customs_Inspection_Manifest_Docks.pdf',
+      fileType: 'application/pdf',
+      fileSize: '3.2 MB',
+      uploadDate: '25 Aug 2026, 17:00 IST',
+      uploader: 'ACP Debabrata Mukherjee (MHA-INT-3301)',
+      version: '1.0',
+      integrityHash: 'e9f1a2b398fc1c149afbf4c8996fb92427ae41e4649b934ca495991b78521068',
+      previewAvailable: true,
+      content: `PORT CUSTOMS PHYSICAL INSPECTION LEDGER
+CASE: CASE-1068 // OPERATION BLUEFIN
+
+CONTAINER ID: MSKU-908124-7
+LOCATION: Dock Terminal Yard 4
+CONSIGNEE: Rahul Sharma
+
+[SYNTHETIC DEMO EVIDENCE — FOR SIH26189 PROTOTYPE EVALUATION ONLY]`
+    },
+    previousVersions: [],
+    chainOfCustody: [
+      {
+        id: 'CUST-01',
+        action: 'Evidence Registered',
+        officer: 'ACP Debabrata Mukherjee',
+        badge: 'MHA-INT-3301',
+        timestamp: '25 Aug 2026, 16:30 IST',
+        notes: 'Customs manifest sealed into evidence ledger.'
+      }
+    ]
+  },
+  {
+    id: 'EVD-2026-000251',
+    caseId: 'CASE-1075',
+    firNumber: 'FIR-2026-HYD-0551',
+    title: 'Hawala Ledger Cash Slips & Note Codes',
+    evidenceType: 'TRANSACTION_RECORD',
+    description: 'Physical ledger pages containing alphanumeric note codes and settlement timestamps for cash handovers.',
+    collectedDate: '2026-08-25',
+    collectedTime: '18:30 IST',
+    policeStation: 'Special Intelligence Branch, Hyderabad',
+    registeringOfficer: 'Inspector K. S. Reddy',
+    badgeNumber: 'MHA-INT-6621',
+    relatedEntities: [
+      { id: 'Account_304', label: 'Account ending 1094', type: 'ACCOUNT', role: 'Ledger Code Target' },
+      { id: 'Person_001', label: 'Vikram Singh', type: 'PERSON', role: 'Signatory' }
+    ],
+    location: 'Sector 9 Safehouse, Hyderabad',
+    source: 'Raid Recovery Panchnama',
+    remarks: '12 handwritten cipher codes decoded and cross-referenced with bank timestamps.',
+    status: 'VERIFIED',
+    hasDigitalCopy: true,
+    digitalDocument: {
+      filename: 'Hawala_Ledger_Scanned_Pages.pdf',
+      fileType: 'application/pdf',
+      fileSize: '2.7 MB',
+      uploadDate: '25 Aug 2026, 19:30 IST',
+      uploader: 'Inspector K. S. Reddy (MHA-INT-6621)',
+      version: '1.0',
+      integrityHash: 'fa12b3c498fc1c149afbf4c8996fb92427ae41e4649b934ca495991b78521075',
+      previewAvailable: true,
+      content: `SPECIAL INTELLIGENCE BRANCH — HAWALA LEDGER EXTRACT
+CASE: CASE-1075
+
+Physical seizure of token serial numbers matching IMPS disbursement intervals.
+
+[SYNTHETIC DEMO EVIDENCE — FOR SIH26189 PROTOTYPE EVALUATION ONLY]`
+    },
+    previousVersions: [],
+    chainOfCustody: [
+      {
+        id: 'CUST-01',
+        action: 'Evidence Registered',
+        officer: 'Inspector K. S. Reddy',
+        badge: 'MHA-INT-6621',
+        timestamp: '25 Aug 2026, 19:00 IST',
+        notes: 'Handwritten ledger scanned and sealed.'
+      }
+    ]
+  },
+  {
+    id: 'EVD-2026-000262',
+    caseId: 'CASE-1082',
+    firNumber: 'FIR-2026-PUN-0104',
+    title: 'Multi-SIM Box Hardware Extraction Log',
+    evidenceType: 'FORENSIC_REPORT',
+    description: 'Hardware telemetry report from 16-channel SIM pool device seized during raid at electronics retail premises.',
+    collectedDate: '2026-08-25',
+    collectedTime: '13:00 IST',
+    policeStation: 'Special Cyber Task Force, Pune',
+    registeringOfficer: 'Inspector Priya Deshmukh',
+    badgeNumber: 'MHA-INT-8819',
+    relatedEntities: [
+      { id: 'Phone_088', label: '+91 XXXXX 99014', type: 'PHONE', role: 'Active SIM Slot 3' },
+      { id: 'Phone_021', label: '+91 XXXXX 28471', type: 'PHONE', role: 'Linked Caller' }
+    ],
+    location: 'Electronic Plaza Arcade, Pune',
+    source: 'Cyber Lab Device Extraction',
+    remarks: 'Hardware box used to automate simultaneous OTP reception.',
+    status: 'VERIFIED',
+    hasDigitalCopy: true,
+    digitalDocument: {
+      filename: 'SIM_Box_Telemetry_Extraction.pdf',
+      fileType: 'application/pdf',
+      fileSize: '3.8 MB',
+      uploadDate: '25 Aug 2026, 14:15 IST',
+      uploader: 'Inspector Priya Deshmukh (MHA-INT-8819)',
+      version: '1.0',
+      integrityHash: 'fb23c4d598fc1c149afbf4c8996fb92427ae41e4649b934ca495991b78521082',
+      previewAvailable: true,
+      content: `SPECIAL CYBER TASK FORCE — HARDWARE LAB EXTRACTION
+CASE: CASE-1082
+
+16-Channel SIM Box extraction reveals automated call forwarding rules.
+
+[SYNTHETIC DEMO EVIDENCE — FOR SIH26189 PROTOTYPE EVALUATION ONLY]`
+    },
+    previousVersions: [],
+    chainOfCustody: [
+      {
+        id: 'CUST-01',
+        action: 'Evidence Registered',
+        officer: 'Inspector Priya Deshmukh',
+        badge: 'MHA-INT-8819',
+        timestamp: '25 Aug 2026, 13:45 IST',
+        notes: 'Physical hardware extraction certified.'
+      }
+    ]
+  },
+  {
+    id: 'EVD-2026-000273',
+    caseId: 'CASE-1090',
+    firNumber: 'FIR-2026-CHD-0319',
+    title: 'Highway Toll Camera High-Res Optical Captures',
+    evidenceType: 'PHOTOGRAPH',
+    description: 'Nighttime optical camera stills captured at Highway Toll Plaza 7 showing driver identity and vehicle transit.',
+    collectedDate: '2026-08-25',
+    collectedTime: '03:15 IST',
+    policeStation: 'Anti-Smuggling Bureau, Chandigarh',
+    registeringOfficer: 'ACP Gurpreet Singh',
+    badgeNumber: 'MHA-INT-5502',
+    relatedEntities: [
+      { id: 'Vehicle_017', label: 'Maruti Swift (MH-04-XX-2847)', type: 'VEHICLE', role: 'Captured Vehicle' },
+      { id: 'Phone_092', label: '+91 XXXXX 44812', type: 'PHONE', role: 'Co-located Device' }
+    ],
+    location: 'Highway Toll Plaza 7 North, Chandigarh Corridor',
+    source: 'National Highway ANPR Stream',
+    remarks: 'Facial recognition confidence: 94.2% match against registered identity records.',
+    status: 'VERIFIED',
+    hasDigitalCopy: true,
+    digitalDocument: {
+      filename: 'ANPR_Toll_Capture_Sector7.pdf',
+      fileType: 'application/pdf',
+      fileSize: '4.5 MB',
+      uploadDate: '25 Aug 2026, 04:30 IST',
+      uploader: 'ACP Gurpreet Singh (MHA-INT-5502)',
+      version: '1.0',
+      integrityHash: 'fc34d5e698fc1c149afbf4c8996fb92427ae41e4649b934ca495991b78521090',
+      previewAvailable: true,
+      content: `NATIONAL HIGHWAYS ANPR CAMERA CAPTURE
+CASE: CASE-1090 // OPERATION FALCON
+
+Optical license plate confirmation: MH-04-XX-2847
+Speed: 84 km/h
+Lane: Express Lane 3
+
+[SYNTHETIC DEMO EVIDENCE — FOR SIH26189 PROTOTYPE EVALUATION ONLY]`
+    },
+    previousVersions: [],
+    chainOfCustody: [
+      {
+        id: 'CUST-01',
+        action: 'Evidence Registered',
+        officer: 'ACP Gurpreet Singh',
+        badge: 'MHA-INT-5502',
+        timestamp: '25 Aug 2026, 04:00 IST',
+        notes: 'High resolution camera stills downloaded from toll authority.'
+      }
+    ]
+  },
+  {
+    id: 'EVD-2026-000284',
+    caseId: 'CASE-1095',
+    firNumber: 'FIR-2026-JPR-0677',
+    title: 'Heavy Transport Fleet GPS Telemetry Extract',
+    evidenceType: 'LOCATION_RECORD',
+    description: 'Comprehensive GPS telemetry log of heavy transport fleet vehicles detailing stopovers at logistics terminals.',
+    collectedDate: '2026-08-25',
+    collectedTime: '11:30 IST',
+    policeStation: 'Highway Surveillance Cell, Jaipur',
+    registeringOfficer: 'Inspector Manvendra Rathore',
+    badgeNumber: 'MHA-INT-7704',
+    relatedEntities: [
+      { id: 'Vehicle_033', label: 'Eicher Truck (RJ-14-XX-9021)', type: 'VEHICLE', role: 'Fleet Asset' },
+      { id: 'Location_A', label: 'Thane West Logistics Hub', type: 'LOCATION', role: 'Origin' }
+    ],
+    location: 'Jaipur Transport Nagar Checkpoint',
+    source: 'Fleet IoT Tracking Telematics',
+    remarks: 'Route anomaly detected: 4 unauthorized stops along interstate transit route.',
+    status: 'VERIFIED',
+    hasDigitalCopy: true,
+    digitalDocument: {
+      filename: 'Fleet_GPS_Telemetry_Log_CASE1095.pdf',
+      fileType: 'application/pdf',
+      fileSize: '2.9 MB',
+      uploadDate: '25 Aug 2026, 12:45 IST',
+      uploader: 'Inspector Manvendra Rathore (MHA-INT-7704)',
+      version: '1.0',
+      integrityHash: 'fd45e6f798fc1c149afbf4c8996fb92427ae41e4649b934ca495991b78521095',
+      previewAvailable: true,
+      content: `HIGHWAY SURVEILLANCE CELL — FLEET GPS LOG
+CASE: CASE-1095 // PROJECT SILVERLINE
+
+VEHICLE: RJ-14-XX-9021
+CORRIDOR: Western Dedicated Freight Route
+
+[SYNTHETIC DEMO EVIDENCE — FOR SIH26189 PROTOTYPE EVALUATION ONLY]`
+    },
+    previousVersions: [],
+    chainOfCustody: [
+      {
+        id: 'CUST-01',
+        action: 'Evidence Registered',
+        officer: 'Inspector Manvendra Rathore',
+        badge: 'MHA-INT-7704',
+        timestamp: '25 Aug 2026, 12:00 IST',
+        notes: 'GPS telematics exported from fleet tracking server.'
+      }
+    ]
+  },
+  {
+    id: 'EVD-2026-000295',
+    caseId: 'CASE-1102',
+    firNumber: 'FIR-2026-LKO-0812',
+    title: 'Corporate Bank Signatory Signature Cards',
+    evidenceType: 'DOCUMENT',
+    description: 'Certified KYC documentation and signature resolution cards from commercial banking branch showing authorized operators.',
+    collectedDate: '2026-08-25',
+    collectedTime: '15:15 IST',
+    policeStation: 'Economic Offenses Wing, Lucknow',
+    registeringOfficer: 'Inspector Ajay Tripathi',
+    badgeNumber: 'MHA-INT-2209',
+    relatedEntities: [
+      { id: 'Account_512', label: 'Account ending 6601', type: 'ACCOUNT', role: 'Corporate Account' },
+      { id: 'Organization_X', label: 'Meridian Logistics Pvt. Ltd.', type: 'ORGANIZATION', role: 'Holding Company' }
+    ],
+    location: 'Commercial Branch Bank Vault, Lucknow',
+    source: 'Branch Legal Officer Handover',
+    remarks: 'Signatory resolution documents cross-referenced with corporate registry filings.',
+    status: 'VERIFIED',
+    hasDigitalCopy: true,
+    digitalDocument: {
+      filename: 'KYC_Signatory_Cards_CASE1102.pdf',
+      fileType: 'application/pdf',
+      fileSize: '3.1 MB',
+      uploadDate: '25 Aug 2026, 16:30 IST',
+      uploader: 'Inspector Ajay Tripathi (MHA-INT-2209)',
+      version: '1.0',
+      integrityHash: 'fe56f7a898fc1c149afbf4c8996fb92427ae41e4649b934ca495991b78521102',
+      previewAvailable: true,
+      content: `ECONOMIC OFFENSES WING — KYC SIGNATORY RECORD
+CASE: CASE-1102 // OPERATION SENTINEL
+
+ACCOUNT: ACCT-7712-6601
+CORPORATE HOLDER: Meridian Logistics Pvt. Ltd.
+
+[SYNTHETIC DEMO EVIDENCE — FOR SIH26189 PROTOTYPE EVALUATION ONLY]`
+    },
+    previousVersions: [],
+    chainOfCustody: [
+      {
+        id: 'CUST-01',
+        action: 'Evidence Registered',
+        officer: 'Inspector Ajay Tripathi',
+        badge: 'MHA-INT-2209',
+        timestamp: '25 Aug 2026, 15:45 IST',
+        notes: 'KYC records received under Section 91 CrPC notice.'
+      }
+    ]
   }
 ];
 

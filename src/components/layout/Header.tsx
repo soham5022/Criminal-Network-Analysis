@@ -82,58 +82,131 @@ export const Header: React.FC = () => {
       <div className="flex items-center gap-4 min-w-0">
         <div className="flex flex-col min-w-0">
           <div className="flex items-center gap-2 text-xs text-[#64748B]">
-            <span className="hover:text-[#087E8B] cursor-pointer transition-colors font-medium" onClick={() => navigateTo('dashboard')}>
+            <span 
+              className="hover:text-[#087E8B] cursor-pointer transition-colors font-medium" 
+              onClick={() => navigateTo('dashboard')}
+            >
               TraceNet
             </span>
 
-            <ChevronRight className="w-3.5 h-3.5 text-[#94A3B8]" />
-            <span className="text-[#087E8B] uppercase tracking-wider font-bold text-[11px]">
-              {currentPage.replace('-', ' ')}
-            </span>
-            
-            {/* Active Case Selector Button */}
-            <ChevronRight className="w-3.5 h-3.5 text-[#94A3B8] hidden sm:inline" />
-            <div className="relative hidden sm:inline-block">
-              <button
-                onClick={() => setShowCaseSelector(!showCaseSelector)}
-                className="flex items-center gap-1.5 px-2.5 py-0.5 rounded bg-[#F1F5F9] hover:bg-[#E6F4F5] border border-[#CBD5E1] text-[#12304A] text-xs font-mono font-bold transition-colors"
-                title="Switch Active Case"
-              >
-                <FolderOpen className="w-3.5 h-3.5 text-[#087E8B]" />
-                <span>{activeCase.id}: {activeCase.name}</span>
-              </button>
+            {/* Breadcrumb Hierarchy */}
+            {currentPage === 'dashboard' || currentPage === 'overview' ? (
+              <>
+                <ChevronRight className="w-3.5 h-3.5 text-[#94A3B8]" />
+                <span className="text-[#087E8B] font-bold text-[11px] uppercase tracking-wider">
+                  Dashboard
+                </span>
+              </>
+            ) : currentPage === 'cases' ? (
+              <>
+                <ChevronRight className="w-3.5 h-3.5 text-[#94A3B8]" />
+                <span className="text-[#087E8B] font-bold text-[11px] uppercase tracking-wider">
+                  Cases Directory
+                </span>
+              </>
+            ) : currentPage === 'case-details' ? (
+              <>
+                <ChevronRight className="w-3.5 h-3.5 text-[#94A3B8]" />
+                <span 
+                  className="hover:text-[#087E8B] cursor-pointer transition-colors font-medium" 
+                  onClick={() => navigateTo('cases')}
+                >
+                  Cases
+                </span>
+                <ChevronRight className="w-3.5 h-3.5 text-[#94A3B8]" />
+                
+                {/* Active Case Switcher Popover */}
+                <div className="relative inline-block">
+                  <button
+                    onClick={() => setShowCaseSelector(!showCaseSelector)}
+                    className="flex items-center gap-1.5 px-2.5 py-0.5 rounded bg-[#F1F5F9] hover:bg-[#E6F4F5] border border-[#CBD5E1] text-[#12304A] text-xs font-mono font-bold transition-colors"
+                    title="Switch Active Case"
+                  >
+                    <FolderOpen className="w-3.5 h-3.5 text-[#087E8B]" />
+                    <span>{activeCase.id} — {activeCase.name}</span>
+                  </button>
 
-              {showCaseSelector && (
-                <div className="absolute left-0 mt-2 w-72 bg-[#FFFFFF] border border-[#CBD5E1] shadow-xl p-2 z-50 rounded-lg space-y-1">
-                  <div className="px-2 py-1 text-[10px] font-bold uppercase tracking-wider text-[#64748B] border-b border-[#E2E8F0]">
-                    Switch Active Case
-                  </div>
-                  {cases.map((c) => (
-                    <div
-                      key={c.id}
-                      onClick={() => {
-                        setActiveCaseId(c.id);
-                        setShowCaseSelector(false);
-                      }}
-                      className={`p-2 rounded-md cursor-pointer text-xs flex items-center justify-between transition-colors ${
-                        c.id === activeCaseId 
-                          ? 'bg-[#E6F4F5] text-[#087E8B] font-bold' 
-                          : 'hover:bg-[#F8FAFC] text-[#17212B]'
-                      }`}
-                    >
-                      <div>
-                        <div className="font-mono font-bold text-[#12304A]">{c.id}</div>
-                        <div className="text-[11px] text-[#64748B] truncate">{c.name}</div>
+                  {showCaseSelector && (
+                    <div className="absolute left-0 mt-2 w-80 bg-[#FFFFFF] border border-[#CBD5E1] shadow-xl p-2 z-50 rounded-lg space-y-1">
+                      <div className="px-2 py-1 text-[10px] font-bold uppercase tracking-wider text-[#64748B] border-b border-[#E2E8F0]">
+                        Switch Active Case Dossier
                       </div>
-                      {c.id === activeCaseId && <Check className="w-3.5 h-3.5 text-[#087E8B]" />}
+                      {cases.map((c) => (
+                        <div
+                          key={c.id}
+                          onClick={() => {
+                            setActiveCaseId(c.id);
+                            setShowCaseSelector(false);
+                          }}
+                          className={`p-2 rounded-md cursor-pointer text-xs flex items-center justify-between transition-colors ${
+                            c.id === activeCaseId 
+                              ? 'bg-[#E6F4F5] text-[#087E8B] font-bold' 
+                              : 'hover:bg-[#F8FAFC] text-[#17212B]'
+                          }`}
+                        >
+                          <div>
+                            <div className="font-mono font-bold text-[#12304A]">{c.id}</div>
+                            <div className="text-[11px] text-[#64748B] truncate">{c.name}</div>
+                          </div>
+                          {c.id === activeCaseId && <Check className="w-3.5 h-3.5 text-[#087E8B]" />}
+                        </div>
+                      ))}
                     </div>
-                  ))}
+                  )}
                 </div>
-              )}
-            </div>
+              </>
+            ) : (
+              <>
+                <ChevronRight className="w-3.5 h-3.5 text-[#94A3B8]" />
+                <span className="text-[#087E8B] uppercase tracking-wider font-bold text-[11px]">
+                  {currentPage.replace('-', ' ')}
+                </span>
+                
+                {/* Active Case Context for other sub-pages */}
+                <ChevronRight className="w-3.5 h-3.5 text-[#94A3B8] hidden sm:inline" />
+                <div className="relative hidden sm:inline-block">
+                  <button
+                    onClick={() => setShowCaseSelector(!showCaseSelector)}
+                    className="flex items-center gap-1.5 px-2.5 py-0.5 rounded bg-[#F1F5F9] hover:bg-[#E6F4F5] border border-[#CBD5E1] text-[#12304A] text-xs font-mono font-bold transition-colors"
+                    title="Active Case Filter"
+                  >
+                    <FolderOpen className="w-3.5 h-3.5 text-[#087E8B]" />
+                    <span>{activeCase.id}</span>
+                  </button>
+
+                  {showCaseSelector && (
+                    <div className="absolute left-0 mt-2 w-80 bg-[#FFFFFF] border border-[#CBD5E1] shadow-xl p-2 z-50 rounded-lg space-y-1">
+                      <div className="px-2 py-1 text-[10px] font-bold uppercase tracking-wider text-[#64748B] border-b border-[#E2E8F0]">
+                        Switch Active Case Scope
+                      </div>
+                      {cases.map((c) => (
+                        <div
+                          key={c.id}
+                          onClick={() => {
+                            setActiveCaseId(c.id);
+                            setShowCaseSelector(false);
+                          }}
+                          className={`p-2 rounded-md cursor-pointer text-xs flex items-center justify-between transition-colors ${
+                            c.id === activeCaseId 
+                              ? 'bg-[#E6F4F5] text-[#087E8B] font-bold' 
+                              : 'hover:bg-[#F8FAFC] text-[#17212B]'
+                          }`}
+                        >
+                          <div>
+                            <div className="font-mono font-bold text-[#12304A]">{c.id}</div>
+                            <div className="text-[11px] text-[#64748B] truncate">{c.name}</div>
+                          </div>
+                          {c.id === activeCaseId && <Check className="w-3.5 h-3.5 text-[#087E8B]" />}
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                </div>
+              </>
+            )}
           </div>
           <h1 className="text-sm sm:text-base font-bold text-[#12304A] tracking-tight truncate flex items-center gap-2">
-            {currentInfo.title}
+            {currentPage === 'case-details' ? `${activeCase.id} — ${activeCase.name}` : currentInfo.title}
           </h1>
         </div>
       </div>

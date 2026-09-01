@@ -443,6 +443,189 @@ OFFICER: ACP Vikramaditya Roy
 Surveillance unit confirms vehicle MH-04-XX-2847 made 14 round-trips between Thane West Hub and Vashi Safehouse Facility during non-operational hours between 01:00 and 04:30 AM.
 
 [SYNTHETIC DEMO DOCUMENT — FOR SIH26189 PROTOTYPE EVALUATION ONLY]`
+  },
+  {
+    id: 'DOC-1057-01',
+    caseId: 'CASE-1057',
+    firNumber: 'FIR-2026-BLR-0342',
+    title: 'Forensic Corporate Audit - Project Crosslink',
+    documentType: 'INVESTIGATION_REPORT',
+    policeStation: 'Economic Offenses & Fraud Analytics Unit, Bengaluru',
+    investigatingOfficer: 'Inspector Ananya Rao',
+    createdDate: '12 Aug 2026, 11:00 UTC',
+    uploadedDate: '12 Aug 2026, 11:30 UTC',
+    version: '1.0',
+    status: 'VERIFIED_IN_RECORD',
+    integrityHash: 'd8e4f5a198fc1c149afbf4c8996fb92427ae41e4649b934ca495991b78521057',
+    pageCount: 4,
+    extractedEntities: [
+      { id: 'Organization_X', label: 'Meridian Logistics Pvt. Ltd.', type: 'ORGANIZATION', roleInDocument: 'Corporate Entity' },
+      { id: 'Account_103', label: 'Account ending 4821', type: 'ACCOUNT', roleInDocument: 'Linked Financial Ledger' }
+    ],
+    summary: 'Audited balance sheet and shell entity registry linking corporate holding structures.',
+    content: `ECONOMIC OFFENSES UNIT — FINANCIAL AUDIT SUMMARY
+CASE REFERENCE: CASE-1057 (PROJECT CROSSLINK)
+
+Audit of Meridian Logistics Pvt. Ltd. shows recurring offshore payment gateway receipts channeled into secondary clearing accounts.
+
+[SYNTHETIC DEMO DOCUMENT — FOR SIH26189 PROTOTYPE EVALUATION ONLY]`
+  },
+  {
+    id: 'DOC-1068-01',
+    caseId: 'CASE-1068',
+    firNumber: 'FIR-2026-KOL-0209',
+    title: 'Port Consignment Seizure Report - Operation Bluefin',
+    documentType: 'SEIZURE_MEMO',
+    policeStation: 'Coastal & Maritime Security Division, Kolkata',
+    investigatingOfficer: 'ACP Debabrata Mukherjee',
+    createdDate: '15 Aug 2026, 09:30 UTC',
+    uploadedDate: '15 Aug 2026, 10:00 UTC',
+    version: '1.0',
+    status: 'VERIFIED_IN_RECORD',
+    integrityHash: 'e9f1a2b398fc1c149afbf4c8996fb92427ae41e4649b934ca495991b78521068',
+    pageCount: 3,
+    extractedEntities: [
+      { id: 'Location_C', label: 'Dock Terminal Yard 4', type: 'LOCATION', roleInDocument: 'Seizure Location' },
+      { id: 'Person_044', label: 'Rahul Sharma', type: 'PERSON', roleInDocument: 'Consignee Contact' }
+    ],
+    summary: 'Seizure memo detailing container consignment intercepts at Dock Terminal Yard 4.',
+    content: `MARITIME POLICE SEIZURE RECORD (SEC 100 CrPC)
+CASE: CASE-1068 — OPERATION BLUEFIN
+LOCATION: Dock Terminal Yard 4, Kolkata Port
+
+Inspection of maritime container revealed unauthorized transceiver relay units matched to logistics paperwork.
+
+[SYNTHETIC DEMO DOCUMENT — FOR SIH26189 PROTOTYPE EVALUATION ONLY]`
+  },
+  {
+    id: 'DOC-1075-01',
+    caseId: 'CASE-1075',
+    firNumber: 'FIR-2026-HYD-0551',
+    title: 'Hawala Ledger Seizure - Sector 9 Intercept',
+    documentType: 'SEIZURE_MEMO',
+    policeStation: 'Special Intelligence Branch, Hyderabad',
+    investigatingOfficer: 'Inspector K. S. Reddy',
+    createdDate: '16 Aug 2026, 15:00 UTC',
+    uploadedDate: '16 Aug 2026, 15:45 UTC',
+    version: '1.0',
+    status: 'VERIFIED_IN_RECORD',
+    integrityHash: 'fa12b3c498fc1c149afbf4c8996fb92427ae41e4649b934ca495991b78521075',
+    pageCount: 5,
+    extractedEntities: [
+      { id: 'Account_304', label: 'Account ending 1094', type: 'ACCOUNT', roleInDocument: 'Hawala Clearing Node' },
+      { id: 'Person_001', label: 'Vikram Singh', type: 'PERSON', roleInDocument: 'Authorized Signatory' }
+    ],
+    summary: 'Physical Hawala token books and encrypted ledger accounts seized during Hyderabad raid.',
+    content: `SPECIAL INTELLIGENCE BRANCH — HAWALA INTERCEPT
+CASE: CASE-1075
+
+Recovery of physical account tokens and encrypted mobile chat exports linking structured fund disbursements below mandatory thresholds.
+
+[SYNTHETIC DEMO DOCUMENT — FOR SIH26189 PROTOTYPE EVALUATION ONLY]`
+  },
+  {
+    id: 'DOC-1082-01',
+    caseId: 'CASE-1082',
+    firNumber: 'FIR-2026-PUN-0104',
+    title: 'Hardware Signature Extraction - Project Blackthorn',
+    documentType: 'FORENSIC_REPORT',
+    policeStation: 'Special Cyber Task Force, Pune',
+    investigatingOfficer: 'Inspector Priya Deshmukh',
+    createdDate: '18 Aug 2026, 12:00 UTC',
+    uploadedDate: '18 Aug 2026, 12:30 UTC',
+    version: '1.0',
+    status: 'VERIFIED_IN_RECORD',
+    integrityHash: 'fb23c4d598fc1c149afbf4c8996fb92427ae41e4649b934ca495991b78521082',
+    pageCount: 4,
+    extractedEntities: [
+      { id: 'Phone_088', label: '+91 XXXXX 99014', type: 'PHONE', roleInDocument: 'Burner Relay' },
+      { id: 'Phone_021', label: '+91 XXXXX 28471', type: 'PHONE', roleInDocument: 'Originating Hub' }
+    ],
+    summary: 'Forensic extraction of synchronized hardware IMEI rotations originating from retail outlets.',
+    content: `SPECIAL CYBER TASK FORCE — FORENSIC EXTRACTION
+CASE: CASE-1082
+
+Analysis confirms 6 rotating SIM lines operating simultaneously from a multi-slot SIM hardware box in Pune corridor.
+
+[SYNTHETIC DEMO DOCUMENT — FOR SIH26189 PROTOTYPE EVALUATION ONLY]`
+  },
+  {
+    id: 'DOC-1090-01',
+    caseId: 'CASE-1090',
+    firNumber: 'FIR-2026-CHD-0319',
+    title: 'Transit Corridor Intercept - Operation Falcon',
+    documentType: 'INVESTIGATION_REPORT',
+    policeStation: 'Anti-Smuggling Bureau, Chandigarh',
+    investigatingOfficer: 'ACP Gurpreet Singh',
+    createdDate: '19 Aug 2026, 14:00 UTC',
+    uploadedDate: '19 Aug 2026, 14:30 UTC',
+    version: '1.0',
+    status: 'VERIFIED_IN_RECORD',
+    integrityHash: 'fc34d5e698fc1c149afbf4c8996fb92427ae41e4649b934ca495991b78521090',
+    pageCount: 3,
+    extractedEntities: [
+      { id: 'Phone_092', label: '+91 XXXXX 44812', type: 'PHONE', roleInDocument: 'Transit Intercept' },
+      { id: 'Vehicle_017', label: 'Maruti Swift (MH-04-XX-2847)', type: 'VEHICLE', roleInDocument: 'Observed Transit Asset' }
+    ],
+    summary: 'Corridor surveillance report tracking vehicular passage through northern toll gates.',
+    content: `ANTI-SMUGGLING BUREAU REPORT
+CASE: CASE-1090 — OPERATION FALCON
+
+Vehicle optical recognition matched target asset passage at 02:40 hours en route to regional staging terminal.
+
+[SYNTHETIC DEMO DOCUMENT — FOR SIH26189 PROTOTYPE EVALUATION ONLY]`
+  },
+  {
+    id: 'DOC-1095-01',
+    caseId: 'CASE-1095',
+    firNumber: 'FIR-2026-JPR-0677',
+    title: 'ANPR Movement Audit - Project Silverline',
+    documentType: 'CASE_DIARY',
+    policeStation: 'Highway Surveillance Cell, Jaipur',
+    investigatingOfficer: 'Inspector Manvendra Rathore',
+    createdDate: '20 Aug 2026, 10:00 UTC',
+    uploadedDate: '20 Aug 2026, 10:30 UTC',
+    version: '1.0',
+    status: 'VERIFIED_IN_RECORD',
+    integrityHash: 'fd45e6f798fc1c149afbf4c8996fb92427ae41e4649b934ca495991b78521095',
+    pageCount: 4,
+    extractedEntities: [
+      { id: 'Vehicle_033', label: 'Eicher Truck (RJ-14-XX-9021)', type: 'VEHICLE', roleInDocument: 'Transport Vehicle' },
+      { id: 'Location_A', label: 'Thane West Logistics Hub', type: 'LOCATION', roleInDocument: 'Departure Hub' }
+    ],
+    summary: 'Automated highway camera log correlating freight movements across western corridor.',
+    content: `HIGHWAY SURVEILLANCE CELL — CASE DIARY
+CASE: CASE-1095
+
+Audit of toll gate timestamps reveals convoy coordination between heavy freight and escort vehicles.
+
+[SYNTHETIC DEMO DOCUMENT — FOR SIH26189 PROTOTYPE EVALUATION ONLY]`
+  },
+  {
+    id: 'DOC-1102-01',
+    caseId: 'CASE-1102',
+    firNumber: 'FIR-2026-LKO-0812',
+    title: 'Financial Shell Inquiry - Operation Sentinel',
+    documentType: 'INVESTIGATION_REPORT',
+    policeStation: 'Economic Offenses Wing, Lucknow',
+    investigatingOfficer: 'Inspector Ajay Tripathi',
+    createdDate: '21 Aug 2026, 16:00 UTC',
+    uploadedDate: '21 Aug 2026, 16:30 UTC',
+    version: '1.0',
+    status: 'VERIFIED_IN_RECORD',
+    integrityHash: 'fe56f7a898fc1c149afbf4c8996fb92427ae41e4649b934ca495991b78521102',
+    pageCount: 5,
+    extractedEntities: [
+      { id: 'Account_512', label: 'Account ending 6601', type: 'ACCOUNT', roleInDocument: 'Shell Corp Account' },
+      { id: 'Organization_X', label: 'Meridian Logistics Pvt. Ltd.', type: 'ORGANIZATION', roleInDocument: 'Holding Parent' }
+    ],
+    summary: 'Inquiry into banking accounts opened with forged corporate KYC credentials.',
+    content: `ECONOMIC OFFENSES WING REPORT
+CASE: CASE-1102 — OPERATION SENTINEL
+
+Bank statements indicate micro-layering transactions designed to evade mandatory currency transaction reporting thresholds.
+
+[SYNTHETIC DEMO DOCUMENT — FOR SIH26189 PROTOTYPE EVALUATION ONLY]`
   }
 ];
 

@@ -3,17 +3,19 @@ import {
   Search, 
   Filter, 
   FolderArchive, 
-  FolderOpen
+  FolderOpen,
+  Plus
 } from 'lucide-react';
-import { caseRecordsService, CaseRecordItem } from '../../services/caseRecordsService';
+import { caseRecordsService, CaseRecordItem, CaseDocument } from '../../services/caseRecordsService';
 import { useInvestigation } from '../../context/InvestigationContext';
+import { RegisterRecordModal } from './RegisterRecordModal';
 
 interface CaseRecordsListProps {
   onSelectCase: (caseId: string) => void;
 }
 
 export const CaseRecordsList: React.FC<CaseRecordsListProps> = ({ onSelectCase }) => {
-  const { searchQuery } = useInvestigation();
+  const { searchQuery, activeCaseId } = useInvestigation();
 
   const [search, setSearch] = useState<string>(searchQuery || '');
   const [stationFilter, setStationFilter] = useState<string>('ALL');
@@ -21,6 +23,7 @@ export const CaseRecordsList: React.FC<CaseRecordsListProps> = ({ onSelectCase }
   const [statusFilter, setStatusFilter] = useState<string>('ALL');
   const [priorityFilter, setPriorityFilter] = useState<string>('ALL');
   const [records, setRecords] = useState<CaseRecordItem[]>([]);
+  const [showRegisterModal, setShowRegisterModal] = useState<boolean>(false);
 
   const loadData = () => {
     const list = caseRecordsService.getCaseRecords({
@@ -84,9 +87,14 @@ export const CaseRecordsList: React.FC<CaseRecordsListProps> = ({ onSelectCase }
           </p>
         </div>
 
-        <div className="text-right text-xs text-[#64748B]">
-          <div>Repository Scale: <strong className="text-[#12304A]">{records.length} Case Files</strong></div>
-          <div className="text-[10px] text-[#94A3B8]">Synthetic Demo Dataset</div>
+        <div className="flex items-center gap-3">
+          <button
+            onClick={() => setShowRegisterModal(true)}
+            className="flex items-center gap-1.5 px-4 py-2 rounded-md bg-[#087E8B] hover:bg-[#06636E] text-white text-xs font-semibold tracking-wide transition-colors shadow-sm shrink-0"
+          >
+            <Plus className="w-4 h-4" />
+            <span>+ Register Record</span>
+          </button>
         </div>
       </div>
 
@@ -211,6 +219,18 @@ export const CaseRecordsList: React.FC<CaseRecordsListProps> = ({ onSelectCase }
           </table>
         </div>
       </div>
+
+      {/* Register Record Modal */}
+      {showRegisterModal && (
+        <RegisterRecordModal
+          initialCaseId={activeCaseId || 'CASE-1024'}
+          onClose={() => setShowRegisterModal(false)}
+          onSuccess={(newDoc) => {
+            setShowRegisterModal(false);
+            loadData();
+          }}
+        />
+      )}
 
     </div>
   );
