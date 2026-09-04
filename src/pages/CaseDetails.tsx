@@ -8,6 +8,8 @@ import { WitnessManagementTab } from '../components/cases/WitnessManagementTab';
 import { CaseActionsAndObservationsTab } from '../components/cases/CaseActionsAndObservationsTab';
 import { UnifiedCaseTimelineTab } from '../components/cases/UnifiedCaseTimelineTab';
 import { CaseEvidenceTab } from '../components/cases/CaseEvidenceTab';
+import { SocialIntelligenceTab } from '../components/cases/SocialIntelligenceTab';
+import { CriminalHistoryTab } from '../components/cases/CriminalHistoryTab';
 import { NetworkAnalysis } from './NetworkAnalysis';
 import { EntitiesTable } from '../components/entities/EntitiesTable';
 import { EntityProfileView } from '../components/entities/EntityProfileView';
@@ -117,6 +119,16 @@ export const CaseDetails: React.FC = () => {
       {/* Tab 10: Intelligence Report Generator */}
       {activeCaseTab === 'reports' && (
         <ReportGenerator />
+      )}
+
+      {/* Tab 11: Social Intelligence Records */}
+      {activeCaseTab === 'social-intel' && (
+        <SocialIntelligenceTab caseId={activeCaseId} />
+      )}
+
+      {/* Tab 12: Criminal History Records */}
+      {activeCaseTab === 'criminal-history' && (
+        <CriminalHistoryTab caseId={activeCaseId} />
       )}
     </div>
   );

@@ -540,5 +540,84 @@ export const mockEntities: Entity[] = [
       confidenceScore: 0.95,
       flags: ['Malware C2', 'Decentralized Mixer']
     }
+  },
+  {
+    id: 'Event_001',
+    label: 'Hawala Staging Meeting (Terminal 3)',
+    name: 'Hawala Physical Cash Staging & Handover',
+    type: 'EVENT',
+    community: 'Cluster 01',
+    analyticalPriority: 'CRITICAL',
+    degreeCentrality: 0.62,
+    betweennessCentrality: 0.58,
+    connectionsCount: 8,
+    locationsCount: 1,
+    phonesCount: 2,
+    accountsCount: 2,
+    organizationsCount: 1,
+    vehiclesCount: 2,
+    lastActivity: '18 Aug 2026 21:14 IST',
+    firstSeen: '2026-08-18',
+    associatedCaseIds: ['CASE-1024', 'CASE-1057'],
+    keyConnections: ['Person_044', 'Person_001', 'Location_A', 'Vehicle_017'],
+    metadata: {
+      description: 'Coordinated rendezvous incident where cash conduits handed over structured physical currency packets under Meridian Logistics documentation.',
+      jurisdiction: 'IGI Airport Transit Jurisdiction / Special Branch',
+      ipOrCoordinates: '28.5562° N, 77.1000° E',
+      confidenceScore: 0.96,
+      flags: ['Co-location Incident', 'Physical Handover', 'Multi-Case Bridge']
+    }
+  },
+  {
+    id: 'Event_002',
+    label: 'Dubai Transit Coordination Meeting',
+    name: 'Cross-Border Smuggling Staging Session',
+    type: 'EVENT',
+    community: 'Cluster 03',
+    analyticalPriority: 'HIGH',
+    degreeCentrality: 0.48,
+    betweennessCentrality: 0.44,
+    connectionsCount: 5,
+    locationsCount: 1,
+    phonesCount: 1,
+    accountsCount: 1,
+    organizationsCount: 1,
+    vehiclesCount: 0,
+    lastActivity: '12 Aug 2026 18:00 IST',
+    firstSeen: '2026-08-12',
+    associatedCaseIds: ['CASE-1024', 'CASE-1082'],
+    keyConnections: ['Person_044', 'Person_078', 'Location_B'],
+    metadata: {
+      description: 'Pre-consignment verification meeting between primary dispatch coordinators and logistics intermediaries.',
+      jurisdiction: 'External Liaison / DRI Unit',
+      confidenceScore: 0.91,
+      flags: ['Cross-Border Planning', 'Logistics Staging']
+    }
+  },
+  {
+    id: 'Event_003',
+    label: 'SIM Card Rotation Flash Event',
+    name: 'Burner Device Simultaneous Activation Spike',
+    type: 'EVENT',
+    community: 'Cluster 02',
+    analyticalPriority: 'HIGH',
+    degreeCentrality: 0.42,
+    betweennessCentrality: 0.38,
+    connectionsCount: 4,
+    locationsCount: 1,
+    phonesCount: 3,
+    accountsCount: 0,
+    organizationsCount: 0,
+    vehiclesCount: 0,
+    lastActivity: '20 Aug 2026 03:22 IST',
+    firstSeen: '2026-08-20',
+    associatedCaseIds: ['CASE-1024'],
+    keyConnections: ['Phone_021', 'Phone_045', 'Location_C'],
+    metadata: {
+      description: 'Synchronized late-night cell tower handshake indicating coordinated burner SIM swap across 3 devices in Sector 4.',
+      jurisdiction: 'Cyber Crime Police Station, Central Delhi',
+      confidenceScore: 0.93,
+      flags: ['SIM Swap Spike', 'Anti-Surveillance Measure']
+    }
   }
 ];

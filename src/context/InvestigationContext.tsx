@@ -32,6 +32,8 @@ export type CaseWorkspaceTab =
   | 'notes'
   | 'reports'
   | 'history'
+  | 'social-intel'
+  | 'criminal-history'
   | 'investigation' 
   | 'activity';
 
@@ -83,7 +85,7 @@ const InvestigationContext = createContext<InvestigationContextType | undefined>
 
 export const InvestigationProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
   const [currentPage, setCurrentPage] = useState<AppPage>('dashboard');
-  const [activeCaseId, setActiveCaseId] = useState<string>('CASE-1024');
+  const [activeCaseId, setActiveCaseId] = useState<string>('');
   const [selectedEntityId, setSelectedEntityId] = useState<string | null>(null);
   const [selectedAlertId, setSelectedAlertId] = useState<string | null>(null);
   const [activeCaseTab, setActiveCaseTab] = useState<CaseWorkspaceTab>('overview');

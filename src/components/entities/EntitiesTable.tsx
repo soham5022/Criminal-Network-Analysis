@@ -50,6 +50,8 @@ export const EntitiesTable: React.FC = () => {
         return <span className="px-2 py-0.5 rounded text-[10px] font-bold bg-[#EEF2FF] text-[#234E70] border border-[#C7D2FE]">ORGANIZATION</span>;
       case 'VEHICLE':
         return <span className="px-2 py-0.5 rounded text-[10px] font-bold bg-[#FEF3C7] text-[#B7791F] border border-[#FCD34D]">VEHICLE</span>;
+      case 'EVENT':
+        return <span className="px-2 py-0.5 rounded text-[10px] font-bold bg-[#FEE2E2] text-[#C24141] border border-[#FCA5A5]">EVENT</span>;
       default:
         return <span className="px-2 py-0.5 rounded text-[10px] font-bold bg-[#F1F5F9] text-[#64748B] border border-[#E2E8F0]">{type}</span>;
     }
@@ -86,6 +88,7 @@ export const EntitiesTable: React.FC = () => {
               <option value="LOCATION">Locations</option>
               <option value="ORGANIZATION">Organizations</option>
               <option value="VEHICLE">Vehicles</option>
+              <option value="EVENT">Events</option>
             </select>
 
             {/* Community Filter */}

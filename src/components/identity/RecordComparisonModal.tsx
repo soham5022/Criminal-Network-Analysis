@@ -132,7 +132,7 @@ export const RecordComparisonModal: React.FC<RecordComparisonModalProps> = ({
                   Correlation & Overlap Rationale:
                 </span>
                 <ul className="space-y-1 text-[#334155] font-sans text-xs">
-                  {duplicate.whyMatchedReasons.map((reason, idx) => (
+                  {duplicate.whyMatchedReasons.map((reason: string, idx: number) => (
                     <li key={idx} className="flex items-start gap-2">
                       <span className="text-[#087E8B] font-bold">•</span>
                       <span>{reason}</span>

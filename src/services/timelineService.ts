@@ -62,10 +62,37 @@ export interface TimelineStats {
   alertEvents: number;
 }
 
+const customTimelineEvents: DetailedTimelineEvent[] = [];
+
 export const timelineService = {
+  addTimelineEvent(event: any): DetailedTimelineEvent {
+    const now = new Date();
+    const newEvt: DetailedTimelineEvent = {
+      id: event.id || `EVT-INGEST-${Date.now()}`,
+      caseId: event.caseId || 'CASE-1024',
+      timestamp: event.timestamp || now.toISOString(),
+      dateFormatted: event.dateFormatted || now.toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' }),
+      timeFormatted: event.timeFormatted || now.toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' }),
+      category: (event.category as TimelineCategory) || 'INVESTIGATION',
+      eventType: event.eventType || 'EVENT',
+      title: event.title || event.description?.slice(0, 50) || 'Timeline Record Added',
+      description: event.description || '',
+      location: event.location,
+      primaryEntityId: event.entityId || event.primaryEntityId,
+      primaryEntityType: event.entityType || event.primaryEntityType,
+      sourceType: event.sourceType || 'INGESTION',
+      sourceId: event.sourceId || event.caseCode || `SRC-${Date.now()}`,
+      recordedBy: event.recordedBy || 'Inspector Rajesh Verma',
+      confidence: typeof event.confidence === 'number' ? event.confidence : 0.95,
+      isAnomaly: Boolean(event.isAnomaly)
+    };
+    customTimelineEvents.push(newEvt);
+    return newEvt;
+  },
+
   getCaseEvents(filter: TimelineFilterOptions): DetailedTimelineEvent[] {
     const caseId = filter.caseId || 'CASE-1024';
-    const events: DetailedTimelineEvent[] = [];
+    const events: DetailedTimelineEvent[] = [...customTimelineEvents.filter(e => !filter.caseId || e.caseId === filter.caseId)];
 
     // 1. Incident & Incident Chronology Updates
     const incident = caseHistoryService.getIncidentDetails(caseId);

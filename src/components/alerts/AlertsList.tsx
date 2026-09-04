@@ -157,14 +157,18 @@ export const AlertsList: React.FC = () => {
         </div>
       </div>
 
-      {/* Review Modal Dialog */}
+      {/* Full Explainability Review Modal Dialog */}
       {activeReviewAlert && (
-        <div className="fixed inset-0 z-50 bg-black/40 backdrop-blur-sm flex items-center justify-center p-4">
-          <div className="w-full max-w-xl bg-[#FFFFFF] rounded-lg border border-[#CBD5E1] shadow-2xl p-5 space-y-4 animate-in fade-in">
+        <div className="fixed inset-0 z-50 bg-black/40 backdrop-blur-sm flex items-center justify-center p-4 animate-in fade-in select-none">
+          <div className="w-full max-w-2xl bg-[#FFFFFF] rounded-lg border border-[#CBD5E1] shadow-2xl p-6 space-y-4 max-h-[90vh] overflow-y-auto">
+            {/* Modal Header */}
             <div className="flex items-center justify-between border-b border-[#E2E8F0] pb-3">
-              <div className="flex items-center gap-2">
+              <div className="flex items-center gap-2.5">
                 <span className="font-mono font-bold text-[#087E8B] text-sm">{activeReviewAlert.id}</span>
                 <span className="text-xs font-bold text-[#12304A]">{activeReviewAlert.category || activeReviewAlert.title}</span>
+                <span className="px-2 py-0.5 rounded text-[10px] font-bold uppercase bg-[#FEF3C7] text-[#B7791F] border border-[#FCD34D]">
+                  Severity: {activeReviewAlert.severity}
+                </span>
               </div>
               <button
                 onClick={() => setActiveReviewAlert(null)}
@@ -174,22 +178,89 @@ export const AlertsList: React.FC = () => {
               </button>
             </div>
 
-            <div className="space-y-3 text-xs">
-              <div className="p-3 bg-[#F8FAFC] rounded-md border border-[#E2E8F0]">
-                <div className="text-[10px] uppercase font-bold text-[#64748B]">Target Entity / Scope</div>
-                <div className="font-mono font-bold text-sm text-[#12304A] mt-0.5">
-                  {activeReviewAlert.relatedEntities?.[0]?.label || activeReviewAlert.relatedEntities?.[0]?.id || activeReviewAlert.associatedCaseId}
+            {/* Mandatory Disclaimer */}
+            <div className="p-3 rounded-md bg-[#F8FAFC] border border-[#CBD5E1] text-[11px] text-[#64748B] flex items-center gap-2">
+              <span className="font-bold text-[#12304A]">LEGAL NOTICE:</span>
+              <span>Analytical lead requiring investigator review. Algorithmic anomaly inferences do not establish criminal culpability without corroborating evidence.</span>
+            </div>
+
+            {/* Comprehensive Explainability Fields */}
+            <div className="space-y-3.5 text-xs">
+              {/* 1. WHAT WAS DETECTED */}
+              <div className="space-y-1">
+                <span className="text-[10px] uppercase font-bold text-[#64748B] block">
+                  1. What Was Detected
+                </span>
+                <div className="p-3 bg-[#F8FAFC] rounded-md border border-[#E2E8F0] font-semibold text-[#12304A]">
+                  {activeReviewAlert.title || activeReviewAlert.category}
                 </div>
               </div>
 
+              {/* 2. WHY IT WAS FLAGGED */}
               <div className="space-y-1">
-                <div className="text-[10px] uppercase font-bold text-[#64748B]">Reason for Flag</div>
+                <span className="text-[10px] uppercase font-bold text-[#64748B] block">
+                  2. Why It Was Flagged (Algorithmic Logic)
+                </span>
                 <p className="text-xs text-[#17212B] leading-relaxed p-3 bg-[#F8FAFC] rounded-md border border-[#E2E8F0]">
-                  {activeReviewAlert.reason}
+                  {activeReviewAlert.explanation || activeReviewAlert.reason}
                 </p>
               </div>
 
-              <div className="grid grid-cols-2 gap-3 pt-1">
+              {/* 3. SOURCE RECORDS & CONFIDENCE */}
+              <div className="grid grid-cols-2 gap-3">
+                <div className="p-3 bg-[#F8FAFC] rounded-md border border-[#E2E8F0] space-y-1">
+                  <span className="text-[10px] uppercase font-bold text-[#64748B] block">3. Source Records</span>
+                  <div className="font-mono text-xs text-[#12304A] space-y-0.5">
+                    {(activeReviewAlert as any).evidence && Array.isArray((activeReviewAlert as any).evidence) ? (
+                      (activeReviewAlert as any).evidence.map((ev: string, i: number) => <div key={i}>• {ev}</div>)
+                    ) : activeReviewAlert.evidenceRef ? (
+                      <div>• {activeReviewAlert.evidenceRef}</div>
+                    ) : (
+                      <div>• Telecom Intercepts (CDR) & Banking Ledgers</div>
+                    )}
+                  </div>
+                </div>
+
+                <div className="p-3 bg-[#F8FAFC] rounded-md border border-[#E2E8F0] space-y-1">
+                  <span className="text-[10px] uppercase font-bold text-[#64748B] block">Confidence & Timestamp</span>
+                  <div className="text-xs text-[#12304A] space-y-0.5">
+                    <div><strong>Score:</strong> <span className="font-mono text-[#087E8B]">89% High Confidence</span></div>
+                    <div><strong>Detected:</strong> <span className="font-mono text-[#64748B]">{activeReviewAlert.timestamp || '2026-08-28 14:22 IST'}</span></div>
+                  </div>
+                </div>
+              </div>
+
+              {/* 4. RELATED ENTITIES */}
+              <div className="space-y-1">
+                <span className="text-[10px] uppercase font-bold text-[#64748B] block">
+                  4. Related Entities
+                </span>
+                <div className="flex flex-wrap gap-2">
+                  {(activeReviewAlert.relatedEntities && activeReviewAlert.relatedEntities.length > 0 ? activeReviewAlert.relatedEntities : [{ id: 'Person_044', label: 'Rahul Sharma', role: 'Subject' }]).map((ent, i) => (
+                    <button
+                      key={i}
+                      onClick={() => handleInspectEntity(ent.id)}
+                      className="px-2.5 py-1 rounded bg-[#FFFFFF] border border-[#CBD5E1] hover:border-[#087E8B] text-[#087E8B] text-xs font-semibold flex items-center gap-1.5 shadow-sm"
+                    >
+                      <span>{ent.label || ent.id}</span>
+                      <Eye className="w-3 h-3 text-[#64748B]" />
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              {/* 5. RECOMMENDED REVIEW ACTION */}
+              <div className="space-y-1">
+                <span className="text-[10px] uppercase font-bold text-[#16805C] block">
+                  5. Recommended Review Action
+                </span>
+                <p className="text-xs text-[#12304A] p-3 bg-[#E8F7F0] rounded-md border border-[#A3E0C8] font-medium">
+                  {activeReviewAlert.recommendedAction || 'Cross-reference telecom CDR logs against financial transaction timestamps. Interview clearing agent and verify transport manifests.'}
+                </p>
+              </div>
+
+              {/* Modal Buttons */}
+              <div className="grid grid-cols-2 gap-3 pt-2">
                 <button
                   onClick={() => {
                     const target = activeReviewAlert.relatedEntities?.[0]?.id || 'Person_044';
@@ -205,7 +276,7 @@ export const AlertsList: React.FC = () => {
                   }}
                   className="py-2 px-3 rounded-md bg-[#087E8B] hover:bg-[#06636E] text-white text-xs font-semibold text-center transition-colors shadow-sm"
                 >
-                  Mark as Reviewed
+                  Confirm & Mark Reviewed
                 </button>
               </div>
             </div>

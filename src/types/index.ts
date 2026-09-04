@@ -4,7 +4,8 @@ export type EntityType =
   | 'ACCOUNT' 
   | 'LOCATION' 
   | 'ORGANIZATION' 
-  | 'VEHICLE';
+  | 'VEHICLE'
+  | 'EVENT';
 
 export type AnalyticalPriority = 'CRITICAL' | 'HIGH' | 'MEDIUM' | 'LOW' | 'INFORMATIONAL';
 
@@ -71,7 +72,14 @@ export type RelationshipType =
   | 'MET'
   | 'CO_LOCATED'
   | 'MEMBER_OF'
-  | 'USES';
+  | 'USES'
+  | 'ATTENDED'
+  | 'INVOLVED_IN'
+  | 'PRESENT_AT'
+  | 'HOSTED'
+  | 'TRIGGERED'
+  | 'WITNESSED'
+  | 'CROSS_CASE_LINK';
 
 export interface Relationship {
   id: string;
@@ -87,10 +95,77 @@ export interface Relationship {
   locationName?: string; // For VISITED
   flaggedAnomaly?: boolean;
   isCrossCommunity?: boolean;
+  isCrossCase?: boolean;
+  crossCaseCaseId?: string;
   sourceCommunity?: string;
   targetCommunity?: string;
   sourceType: string;
+  provenance?: {
+    sourceRecordId: string;
+    sourceType: string;
+    caseId: string;
+    timestamp: string;
+    confidence: number;
+  };
   notes?: string;
+}
+
+// Event entity specific fields
+export interface EventEntity {
+  id: string;
+  label: string;
+  type: 'EVENT';
+  eventType: 'INCIDENT' | 'MEETING' | 'SURVEILLANCE' | 'TRANSACTION' | 'ARREST' | 'SEARCH_SEIZURE' | 'INTELLIGENCE' | 'OTHER';
+  date: string;
+  time?: string;
+  location?: string;
+  description: string;
+  involvedEntities: string[];
+  caseId: string;
+  severity?: 'HIGH' | 'MEDIUM' | 'LOW';
+  status?: 'CONFIRMED' | 'UNVERIFIED' | 'UNDER_REVIEW';
+  sourceRecord?: string;
+}
+
+// Social Intelligence record
+export interface SocialIntelRecord {
+  id: string;
+  caseId: string;
+  platform: string;
+  accountRef: string;
+  subject: string;
+  subjectEntityId?: string;
+  date: string;
+  time: string;
+  location?: string;
+  relatedEntities: string[];
+  content: string;
+  sourceReference: string;
+  confidence: 'HIGH' | 'MEDIUM' | 'LOW';
+  status: 'UNVERIFIED' | 'REQUIRES_REVIEW' | 'CONFIRMED_LEAD' | 'DISMISSED';
+  registeredBy: string;
+  registeredDate: string;
+  attachments?: string[];
+  tags?: string[];
+}
+
+// Criminal History record
+export interface CriminalHistoryRecord {
+  id: string;
+  personEntityId: string;
+  personName: string;
+  previousCaseId: string;
+  firReference: string;
+  offenceCategory: string;
+  offenceDate: string;
+  policeStation: string;
+  caseStatus: string;
+  disposition: string;
+  sourceReference: string;
+  notes?: string;
+  linkedCurrentCaseId: string;
+  registeredBy: string;
+  registeredDate: string;
 }
 
 export type CaseStatus = 'ACTIVE' | 'UNDER_REVIEW' | 'CRITICAL_LEAD' | 'CLOSED' | 'ARCHIVED';

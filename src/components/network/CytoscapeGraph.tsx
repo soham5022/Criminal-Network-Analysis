@@ -185,6 +185,16 @@ export const CytoscapeGraph: React.FC<CytoscapeGraphProps> = ({
             'height': 36
           }
         },
+        {
+          selector: 'node[type = "EVENT"]',
+          style: {
+            'background-color': '#C24141', // Alert Crimson / Staging Event
+            'border-color': '#991B1B',
+            'shape': 'star',
+            'width': 38,
+            'height': 38
+          }
+        },
 
         // Cross-case shared identifier indicator
         {
@@ -811,7 +821,8 @@ export const CytoscapeGraph: React.FC<CytoscapeGraphProps> = ({
                 { type: 'ACCOUNT' as EntityType, label: 'Accounts (Financial Ledgers)' },
                 { type: 'LOCATION' as EntityType, label: 'Locations (Physical Coordinates)' },
                 { type: 'ORGANIZATION' as EntityType, label: 'Organizations (Corporate Entities)' },
-                { type: 'VEHICLE' as EntityType, label: 'Vehicles (Transit Assets)' }
+                { type: 'VEHICLE' as EntityType, label: 'Vehicles (Transit Assets)' },
+                { type: 'EVENT' as EntityType, label: 'Events (Incidents & Meetings)' }
               ].map(({ type, label }) => {
                 const checked = tempFilters.includes(type);
                 return (

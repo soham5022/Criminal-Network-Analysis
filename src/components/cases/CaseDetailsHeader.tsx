@@ -13,7 +13,9 @@ import {
   ShieldCheck,
   User,
   UserCheck,
-  ClipboardList
+  ClipboardList,
+  Globe,
+  BookOpen
 } from 'lucide-react';
 import { Case } from '../../types';
 import { useInvestigation, CaseWorkspaceTab } from '../../context/InvestigationContext';
@@ -28,16 +30,18 @@ export const CaseDetailsHeader: React.FC<CaseDetailsHeaderProps> = ({ caseData }
   const { canIngest } = useAuth();
 
   const tabs: { id: CaseWorkspaceTab; label: string; icon: React.ElementType }[] = [
-    { id: 'overview', label: '1. Overview & Incident', icon: LayoutDashboard },
-    { id: 'witnesses', label: '2. Witnesses & Statements', icon: UserCheck },
-    { id: 'actions', label: '3. Actions & Observations', icon: ClipboardList },
-    { id: 'network', label: '4. Network Graph', icon: Network },
-    { id: 'entities', label: '5. Entities Directory', icon: Users },
-    { id: 'timeline', label: '6. Unified Timeline', icon: Clock },
-    { id: 'alerts', label: '7. Investigation Alerts', icon: AlertTriangle },
-    { id: 'evidence', label: '8. Evidence Registry', icon: FileSpreadsheet },
-    { id: 'notes', label: '9. Notes', icon: StickyNote },
-    { id: 'reports', label: '10. Reports', icon: FileText }
+    { id: 'overview', label: 'Overview', icon: LayoutDashboard },
+    { id: 'witnesses', label: 'Witnesses', icon: UserCheck },
+    { id: 'actions', label: 'Actions', icon: ClipboardList },
+    { id: 'social-intel', label: 'Social Intel', icon: Globe },
+    { id: 'criminal-history', label: 'Criminal History', icon: BookOpen },
+    { id: 'network', label: 'Network', icon: Network },
+    { id: 'entities', label: 'Entities', icon: Users },
+    { id: 'timeline', label: 'Timeline', icon: Clock },
+    { id: 'alerts', label: 'Alerts', icon: AlertTriangle },
+    { id: 'evidence', label: 'Evidence', icon: FileSpreadsheet },
+    { id: 'notes', label: 'Notes', icon: StickyNote },
+    { id: 'reports', label: 'Reports', icon: FileText }
   ];
 
   return (

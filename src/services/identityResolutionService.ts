@@ -1,61 +1,19 @@
-export type IdentitySourceType = 
-  | 'KYC_REGISTRY'
-  | 'TELECOM_CDR'
-  | 'BANKING_CORE'
-  | 'VEHICLE_ANPR'
-  | 'INCIDENT_FIR'
-  | 'ROC_CORPORATE'
-  | 'CASE_DOSSIER';
+import { auditService } from './auditService';
 
-export interface SourceRecordAttribute {
-  id: string;
-  sourceType: IdentitySourceType;
-  sourceName: string;
+export interface IdentityConflictSource {
   recordId: string;
-  attributeType: 'NAME' | 'ALIAS' | 'PHONE' | 'ACCOUNT' | 'VEHICLE' | 'ADDRESS' | 'DOB' | 'NATIONALITY' | 'ORGANIZATION';
-  attributeLabel: string;
-  attributeValue: string;
-  maskedValue: string;
-  firstSeen: string;
-  lastSeen: string;
-  verificationStatus: 'VERIFIED_SOURCE' | 'REPORTED_ALIAS' | 'UNVERIFIED_SOURCE' | 'CONFLICTING_SOURCE';
-  confidenceScore: number;
-}
-
-export interface IdentityAliasRecord {
-  id: string;
-  aliasName: string;
-  aliasType: 'PRIMARY_LEGAL_NAME' | 'REPORTED_ALIAS' | 'SOURCE_RECORD_ALIAS' | 'UNVERIFIED_IDENTITY';
   sourceName: string;
-  sourceRecordId: string;
-  firstSeen: string;
-  lastSeen: string;
-  verificationStatus: string;
-  notes: string;
+  value: string;
+  timestamp: string;
 }
 
 export interface IdentityConflict {
   id: string;
-  entityId: string;
   title: string;
-  conflictType: 'NAME_SPELLING_VARIANCE' | 'DOB_MISMATCH' | 'ADDRESS_INCONSISTENCY' | 'IDENTIFIER_REUSE';
-  sourceA: {
-    sourceName: string;
-    recordId: string;
-    value: string;
-    timestamp: string;
-  };
-  sourceB: {
-    sourceName: string;
-    recordId: string;
-    value: string;
-    timestamp: string;
-  };
   inconsistencyExplanation: string;
-  status: 'REQUIRES_INVESTIGATOR_REVIEW' | 'RESOLVED_SAME_ENTITY' | 'RESOLVED_KEEP_SEPARATE';
-  resolvedBy?: string;
-  resolvedAt?: string;
-  resolutionNotes?: string;
+  status: 'REQUIRES_INVESTIGATOR_REVIEW' | 'RESOLVED' | 'DISMISSED';
+  sourceA: IdentityConflictSource;
+  sourceB: IdentityConflictSource;
 }
 
 export interface PotentialDuplicateEntity {
@@ -63,389 +21,313 @@ export interface PotentialDuplicateEntity {
   primaryEntityId: string;
   candidateEntityId: string;
   candidateName: string;
-  matchScore: number; // 0 - 100
-  matchTier: 'MATCHED' | 'POSSIBLE_MATCH' | 'UNRESOLVED';
+  matchScore: number;
+  matchTier: 'HIGH' | 'MEDIUM' | 'LOW';
+  status: 'PENDING_REVIEW' | 'MERGED' | 'SEPARATED';
   whyMatchedReasons: string[];
   overlappingAttributes: {
     phones: string[];
-    accounts: string[];
-    addresses: string[];
     organizations: string[];
+    addresses: string[];
   };
-  sourceRecords: string[];
-  status: 'PENDING_REVIEW' | 'CONFIRMED_MERGE' | 'CONFIRMED_SEPARATE';
-  resolvedBy?: string;
-  resolvedAt?: string;
-  resolutionNotes?: string;
 }
 
-export interface IdentityEvolutionStep {
+export interface ConnectedSourceRecord {
   id: string;
-  year: string;
-  date: string;
-  eventType: 'KYC_REGISTRATION' | 'TELECOM_ACTIVATION' | 'BANK_OPENING' | 'VEHICLE_REGISTRATION' | 'INCIDENT_RECORDED' | 'CORPORATE_FILING';
-  summary: string;
-  details: string;
   sourceName: string;
   recordId: string;
+  lastSeen: string;
+  attributeLabel: string;
+  attributeValue: string;
 }
 
 export interface UnifiedIdentityDossier {
   entityId: string;
+  caseId: string;
   primaryLegalName: string;
-  resolutionScore: number; // 0 - 100
-  resolutionStatus: 'UNIFIED_CONFIRMED' | 'PARTIALLY_RESOLVED' | 'CONFLICTS_PENDING';
-  sourceRecords: SourceRecordAttribute[];
-  aliases: IdentityAliasRecord[];
+  resolutionScore: number;
+  aliases: string[];
+  sourceRecords: ConnectedSourceRecord[];
   conflicts: IdentityConflict[];
   potentialDuplicates: PotentialDuplicateEntity[];
-  evolutionTimeline: IdentityEvolutionStep[];
 }
 
-const STORAGE_KEY_CONFLICTS = 'tracenet_identity_conflicts_v1';
-const STORAGE_KEY_DUPLICATES = 'tracenet_identity_duplicates_v1';
+export interface IdentityMatchCandidate {
+  id: string;
+  sourceEntityId: string;
+  sourceEntityLabel: string;
+  sourceEntityType: string;
+  sourceCaseId: string;
+  sourceLocation: string;
+  sourceDetails: string;
 
-export const identityResolutionService = {
-  getIdentityResolutionData(entityId: string, caseId: string = 'CASE-1024'): UnifiedIdentityDossier {
-    const suffix = (entityId.replace(/\D/g, '') || '4821').padStart(4, '0').slice(-4);
+  targetEntityId: string;
+  targetEntityLabel: string;
+  targetEntityType: string;
+  targetCaseId: string;
+  targetLocation: string;
+  targetDetails: string;
+
+  confidenceScore: number; // e.g. 87
+  matchingIndicators: {
+    indicator: string;
+    details: string;
+  }[];
+  conflicts: string[];
+  status: 'PENDING_REVIEW' | 'CONFIRMED_MERGED' | 'KEPT_SEPARATE';
+  reviewedBy?: string;
+  reviewedAt?: string;
+  notes?: string;
+}
+
+const STORAGE_KEY = 'tracenet_identity_resolution_v1';
+
+const INITIAL_MATCHES: IdentityMatchCandidate[] = [
+  {
+    id: 'ID-RES-2026-001',
+    sourceEntityId: 'Person_044',
+    sourceEntityLabel: 'Rahul Sharma',
+    sourceEntityType: 'PERSON',
+    sourceCaseId: 'CASE-1024',
+    sourceLocation: 'Sector 4 Industrial Estate, Thane West, Maharashtra',
+    sourceDetails: 'Primary Logistics Bridge Coordinator, Linked to Burner Phone (+91 98201 48291)',
+
+    targetEntityId: 'Person_092',
+    targetEntityLabel: 'R. S. Sharma',
+    targetEntityType: 'PERSON',
+    targetCaseId: 'CASE-1057',
+    targetLocation: 'Ring Road Diamond Bourse, Surat, Gujarat',
+    targetDetails: 'Consignment Clearing Agent, Listed with Vehicle MH-04-XX-2847',
+
+    confidenceScore: 87,
+    matchingIndicators: [
+      { indicator: 'Name similarity', details: 'Phonetic & alias token match ("Rahul Sharma" ↔ "R. S. Sharma")' },
+      { indicator: 'Shared phone reference', details: 'IMEI ping overlap with Burner Phone (+91 98201 48291)' },
+      { indicator: 'Shared vehicle reference', details: 'Both records log Maruti Swift MH-04-XX-2847' },
+      { indicator: 'Shared account reference', details: 'Both entities authorized transfers into Axis Bank ending 4821' }
+    ],
+    conflicts: [
+      'Address differs across source records (Thane West vs Surat Bourse)',
+      'Registered father name in FIR has single initial discrepancy (S. Sharma vs Satish Sharma)'
+    ],
+    status: 'PENDING_REVIEW'
+  },
+  {
+    id: 'ID-RES-2026-002',
+    sourceEntityId: 'Phone_021',
+    sourceEntityLabel: '+91 XXXXX 28471',
+    sourceEntityType: 'PHONE',
+    sourceCaseId: 'CASE-1024',
+    sourceLocation: 'Central Delhi Tower Sector 4',
+    sourceDetails: 'Burner SIM subscribed under Ramesh Enterprises',
+
+    targetEntityId: 'Phone_088',
+    targetEntityLabel: '+91 XXXXX 91042',
+    targetEntityType: 'PHONE',
+    targetCaseId: 'CASE-1031',
+    targetLocation: 'Mumbai Airport Gateway',
+    targetDetails: 'Hardware cloned terminal matching IMEI 864201048291042',
+
+    confidenceScore: 92,
+    matchingIndicators: [
+      { indicator: 'Hardware IMEI match', details: 'Identical transceiver chip 864201048291042 used across both IMSIs' },
+      { indicator: 'Sequential activation time', details: 'Device 088 activated 14 minutes after Device 021 was deactivated' }
+    ],
+    conflicts: [
+      'Subscriber identities registered under two distinct Aadhaar numbers (likely forged credentials)'
+    ],
+    status: 'PENDING_REVIEW'
+  }
+];
+
+class IdentityResolutionService {
+  private getStorage(): IdentityMatchCandidate[] {
+    try {
+      if (typeof localStorage !== 'undefined') {
+        const data = localStorage.getItem(STORAGE_KEY);
+        if (data) return JSON.parse(data);
+      }
+    } catch {}
+    return INITIAL_MATCHES;
+  }
+
+  private setStorage(items: IdentityMatchCandidate[]) {
+    try {
+      if (typeof localStorage !== 'undefined') {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(items));
+      }
+    } catch {}
+  }
+
+  public getCandidates(): IdentityMatchCandidate[] {
+    return this.getStorage();
+  }
+
+  public getPendingCount(): number {
+    return this.getStorage().filter(m => m.status === 'PENDING_REVIEW').length;
+  }
+
+  public confirmMatch(matchId: string, officerName: string = 'Inspector Rajesh Verma', notes?: string): IdentityMatchCandidate | null {
+    const list = this.getStorage();
+    const target = list.find(m => m.id === matchId);
+    if (!target) return null;
+
+    target.status = 'CONFIRMED_MERGED';
+    target.reviewedBy = officerName;
+    target.reviewedAt = new Date().toLocaleString('en-GB');
+    target.notes = notes || 'Investigator verified biometric, IMEI, and ledger commonalities. Entity confirmed as identical individual.';
+
+    this.setStorage(list);
+
+    // Audit trail
+    auditService.logAction({
+      action: 'IDENTITY_MERGED',
+      actionLabel: 'Confirmed Identity Resolution Match',
+      module: 'Entities',
+      caseId: target.sourceCaseId,
+      recordId: target.id,
+      recordType: 'ENTITY_MATCH',
+      recordLabel: `${target.sourceEntityLabel} ↔ ${target.targetEntityLabel}`,
+      status: 'SUCCESS',
+      details: `Investigator confirmed ${target.confidenceScore}% identity match between ${target.sourceEntityId} (${target.sourceEntityLabel}) and ${target.targetEntityId} (${target.targetEntityLabel}). Knowledge graph cross-reference verified.`
+    });
+
+    return target;
+  }
+
+  public keepSeparate(matchId: string, officerName: string = 'Inspector Rajesh Verma', reason?: string): IdentityMatchCandidate | null {
+    const list = this.getStorage();
+    const target = list.find(m => m.id === matchId);
+    if (!target) return null;
+
+    target.status = 'KEPT_SEPARATE';
+    target.reviewedBy = officerName;
+    target.reviewedAt = new Date().toLocaleString('en-GB');
+    target.notes = reason || 'Investigator reviewed physical evidence and confirmed separate persons despite shared contact references.';
+
+    this.setStorage(list);
+
+    // Audit trail
+    auditService.logAction({
+      action: 'IDENTITY_SEPARATED',
+      actionLabel: 'Rejected Identity Merge (Kept Separate)',
+      module: 'Entities',
+      caseId: target.sourceCaseId,
+      recordId: target.id,
+      recordType: 'ENTITY_MATCH',
+      recordLabel: `${target.sourceEntityLabel} ↮ ${target.targetEntityLabel}`,
+      status: 'SUCCESS',
+      details: `Investigator kept ${target.sourceEntityId} and ${target.targetEntityId} separate. Reason: ${target.notes}`
+    });
+
+    return target;
+  }
+
+  public getIdentityResolutionData(entityId: string, caseId: string): UnifiedIdentityDossier {
+    const candidate = this.getStorage().find(m => m.sourceEntityId === entityId || m.targetEntityId === entityId);
     
-    // 1. Cross-Source Attributes
-    const sourceRecords: SourceRecordAttribute[] = [
-      {
-        id: `REC_${suffix}_01`,
-        sourceType: 'KYC_REGISTRY',
-        sourceName: 'Synthetic Identity / KYC Registry',
-        recordId: `KYC-UIDAI-${suffix}`,
-        attributeType: 'NAME',
-        attributeLabel: 'Legal Full Name',
-        attributeValue: entityId === 'Person_044' ? 'Rahul Sharma' : `${entityId} Registered Name`,
-        maskedValue: entityId === 'Person_044' ? 'Rahul Sharma' : `${entityId} Registered Name`,
-        firstSeen: '2023-04-12',
-        lastSeen: '2026-06-10',
-        verificationStatus: 'VERIFIED_SOURCE',
-        confidenceScore: 0.98
-      },
-      {
-        id: `REC_${suffix}_02`,
-        sourceType: 'KYC_REGISTRY',
-        sourceName: 'Synthetic Identity / KYC Registry',
-        recordId: `KYC-UIDAI-${suffix}`,
-        attributeType: 'DOB',
-        attributeLabel: 'Date of Birth',
-        attributeValue: '1984-07-14',
-        maskedValue: '14 Jul 1984',
-        firstSeen: '2023-04-12',
-        lastSeen: '2026-06-10',
-        verificationStatus: 'VERIFIED_SOURCE',
-        confidenceScore: 0.98
-      },
-      {
-        id: `REC_${suffix}_03`,
-        sourceType: 'TELECOM_CDR',
-        sourceName: 'Synthetic Telecom Records',
-        recordId: `CDR_LOG_${suffix}`,
-        attributeType: 'PHONE',
-        attributeLabel: 'Primary MSISDN',
-        attributeValue: '+91 XXXXX 28471',
-        maskedValue: '+91 XXXXX 28471',
-        firstSeen: '2024-02-18',
-        lastSeen: 'Today, 14:15 UTC',
-        verificationStatus: 'VERIFIED_SOURCE',
-        confidenceScore: 0.96
-      },
-      {
-        id: `REC_${suffix}_04`,
-        sourceType: 'BANKING_CORE',
-        sourceName: 'Synthetic Banking Records',
-        recordId: `BANK_ACCT_${suffix}`,
-        attributeType: 'ACCOUNT',
-        attributeLabel: 'Commercial Ledger Account',
-        attributeValue: 'XXXX XXXX 4821',
-        maskedValue: 'XXXX XXXX 4821',
-        firstSeen: '2025-01-10',
-        lastSeen: 'Today, 14:32 UTC',
-        verificationStatus: 'VERIFIED_SOURCE',
-        confidenceScore: 0.95
-      },
-      {
-        id: `REC_${suffix}_05`,
-        sourceType: 'VEHICLE_ANPR',
-        sourceName: 'Synthetic Vehicle / ANPR Records',
-        recordId: `ANPR_TOLL_${suffix}`,
-        attributeType: 'VEHICLE',
-        attributeLabel: 'Registered Transport Asset',
-        attributeValue: 'MH-04-XX-2847',
-        maskedValue: 'MH-04-XX-2847',
-        firstSeen: '2025-08-04',
-        lastSeen: 'Today, 07:10 UTC',
-        verificationStatus: 'VERIFIED_SOURCE',
-        confidenceScore: 0.92
-      },
-      {
-        id: `REC_${suffix}_06`,
-        sourceType: 'INCIDENT_FIR',
-        sourceName: 'Synthetic Incident / FIR Records',
-        recordId: 'FIR_POLICE_019',
-        attributeType: 'ALIAS',
-        attributeLabel: 'Reported Field Alias',
-        attributeValue: 'Ravi (R. Sharma)',
-        maskedValue: 'Ravi (R. Sharma)',
-        firstSeen: '2026-05-18',
-        lastSeen: '2026-07-22',
-        verificationStatus: 'REPORTED_ALIAS',
-        confidenceScore: 0.88
-      },
-      {
-        id: `REC_${suffix}_07`,
-        sourceType: 'ROC_CORPORATE',
-        sourceName: 'Synthetic Corporate Registry (ROC)',
-        recordId: 'ROC_CORP_0019',
-        attributeType: 'ORGANIZATION',
-        attributeLabel: 'Director / Signatory Affiliation',
-        attributeValue: 'Meridian Logistics Pvt. Ltd.',
-        maskedValue: 'Meridian Logistics Pvt. Ltd.',
-        firstSeen: '2024-11-05',
-        lastSeen: '2026-08-01',
-        verificationStatus: 'VERIFIED_SOURCE',
-        confidenceScore: 0.94
-      }
-    ];
-
-    // 2. Identity Aliases Matrix
-    const aliases: IdentityAliasRecord[] = [
-      {
-        id: `AL_${suffix}_01`,
-        aliasName: entityId === 'Person_044' ? 'Rahul Sharma' : `${entityId} Registered Name`,
-        aliasType: 'PRIMARY_LEGAL_NAME',
-        sourceName: 'Synthetic Identity Registry',
-        sourceRecordId: `KYC-UIDAI-${suffix}`,
-        firstSeen: '2023-04-12',
-        lastSeen: '2026-06-10',
-        verificationStatus: 'Verified in Source Dataset',
-        notes: 'Primary legal identity matching KYC documents.'
-      },
-      {
-        id: `AL_${suffix}_02`,
-        aliasName: 'R. Sharma',
-        aliasType: 'REPORTED_ALIAS',
-        sourceName: 'Synthetic Incident / FIR Records',
-        sourceRecordId: 'FIR_POLICE_019',
-        firstSeen: '2026-05-18',
-        lastSeen: '2026-07-22',
-        verificationStatus: 'Reported in Incident FIR',
-        notes: 'Informant statement citation; consistent with primary identity.'
-      },
-      {
-        id: `AL_${suffix}_03`,
-        aliasName: 'Ravi (Logistics Operator)',
-        aliasType: 'SOURCE_RECORD_ALIAS',
-        sourceName: 'Synthetic Telecom Records',
-        sourceRecordId: `CDR_LOG_${suffix}`,
-        firstSeen: '2026-06-01',
-        lastSeen: '2026-08-25',
-        verificationStatus: 'Source-Record Telecom Tag',
-        notes: 'Internal telecommunication network node label.'
-      }
-    ];
-
-    // 3. Identity Conflicts
-    let rawConflicts: IdentityConflict[] = [
-      {
-        id: `CONF_${suffix}_01`,
-        entityId,
-        title: 'Spelling Variance across Cross-Source Records',
-        conflictType: 'NAME_SPELLING_VARIANCE',
-        sourceA: {
-          sourceName: 'Synthetic Identity Registry',
-          recordId: `KYC-UIDAI-${suffix}`,
-          value: 'Rahul Sharma',
-          timestamp: '2023-04-12'
-        },
-        sourceB: {
-          sourceName: 'Synthetic Incident / FIR Records',
-          recordId: 'FIR_POLICE_042',
-          value: 'Rahul S. Sharma',
-          timestamp: '2026-06-14'
-        },
-        inconsistencyExplanation: 'Name variance detected between formal KYC registry and field incident complaint filing.',
-        status: 'REQUIRES_INVESTIGATOR_REVIEW'
-      }
-    ];
-
-    // Load overrides from local storage
-    try {
-      const storedConflicts = localStorage.getItem(STORAGE_KEY_CONFLICTS);
-      if (storedConflicts) {
-        const parsed = JSON.parse(storedConflicts);
-        rawConflicts = rawConflicts.map(c => {
-          const found = parsed.find((p: any) => p.id === c.id);
-          return found ? { ...c, ...found } : c;
-        });
-      }
-    } catch {}
-
-    // 4. Potential Duplicate Entities
-    let rawDuplicates: PotentialDuplicateEntity[] = [
-      {
-        id: `DUP_${suffix}_01`,
-        primaryEntityId: entityId,
-        candidateEntityId: 'Person_117',
-        candidateName: 'Rahul S. (Logistics Agent)',
-        matchScore: 84,
-        matchTier: 'POSSIBLE_MATCH',
-        whyMatchedReasons: [
-          'Shared telecommunication cell tower handover location near Vashi Safehouse.',
-          'Common corporate affiliation with Meridian Logistics Pvt. Ltd.',
-          'Temporal co-location observed on 12 Aug 2026.'
-        ],
-        overlappingAttributes: {
-          phones: ['+91 XXXXX 28471'],
-          accounts: ['XXXX XXXX 4821'],
-          addresses: ['Thane West Logistics Hub'],
-          organizations: ['Meridian Logistics Pvt. Ltd.']
-        },
-        sourceRecords: ['CDR_00441', 'ROC_CORP_0019', 'ANPR_00881'],
-        status: 'PENDING_REVIEW'
-      }
-    ];
-
-    try {
-      const storedDuplicates = localStorage.getItem(STORAGE_KEY_DUPLICATES);
-      if (storedDuplicates) {
-        const parsed = JSON.parse(storedDuplicates);
-        rawDuplicates = rawDuplicates.map(d => {
-          const found = parsed.find((p: any) => p.id === d.id);
-          return found ? { ...d, ...found } : d;
-        });
-      }
-    } catch {}
-
-    // 5. Identity Evolution Timeline
-    const evolutionTimeline: IdentityEvolutionStep[] = [
-      {
-        id: 'EVO_01',
-        year: '2023',
-        date: '12 Apr 2023',
-        eventType: 'KYC_REGISTRATION',
-        summary: 'Primary Identity KYC Registered',
-        details: 'Initial digital identity and demographic verification recorded.',
-        sourceName: 'Synthetic Identity Registry',
-        recordId: `KYC-UIDAI-${suffix}`
-      },
-      {
-        id: 'EVO_02',
-        year: '2024',
-        date: '18 Feb 2024',
-        eventType: 'TELECOM_ACTIVATION',
-        summary: 'Primary Telecom MSISDN Handshake',
-        details: 'Cellular line +91 XXXXX 28471 activated with VoLTE carrier.',
-        sourceName: 'Synthetic Telecom Records',
-        recordId: `CDR_LOG_${suffix}`
-      },
-      {
-        id: 'EVO_03',
-        year: '2024',
-        date: '05 Nov 2024',
-        eventType: 'CORPORATE_FILING',
-        summary: 'Corporate Director Registry Filing',
-        details: 'Listed as operational signatory for Meridian Logistics Pvt. Ltd.',
-        sourceName: 'Synthetic Corporate Registry (ROC)',
-        recordId: 'ROC_CORP_0019'
-      },
-      {
-        id: 'EVO_04',
-        year: '2025',
-        date: '10 Jan 2025',
-        eventType: 'BANK_OPENING',
-        summary: 'Commercial Bank Ledger Opened',
-        details: 'Account ending 4821 initialized for trade settlements.',
-        sourceName: 'Synthetic Banking Records',
-        recordId: `BANK_ACCT_${suffix}`
-      },
-      {
-        id: 'EVO_05',
-        year: '2026',
-        date: '18 May 2026',
-        eventType: 'INCIDENT_RECORDED',
-        summary: 'Alias Logged in Cross-Border Incident Report',
-        details: 'Alias "R. Sharma" noted in cross-agency intelligence report.',
-        sourceName: 'Synthetic Incident / FIR Records',
-        recordId: 'FIR_POLICE_019'
-      }
-    ];
-
-    const hasPendingConflicts = rawConflicts.some(c => c.status === 'REQUIRES_INVESTIGATOR_REVIEW');
-    const resolutionStatus = hasPendingConflicts ? 'CONFLICTS_PENDING' : 'UNIFIED_CONFIRMED';
-    const resolutionScore = hasPendingConflicts ? 78 : 94;
-
     return {
       entityId,
-      primaryLegalName: entityId === 'Person_044' ? 'Rahul Sharma' : `${entityId} Registered Name`,
-      resolutionScore,
-      resolutionStatus,
-      sourceRecords,
-      aliases,
-      conflicts: rawConflicts,
-      potentialDuplicates: rawDuplicates,
-      evolutionTimeline
+      caseId,
+      primaryLegalName: candidate ? (candidate.sourceEntityId === entityId ? candidate.sourceEntityLabel : candidate.targetEntityLabel) : (entityId === 'Person_044' ? 'Rahul Sharma' : 'Identified Subject'),
+      resolutionScore: candidate ? candidate.confidenceScore : 85,
+      aliases: ['R. Sharma', 'Sharmaji (Logistics)', 'RS-44'],
+      sourceRecords: [
+        {
+          id: 'SRC-1',
+          sourceName: 'Telecom CDR Registry',
+          recordId: 'CDR-2026-08-991',
+          lastSeen: '24 Aug 2026',
+          attributeLabel: 'Registered Mobile',
+          attributeValue: '+91 98201 48291'
+        },
+        {
+          id: 'SRC-2',
+          sourceName: 'Core Banking Financial Ledger',
+          recordId: 'FIN-TX-48210',
+          lastSeen: '21 Aug 2026',
+          attributeLabel: 'Primary Beneficiary Account',
+          attributeValue: 'Axis Bank A/C ...4821'
+        },
+        {
+          id: 'SRC-3',
+          sourceName: 'Automated Number Plate Recognition (ANPR)',
+          recordId: 'ANPR-MH04-88',
+          lastSeen: '18 Aug 2026',
+          attributeLabel: 'Registered Vehicle',
+          attributeValue: 'MH-04-XX-2847'
+        },
+        {
+          id: 'SRC-4',
+          sourceName: 'National FIR & Crime Repository',
+          recordId: 'FIR-2024-819',
+          lastSeen: '12 May 2024',
+          attributeLabel: 'Prior Case Record',
+          attributeValue: 'EOW Charge Sheet 1031'
+        }
+      ],
+      conflicts: [
+        {
+          id: 'CONF-01',
+          title: 'Address Verification Discrepancy Across Jurisdictions',
+          inconsistencyExplanation: 'Telecom subscriber KYC specifies Thane West Industrial Area whereas Banking KYC lists Surat Diamond Bourse commercial office.',
+          status: 'REQUIRES_INVESTIGATOR_REVIEW',
+          sourceA: {
+            recordId: 'KYC-TEL-991',
+            sourceName: 'Telecom Subscriber Database',
+            value: 'Sector 4 Industrial Estate, Thane West, MH',
+            timestamp: '2026-01-14'
+          },
+          sourceB: {
+            recordId: 'KYC-BNK-482',
+            sourceName: 'Axis Bank Core Account Profile',
+            value: 'Shop 14, Ring Road Diamond Bourse, Surat, GJ',
+            timestamp: '2025-11-20'
+          }
+        }
+      ],
+      potentialDuplicates: [
+        {
+          id: 'DUP-01',
+          primaryEntityId: entityId,
+          candidateEntityId: candidate ? (candidate.sourceEntityId === entityId ? candidate.targetEntityId : candidate.sourceEntityId) : 'Person_092',
+          candidateName: candidate ? (candidate.sourceEntityId === entityId ? candidate.targetEntityLabel : candidate.sourceEntityLabel) : 'R. S. Sharma',
+          matchScore: candidate ? candidate.confidenceScore : 87,
+          matchTier: 'HIGH',
+          status: 'PENDING_REVIEW',
+          whyMatchedReasons: [
+            'Phonetic and abbreviation similarity (Rahul Sharma ↔ R. S. Sharma)',
+            'Identical IMEI telemetry handset ping within 20 minutes',
+            'Registered co-ownership on seized transport vehicle MH-04-XX-2847'
+          ],
+          overlappingAttributes: {
+            phones: ['+91 98201 48291'],
+            organizations: ['Apex Logistics Hub', 'Meridian Enterprises'],
+            addresses: ['Sector 4 Industrial Estate, Thane West']
+          }
+        }
+      ]
     };
-  },
+  }
 
-  resolveConflict(
-    conflictId: string, 
-    decision: 'SAME_ENTITY' | 'KEEP_SEPARATE', 
-    notes: string = '', 
-    investigatorName: string = 'Inspector Rajesh Verma'
-  ): void {
-    try {
-      const stored = localStorage.getItem(STORAGE_KEY_CONFLICTS);
-      const list = stored ? JSON.parse(stored) : [];
-      const updatedItem = {
-        id: conflictId,
-        status: decision === 'SAME_ENTITY' ? 'RESOLVED_SAME_ENTITY' : 'RESOLVED_KEEP_SEPARATE',
-        resolvedBy: investigatorName,
-        resolvedAt: new Date().toISOString(),
-        resolutionNotes: notes || `Investigator marked as ${decision === 'SAME_ENTITY' ? 'Same Unified Entity' : 'Distinct Entities'}.`
-      };
+  public resolveConflict(conflictId: string, decision: 'SAME_ENTITY' | 'KEEP_SEPARATE', notes: string): void {
+    auditService.logAction({
+      action: decision === 'SAME_ENTITY' ? 'IDENTITY_MERGED' : 'IDENTITY_SEPARATED',
+      actionLabel: `Resolved Identity Conflict (${decision})`,
+      module: 'Entities',
+      recordId: conflictId,
+      status: 'SUCCESS',
+      details: `Investigator resolved conflict ${conflictId} with decision: ${decision}. Notes: ${notes}`
+    });
+  }
 
-      const existingIdx = list.findIndex((c: any) => c.id === conflictId);
-      if (existingIdx >= 0) {
-        list[existingIdx] = updatedItem;
-      } else {
-        list.push(updatedItem);
-      }
-      localStorage.setItem(STORAGE_KEY_CONFLICTS, JSON.stringify(list));
-    } catch (err) {
-      console.warn('Failed to persist conflict resolution:', err);
-    }
-  },
-
-  resolveDuplicateCandidate(
-    duplicateId: string, 
-    decision: 'MERGE' | 'SEPARATE', 
-    notes: string = '', 
-    investigatorName: string = 'Inspector Rajesh Verma'
-  ): void {
-    try {
-      const stored = localStorage.getItem(STORAGE_KEY_DUPLICATES);
-      const list = stored ? JSON.parse(stored) : [];
-      const updatedItem = {
-        id: duplicateId,
-        status: decision === 'MERGE' ? 'CONFIRMED_MERGE' : 'CONFIRMED_SEPARATE',
-        resolvedBy: investigatorName,
-        resolvedAt: new Date().toISOString(),
-        resolutionNotes: notes || `Investigator decision: ${decision === 'MERGE' ? 'Merged into Unified Entity' : 'Maintained as Separate Distinct Entities'}.`
-      };
-
-      const existingIdx = list.findIndex((d: any) => d.id === duplicateId);
-      if (existingIdx >= 0) {
-        list[existingIdx] = updatedItem;
-      } else {
-        list.push(updatedItem);
-      }
-      localStorage.setItem(STORAGE_KEY_DUPLICATES, JSON.stringify(list));
-    } catch (err) {
-      console.warn('Failed to persist duplicate candidate decision:', err);
+  public resolveDuplicateCandidate(duplicateId: string, decision: 'MERGE' | 'SEPARATE', notes: string): void {
+    if (decision === 'MERGE') {
+      this.confirmMatch(duplicateId, 'Inspector Rajesh Verma', notes);
+    } else {
+      this.keepSeparate(duplicateId, 'Inspector Rajesh Verma', notes);
     }
   }
-};
+}
+
+export const identityResolutionService = new IdentityResolutionService();

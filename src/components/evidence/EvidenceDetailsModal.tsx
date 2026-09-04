@@ -202,10 +202,19 @@ export const EvidenceDetailsModal: React.FC<EvidenceDetailsModalProps> = ({
             {/* Section B: Digital Soft Copy & Viewer */}
             <div className="p-4 border border-[#E2E8F0] rounded-lg bg-[#FFFFFF] shadow-sm space-y-3">
               <div className="flex items-center justify-between">
-                <span className="text-[10px] font-bold uppercase tracking-wider text-[#64748B] flex items-center gap-1.5">
-                  <FileText className="w-3.5 h-3.5 text-[#087E8B]" />
-                  <span>Digital Soft Copy Repository</span>
-                </span>
+                <div className="flex items-center gap-2">
+                  <span className="text-[10px] font-bold uppercase tracking-wider text-[#64748B] flex items-center gap-1.5">
+                    <FileText className="w-3.5 h-3.5 text-[#087E8B]" />
+                    <span>Digital Evidence Artifact & Viewer</span>
+                  </span>
+                  {/* Status distinction badge */}
+                  <span className="px-2 py-0.5 rounded text-[9px] font-bold uppercase tracking-wider bg-[#E6F4F5] text-[#087E8B] border border-[#A7DFE3]">
+                    {currentEvidence.hasDigitalCopy ? 'STORED • PREVIEW AVAILABLE' : 'STORED • AWAITING DIGITIZATION'}
+                  </span>
+                  <span className="px-2 py-0.5 rounded text-[9px] font-bold uppercase tracking-wider bg-[#FEF3C7] text-[#B7791F] border border-[#FCD34D]">
+                    Stored — Analysis pending
+                  </span>
+                </div>
                 
                 {currentEvidence.hasDigitalCopy && currentEvidence.digitalDocument ? (
                   <div className="flex items-center gap-2">
@@ -252,7 +261,62 @@ export const EvidenceDetailsModal: React.FC<EvidenceDetailsModalProps> = ({
                     </div>
                   </div>
 
-                  {/* Document Text Viewer */}
+                  {/* Multimedia Preview Players based on Evidence Type */}
+                  {currentEvidence.evidenceType === 'VIDEO' || currentEvidence.digitalDocument.filename.endsWith('.mp4') ? (
+                    <div className="p-3 rounded-md bg-[#0F172A] border border-[#334155] text-white space-y-2">
+                      <div className="flex items-center justify-between text-[11px] text-[#94A3B8] pb-1 border-b border-[#1E293B]">
+                        <span className="flex items-center gap-1.5 font-mono text-[#38BDF8]">
+                          <span>● REC</span> <span>CAM-04 (Terminal 3 Logistics Gate)</span>
+                        </span>
+                        <span className="font-mono">1080p @ 30fps • H.264</span>
+                      </div>
+                      <div className="relative aspect-video bg-[#020617] rounded flex items-center justify-center border border-[#1E293B] overflow-hidden group">
+                        <div className="text-center space-y-2">
+                          <div className="w-12 h-12 rounded-full bg-white/10 hover:bg-white/20 border border-white/20 flex items-center justify-center mx-auto cursor-pointer transition-colors">
+                            <span className="text-white text-lg font-bold pl-1">▶</span>
+                          </div>
+                          <p className="text-[11px] text-[#94A3B8] font-mono">
+                            Timecode: 2026-08-18 21:10:44 IST | Boom Barrier Entry
+                          </p>
+                        </div>
+                        <div className="absolute bottom-2 left-2 right-2 flex items-center justify-between text-[10px] text-[#94A3B8] bg-black/60 px-2 py-1 rounded font-mono">
+                          <span>00:14 / 04:30</span>
+                          <span>Vehicle MH-04-XX-2847 in frame</span>
+                        </div>
+                      </div>
+                    </div>
+                  ) : currentEvidence.evidenceType === 'CALL_RECORD' && currentEvidence.digitalDocument.filename.endsWith('.mp3') ? (
+                    <div className="p-3.5 rounded-md bg-[#F8FAFC] border border-[#CBD5E1] space-y-2.5">
+                      <div className="flex items-center justify-between text-xs">
+                        <span className="font-bold text-[#12304A] flex items-center gap-1.5">
+                          <span>Surveillance Audio Wiretap</span>
+                        </span>
+                        <span className="font-mono text-[11px] text-[#64748B]">Channel: Ch-1 (Inbound) • 16kHz Mono</span>
+                      </div>
+                      <div className="p-3 rounded bg-[#FFFFFF] border border-[#E2E8F0] flex items-center gap-3">
+                        <button className="w-8 h-8 rounded-full bg-[#087E8B] text-white flex items-center justify-center shrink-0 shadow-sm">
+                          ▶
+                        </button>
+                        <div className="flex-1 space-y-1">
+                          <div className="h-4 bg-[#E2E8F0] rounded flex items-center px-1 gap-0.5 overflow-hidden">
+                            {Array.from({ length: 40 }).map((_, i) => (
+                              <div 
+                                key={i} 
+                                className="w-1 bg-[#087E8B] rounded-full" 
+                                style={{ height: `${Math.max(20, Math.sin(i * 0.4) * 90 + 30)}%` }} 
+                              />
+                            ))}
+                          </div>
+                          <div className="flex justify-between text-[10px] text-[#64748B] font-mono">
+                            <span>00:32</span>
+                            <span>02:45</span>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  ) : null}
+
+                  {/* Document Text / Forensic Dump Viewer */}
                   <div className="p-4 rounded-md bg-[#F8FAFC] border border-[#CBD5E1] font-mono text-xs text-[#17212B] max-h-56 overflow-y-auto leading-relaxed whitespace-pre-wrap select-text">
                     {currentEvidence.digitalDocument.content}
                   </div>
@@ -264,14 +328,14 @@ export const EvidenceDetailsModal: React.FC<EvidenceDetailsModalProps> = ({
                   </div>
                   <h4 className="text-xs font-bold text-[#12304A]">Digital Soft Copy Not Available</h4>
                   <p className="text-[11px] text-[#64748B] max-w-md mx-auto">
-                    This physical evidence record is currently indexed in the registry. Authorized personnel can upload a high-resolution scan to attach the digital copy.
+                    This physical evidence record is currently indexed in the registry. Authorized personnel can upload a high-resolution scan, audio, video, or data package to attach the digital copy.
                   </p>
                   <button
                     onClick={() => setShowUploadModal(true)}
                     className="mt-2 inline-flex items-center gap-1.5 px-4 py-1.5 rounded-md bg-[#087E8B] hover:bg-[#06636E] text-white text-xs font-bold transition-colors shadow-sm"
                   >
                     <UploadCloud className="w-4 h-4" />
-                    <span>Upload Scanned Copy</span>
+                    <span>Upload Digital Evidence</span>
                   </button>
                 </div>
               )}

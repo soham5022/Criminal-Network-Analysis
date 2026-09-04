@@ -112,88 +112,74 @@ export const GraphReferencePopover: React.FC<GraphReferencePopoverProps> = ({
             </svg>
             <span className="font-medium text-[#252A27]">Vehicle</span>
           </div>
+
+          {/* Event */}
+          <div className="flex items-center gap-2 p-1.5 rounded bg-[#F8FAFC] border border-[#E2E8F0] col-span-2">
+            <svg width="14" height="14" viewBox="0 0 14 14" className="shrink-0">
+              <polygon points="7,0 8.8,4.5 13.5,4.5 9.5,7.8 11,12.5 7,9.5 3,12.5 4.5,7.8 0.5,4.5 5.2,4.5" fill="#C24141" stroke="#991B1B" strokeWidth="0.8" />
+            </svg>
+            <span className="font-medium text-[#252A27]">Event (Incident / Staging / Meeting)</span>
+          </div>
         </div>
       </div>
 
-      {/* SECTION 2: RELATIONSHIPS */}
+      {/* SECTION 2: RELATIONSHIP LINE CONVENTIONS */}
       <div className="space-y-2 pt-1 border-t border-[#D9E0DC]">
         <div className="text-[9px] font-mono font-bold uppercase tracking-wider text-[#66736C]">
-          RELATIONSHIPS
+          LINE CONVENTIONS
         </div>
 
         <div className="space-y-1.5 text-[11px]">
-          {/* Called */}
+          {/* Solid line = recorded relationship */}
           <div className="flex items-center justify-between p-1.5 rounded bg-[#F8FAFC] border border-[#E2E8F0]">
             <div className="flex items-center gap-2">
-              <svg width="18" height="6" className="shrink-0">
-                <line x1="0" y1="3" x2="18" y2="3" stroke="#087E8B" strokeWidth="2" strokeDasharray="3 2" />
+              <svg width="24" height="6" className="shrink-0">
+                <line x1="0" y1="3" x2="24" y2="3" stroke="#234E70" strokeWidth="2.5" />
               </svg>
-              <span className="font-semibold text-[#12304A]">Called</span>
+              <span className="font-semibold text-[#12304A]">Solid line</span>
             </div>
-            <span className="text-[10px] text-[#66736C]">Communication relationship</span>
+            <span className="text-[10px] text-[#66736C]">Recorded relationship</span>
           </div>
 
-          {/* Transferred */}
+          {/* Dashed line = inferred/analytical relationship */}
           <div className="flex items-center justify-between p-1.5 rounded bg-[#F8FAFC] border border-[#E2E8F0]">
             <div className="flex items-center gap-2">
-              <svg width="18" height="6" className="shrink-0">
-                <line x1="0" y1="3" x2="18" y2="3" stroke="#B7791F" strokeWidth="2.5" />
+              <svg width="24" height="6" className="shrink-0">
+                <line x1="0" y1="3" x2="24" y2="3" stroke="#087E8B" strokeWidth="2" strokeDasharray="4 3" />
               </svg>
-              <span className="font-semibold text-[#12304A]">Transferred</span>
+              <span className="font-semibold text-[#12304A]">Dashed line</span>
             </div>
-            <span className="text-[10px] text-[#66736C]">Financial transaction</span>
+            <span className="text-[10px] text-[#66736C]">Inferred / analytical lead</span>
           </div>
 
-          {/* Visited */}
+          {/* Highlighted line = selected investigation path */}
           <div className="flex items-center justify-between p-1.5 rounded bg-[#F8FAFC] border border-[#E2E8F0]">
             <div className="flex items-center gap-2">
-              <svg width="18" height="6" className="shrink-0">
-                <line x1="0" y1="3" x2="18" y2="3" stroke="#7E22CE" strokeWidth="2" />
+              <svg width="24" height="6" className="shrink-0">
+                <line x1="0" y1="3" x2="24" y2="3" stroke="#087E8B" strokeWidth="3.5" strokeLinecap="round" />
               </svg>
-              <span className="font-semibold text-[#12304A]">Visited</span>
+              <span className="font-semibold text-[#12304A]">Highlighted line</span>
             </div>
-            <span className="text-[10px] text-[#66736C]">Location interaction</span>
+            <span className="text-[10px] text-[#66736C]">Selected path</span>
           </div>
 
-          {/* Owned */}
+          {/* Alert-highlighted line = relationship involved in alert */}
           <div className="flex items-center justify-between p-1.5 rounded bg-[#F8FAFC] border border-[#E2E8F0]">
             <div className="flex items-center gap-2">
-              <svg width="18" height="6" className="shrink-0">
-                <line x1="0" y1="3" x2="18" y2="3" stroke="#16805C" strokeWidth="2" />
+              <svg width="24" height="6" className="shrink-0">
+                <line x1="0" y1="3" x2="24" y2="3" stroke="#C24141" strokeWidth="3" />
               </svg>
-              <span className="font-semibold text-[#12304A]">Owned</span>
+              <span className="font-semibold text-[#C24141]">Alert line</span>
             </div>
-            <span className="text-[10px] text-[#66736C]">Ownership relationship</span>
-          </div>
-
-          {/* Met */}
-          <div className="flex items-center justify-between p-1.5 rounded bg-[#F8FAFC] border border-[#E2E8F0]">
-            <div className="flex items-center gap-2">
-              <svg width="18" height="6" className="shrink-0">
-                <line x1="0" y1="3" x2="18" y2="3" stroke="#C24141" strokeWidth="2" />
-              </svg>
-              <span className="font-semibold text-[#12304A]">Met</span>
-            </div>
-            <span className="text-[10px] text-[#66736C]">Physical meeting</span>
-          </div>
-
-          {/* Associated */}
-          <div className="flex items-center justify-between p-1.5 rounded bg-[#F8FAFC] border border-[#E2E8F0]">
-            <div className="flex items-center gap-2">
-              <svg width="18" height="6" className="shrink-0">
-                <line x1="0" y1="3" x2="18" y2="3" stroke="#234E70" strokeWidth="2" />
-              </svg>
-              <span className="font-semibold text-[#12304A]">Associated</span>
-            </div>
-            <span className="text-[10px] text-[#66736C]">Recorded association</span>
+            <span className="text-[10px] text-[#66736C]">Involved in alert pattern</span>
           </div>
         </div>
       </div>
 
-      {/* SECTION 3: STATUS */}
+      {/* SECTION 3: STATUS INDICATORS */}
       <div className="space-y-2 pt-1 border-t border-[#D9E0DC]">
         <div className="text-[9px] font-mono font-bold uppercase tracking-wider text-[#66736C]">
-          STATUS
+          NODE STATUS
         </div>
 
         <div className="space-y-1.5 text-[11px]">
@@ -205,7 +191,7 @@ export const GraphReferencePopover: React.FC<GraphReferencePopoverProps> = ({
               </div>
               <span className="font-semibold text-[#12304A]">Selected</span>
             </div>
-            <span className="text-[10px] text-[#66736C]">Currently selected entity</span>
+            <span className="text-[10px] text-[#66736C]">Active inspection node</span>
           </div>
 
           {/* Bridge */}
@@ -214,20 +200,9 @@ export const GraphReferencePopover: React.FC<GraphReferencePopoverProps> = ({
               <div className="w-3.5 h-3.5 rounded-full border-2 border-[#B7791F] bg-[#FEF3C7] flex items-center justify-center">
                 <div className="w-1.5 h-1.5 rounded-full bg-[#B7791F]" />
               </div>
-              <span className="font-semibold text-[#12304A]">Bridge</span>
+              <span className="font-semibold text-[#12304A]">Bridge Node</span>
             </div>
-            <span className="text-[10px] text-[#66736C]">Connects separate groups</span>
-          </div>
-
-          {/* Highlighted path */}
-          <div className="flex items-center justify-between p-1.5 rounded bg-[#F8FAFC] border border-[#E2E8F0]">
-            <div className="flex items-center gap-2">
-              <svg width="18" height="6" className="shrink-0">
-                <line x1="0" y1="3" x2="18" y2="3" stroke="#087E8B" strokeWidth="3" strokeLinecap="round" />
-              </svg>
-              <span className="font-semibold text-[#12304A]">Highlighted path</span>
-            </div>
-            <span className="text-[10px] text-[#66736C]">Path being examined</span>
+            <span className="text-[10px] text-[#66736C]">Connects distinct groups</span>
           </div>
         </div>
       </div>

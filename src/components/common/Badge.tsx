@@ -63,7 +63,8 @@ export const EntityTypeBadge: React.FC<{ type: EntityType; size?: 'sm' | 'md' }>
     ACCOUNT: { label: 'Account', variant: 'high' },
     LOCATION: { label: 'Location', variant: 'purple' },
     ORGANIZATION: { label: 'Organization', variant: 'indigo' },
-    VEHICLE: { label: 'Vehicle', variant: 'critical' }
+    VEHICLE: { label: 'Vehicle', variant: 'critical' },
+    EVENT: { label: 'Event', variant: 'purple' }
   };
 
   const config = mapping[type] || { label: type, variant: 'default' };

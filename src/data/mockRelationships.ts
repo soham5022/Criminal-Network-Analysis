@@ -292,5 +292,83 @@ export const mockRelationships: Relationship[] = [
     currency: 'INR',
     sourceType: 'CRYPTO_SETTLEMENT',
     notes: 'Decentralized mixer cash-out into intermediary account.'
+  },
+  {
+    id: 'rel_027',
+    source: 'Person_044',
+    target: 'Event_001',
+    type: 'ATTENDED',
+    timestamp: '2026-08-18 21:14:00',
+    confidence: 0.96,
+    frequency: 1,
+    sourceType: 'SURVEILLANCE_LOG',
+    flaggedAnomaly: true,
+    notes: 'Surveillance confirmed presence of Rahul Sharma at Terminal 3 handover.'
+  },
+  {
+    id: 'rel_028',
+    source: 'Person_001',
+    target: 'Event_001',
+    type: 'INVOLVED_IN',
+    timestamp: '2026-08-18 21:14:00',
+    confidence: 0.94,
+    frequency: 1,
+    sourceType: 'CDR_TOWER_CO_LOC',
+    flaggedAnomaly: true,
+    notes: 'Vikram Singh co-located at Terminal 3 during event window.'
+  },
+  {
+    id: 'rel_029',
+    source: 'Vehicle_017',
+    target: 'Event_001',
+    type: 'PRESENT_AT',
+    timestamp: '2026-08-18 21:10:00',
+    confidence: 0.98,
+    frequency: 1,
+    sourceType: 'ANPR_CAMERA',
+    flaggedAnomaly: false,
+    notes: 'Vehicle MH-04-XX-2847 logged by ANPR at Terminal 3 parking boom barrier.'
+  },
+  {
+    id: 'rel_030',
+    source: 'Location_A',
+    target: 'Event_001',
+    type: 'HOSTED',
+    timestamp: '2026-08-18 21:14:00',
+    confidence: 0.99,
+    sourceType: 'POLICE_MAPPING',
+    notes: 'Sector staging and logistical staging perimeter.'
+  },
+  {
+    id: 'rel_031',
+    source: 'Account_103',
+    target: 'Event_001',
+    type: 'ASSOCIATED_WITH',
+    timestamp: '2026-08-18 21:30:00',
+    confidence: 0.92,
+    amount: 2500000,
+    currency: 'INR',
+    sourceType: 'BANK_TRANSACTION',
+    notes: 'Settlement ledger credit coinciding with event conclusion.'
+  },
+  {
+    id: 'rel_032',
+    source: 'Person_044',
+    target: 'Event_002',
+    type: 'ATTENDED',
+    timestamp: '2026-08-12 18:00:00',
+    confidence: 0.91,
+    sourceType: 'INTELLIGENCE_REPORT',
+    notes: 'Interpol / DRI intelligence debrief confirmed attendance.'
+  },
+  {
+    id: 'rel_033',
+    source: 'Phone_021',
+    target: 'Event_003',
+    type: 'INVOLVED_IN',
+    timestamp: '2026-08-20 03:22:00',
+    confidence: 0.93,
+    sourceType: 'CELL_TOWER_DUMP',
+    notes: 'SIM rotation burst detected on primary burner terminal.'
   }
 ];

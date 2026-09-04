@@ -14,13 +14,10 @@ import {
   Building2, 
   X 
 } from 'lucide-react';
-import { 
-  EvidenceRecord, 
-  EvidenceFilterOptions, 
-  EvidenceRegistryStats, 
-  evidenceRegistryService 
-} from '../../services/evidenceRegistryService';
+import { EvidenceRecord, EvidenceFilterOptions, EvidenceRegistryStats, evidenceRegistryService } from '../../services/evidenceRegistryService';
 import { useInvestigation } from '../../context/InvestigationContext';
+import { caseService } from '../../services/caseService';
+import { Case } from '../../types';
 import { mockCases } from '../../data/mockCases';
 import { EvidenceRegistrationModal } from './EvidenceRegistrationModal';
 import { EvidenceDetailsModal } from './EvidenceDetailsModal';
@@ -37,6 +34,7 @@ export const EvidenceRegistryView: React.FC<EvidenceRegistryViewProps> = ({
   
   const effectiveCaseId = initialCaseId || activeCaseId || 'ALL';
   const [selectedCaseFilter, setSelectedCaseFilter] = useState<string>(effectiveCaseId);
+  const [cases, setCases] = useState<Case[]>(mockCases);
   const [search, setSearch] = useState<string>('');
   const [selectedType, setSelectedType] = useState<string>('ALL');
   const [selectedStation, setSelectedStation] = useState<string>('ALL');
@@ -74,6 +72,10 @@ export const EvidenceRegistryView: React.FC<EvidenceRegistryViewProps> = ({
   };
 
   useEffect(() => {
+    caseService.getCases().then(setCases).catch(() => setCases(mockCases));
+  }, []);
+
+  useEffect(() => {
     loadData();
   }, [selectedCaseFilter, search, selectedType, selectedStation, selectedStatus, selectedDigitalCopy]);
 
@@ -107,11 +109,11 @@ export const EvidenceRegistryView: React.FC<EvidenceRegistryViewProps> = ({
       case 'CALL_RECORD':
         return 'bg-[#E6F4F5] text-[#087E8B] border-[#A7DFE3]';
       case 'TRANSACTION_RECORD':
-        return 'bg-[#FEF3C7] text-[#B7791F] border-[#FCD34D]';
-      case 'VEHICLE_ANPR_RECORD':
-        return 'bg-[#F3E8FF] text-[#7E22CE] border-[#E9D5FF]';
-      case 'FORENSIC_REPORT':
         return 'bg-[#EBF8FF] text-[#2563A6] border-[#BEE3F8]';
+      case 'VEHICLE_ANPR_RECORD':
+        return 'bg-[#FEF3C7] text-[#B7791F] border-[#FCD34D]';
+      case 'FORENSIC_REPORT':
+        return 'bg-[#F3E8FF] text-[#7E22CE] border-[#E9D5FF]';
       case 'SURVEILLANCE_FOOTAGE':
         return 'bg-[#FEE2E2] text-[#C24141] border-[#FCA5A5]';
       default:
@@ -122,58 +124,61 @@ export const EvidenceRegistryView: React.FC<EvidenceRegistryViewProps> = ({
   const getStatusBadge = (status: string) => {
     switch (status) {
       case 'VERIFIED':
-        return <span className="px-2.5 py-0.5 rounded text-[10px] font-bold bg-[#E8F7F0] text-[#16805C] border border-[#A3E0C8]">VERIFIED</span>;
-      case 'DIGITAL_COPY_AVAILABLE':
-        return <span className="px-2.5 py-0.5 rounded text-[10px] font-bold bg-[#E6F4F5] text-[#087E8B] border border-[#A7DFE3]">SOFT COPY READY</span>;
+        return <span className="px-2 py-0.5 rounded text-[10px] font-bold bg-[#E8F7F0] text-[#16805C] border border-[#A3E0C8]">VERIFIED (SEALED)</span>;
       case 'UNDER_REVIEW':
-        return <span className="px-2.5 py-0.5 rounded text-[10px] font-bold bg-[#FEF3C7] text-[#B7791F] border border-[#FCD34D]">UNDER REVIEW</span>;
+        return <span className="px-2 py-0.5 rounded text-[10px] font-bold bg-[#FEF3C7] text-[#B7791F] border border-[#FCD34D]">UNDER REVIEW</span>;
+      case 'FLAGGED_ANOMALY':
+        return <span className="px-2 py-0.5 rounded text-[10px] font-bold bg-[#FEE2E2] text-[#C24141] border border-[#FCA5A5]">ANOMALY FLAGGED</span>;
       default:
-        return <span className="px-2.5 py-0.5 rounded text-[10px] font-bold bg-[#F1F5F9] text-[#64748B] border border-[#E2E8F0]">PENDING SCAN</span>;
+        return <span className="px-2 py-0.5 rounded text-[10px] font-bold bg-[#F1F5F9] text-[#64748B] border border-[#E2E8F0]">INDEXED</span>;
     }
   };
 
   return (
-    <div className="max-w-6xl mx-auto py-1 space-y-5 select-none animate-in fade-in">
+    <div className="space-y-6 select-none animate-in fade-in max-w-6xl mx-auto py-1">
       
-      {/* Notifications */}
+      {/* 1. Header with Stats & Registration Action */}
+      <div className="bg-[#FFFFFF] p-5 rounded-lg border border-[#E2E8F0] shadow-sm flex flex-col md:flex-row md:items-center justify-between gap-4">
+        <div className="space-y-1">
+          <div className="flex items-center gap-2 text-xs text-[#087E8B] font-bold mb-0.5">
+            <FolderLock className="w-4 h-4 text-[#087E8B]" />
+            <span>CENTRAL DIGITAL EVIDENCE REGISTRY</span>
+            <span>•</span>
+            <span className="text-[#64748B] font-normal">MHA Investigation Standards Compliant</span>
+          </div>
+          <h1 className="text-xl font-bold text-[#12304A] tracking-tight">
+            Digital Chain of Custody & Soft-Copy Repository
+          </h1>
+          <p className="text-xs text-[#64748B] max-w-2xl">
+            Indexed physical and electronic evidence records secured via SHA-256 cryptographic hashes. 
+            All evidence files maintain an immutable verification audit trail.
+          </p>
+        </div>
+
+        <div className="flex items-center gap-2.5">
+          <button
+            onClick={() => setShowRegisterModal(true)}
+            className="flex items-center gap-1.5 px-4 py-2 rounded-md bg-[#087E8B] hover:bg-[#06636E] text-white text-xs font-semibold tracking-wide transition-colors shadow-sm shrink-0"
+          >
+            <PlusCircle className="w-4 h-4" />
+            <span>+ Register Evidence</span>
+          </button>
+        </div>
+      </div>
+
       {notification && (
-        <div className="p-3.5 rounded-lg bg-[#E8F7F0] border border-[#A3E0C8] text-[#16805C] text-xs flex items-center justify-between shadow-sm animate-in slide-in-from-top duration-200">
+        <div className="p-3 rounded-lg bg-[#E8F7F0] border border-[#A3E0C8] text-[#16805C] text-xs font-semibold flex items-center justify-between shadow-sm animate-in slide-in-from-top-1">
           <div className="flex items-center gap-2">
             <CheckCircle2 className="w-4 h-4 text-[#16805C]" />
-            <span className="font-semibold">{notification}</span>
+            <span>{notification}</span>
           </div>
-          <button onClick={() => setNotification(null)} className="text-[#16805C] hover:opacity-80">
+          <button onClick={() => setNotification(null)} className="text-[#16805C] hover:opacity-75">
             <X className="w-4 h-4" />
           </button>
         </div>
       )}
 
-      {/* 1. Header Banner */}
-      <div className="bg-[#FFFFFF] p-6 border border-[#E2E8F0] rounded-lg shadow-sm flex flex-col md:flex-row md:items-center justify-between gap-4">
-        <div className="space-y-1">
-          <div className="flex items-center gap-2">
-            <FolderLock className="w-6 h-6 text-[#087E8B]" />
-            <h1 className="text-xl sm:text-2xl font-bold text-[#12304A] tracking-tight">
-              Digital Evidence Registry
-            </h1>
-          </div>
-          <p className="text-xs text-[#64748B] font-sans">
-            Centralized digital record of evidence associated with authorized investigation cases.
-          </p>
-        </div>
-
-        <div className="flex items-center gap-3">
-          <button
-            onClick={() => setShowRegisterModal(true)}
-            className="px-4 py-2 rounded-md bg-[#087E8B] hover:bg-[#06636E] text-white text-xs font-semibold flex items-center gap-1.5 transition-colors shadow-sm"
-          >
-            <PlusCircle className="w-4 h-4" />
-            <span>Register New Evidence</span>
-          </button>
-        </div>
-      </div>
-
-      {/* 2. Top Summary Metric Cards */}
+      {/* 2. Top Metric Statistics Cards */}
       <div className="grid grid-cols-2 sm:grid-cols-5 gap-3">
         <div className="p-3.5 rounded-lg bg-[#FFFFFF] border border-[#E2E8F0] shadow-sm text-center space-y-0.5">
           <div className="text-lg font-bold text-[#12304A] font-mono">{stats.totalEvidence}</div>
@@ -221,7 +226,7 @@ export const EvidenceRegistryView: React.FC<EvidenceRegistryViewProps> = ({
               className="px-3 py-2 rounded-md bg-[#FFFFFF] border border-[#CBD5E1] text-xs text-[#17212B] focus:outline-none focus:border-[#087E8B]"
             >
               <option value="ALL">All Investigation Cases</option>
-              {mockCases.map(c => (
+              {cases.map(c => (
                 <option key={c.id} value={c.id}>{c.id} - {c.name}</option>
               ))}
             </select>
@@ -253,6 +258,7 @@ export const EvidenceRegistryView: React.FC<EvidenceRegistryViewProps> = ({
                 <th className="py-3.5 px-4">Type</th>
                 <th className="py-3.5 px-4">Case Scope</th>
                 <th className="py-3.5 px-4">Seized / Collected</th>
+                <th className="py-3.5 px-4">Processing Scope</th>
                 <th className="py-3.5 px-4">Integrity Hash</th>
                 <th className="py-3.5 px-4">Status</th>
                 <th className="py-3.5 px-4 text-right">Actions</th>
@@ -261,7 +267,7 @@ export const EvidenceRegistryView: React.FC<EvidenceRegistryViewProps> = ({
             <tbody className="divide-y divide-[#E2E8F0]">
               {evidenceList.length === 0 ? (
                 <tr>
-                  <td colSpan={7} className="py-8 text-center text-[#64748B]">
+                  <td colSpan={8} className="py-8 text-center text-[#64748B]">
                     No evidence records match current filters.
                   </td>
                 </tr>
@@ -293,6 +299,21 @@ export const EvidenceRegistryView: React.FC<EvidenceRegistryViewProps> = ({
                     <td className="py-3.5 px-4 text-[#64748B] font-mono whitespace-nowrap">
                       <div>{item.collectedDate}</div>
                       <div className="text-[10px] text-[#94A3B8]">{item.policeStation}</div>
+                    </td>
+
+                    <td className="py-3.5 px-4 whitespace-nowrap">
+                      {item.hasDigitalCopy ? (
+                        <span className="px-2 py-0.5 rounded text-[9px] font-bold bg-[#E6F4F5] text-[#087E8B] border border-[#A7DFE3] block w-fit">
+                          PREVIEW AVAILABLE
+                        </span>
+                      ) : (
+                        <span className="px-2 py-0.5 rounded text-[9px] font-bold bg-[#F1F5F9] text-[#64748B] border border-[#E2E8F0] block w-fit">
+                          STORED (PHYSICAL)
+                        </span>
+                      )}
+                      <div className="text-[9px] text-[#B7791F] font-mono mt-0.5">
+                        Analysis pending
+                      </div>
                     </td>
 
                     <td className="py-3.5 px-4 font-mono text-[10px] text-[#64748B] whitespace-nowrap">

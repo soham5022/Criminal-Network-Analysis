@@ -57,10 +57,10 @@ export const NetworkAnalysis: React.FC = () => {
   
   // Entity and Relationship type filters
   const [activeEntityTypes, setActiveEntityTypes] = useState<EntityType[]>([
-    'PERSON', 'PHONE', 'ACCOUNT', 'LOCATION', 'ORGANIZATION', 'VEHICLE'
+    'PERSON', 'PHONE', 'ACCOUNT', 'LOCATION', 'ORGANIZATION', 'VEHICLE', 'EVENT'
   ]);
   const [activeRelationshipTypes, setActiveRelationshipTypes] = useState<RelationshipType[]>([
-    'CALLED', 'TRANSFERRED', 'VISITED', 'OWNED', 'MET', 'ASSOCIATED_WITH'
+    'CALLED', 'TRANSFERRED', 'VISITED', 'OWNED', 'MET', 'ASSOCIATED_WITH', 'ATTENDED', 'INVOLVED_IN', 'PRESENT_AT', 'HOSTED'
   ]);
 
   // Dropdown popover open states
@@ -411,9 +411,33 @@ export const NetworkAnalysis: React.FC = () => {
       {/* 2. GLOBAL FILTER & CONTROLS TOOLBAR */}
       <div className="bg-[#FFFFFF] p-3 rounded-lg border border-[#E2E8F0] shadow-sm flex flex-wrap items-center justify-between gap-3 text-xs">
         
-        {/* Left: Interactive Filter Dropdowns */}
-        <div className="flex items-center gap-2 flex-wrap">
+        {/* Left: Mode Toggle & Interactive Filter Dropdowns */}
+        <div className="flex items-center gap-2.5 flex-wrap">
           
+          {/* HIGH-PRIORITY: CASE NETWORK vs AUTHORIZED CROSS-CASE NETWORK */}
+          <div className="flex items-center p-0.5 bg-[#F1F5F9] rounded-md border border-[#CBD5E1]">
+            <button
+              onClick={() => setSelectedCaseIds([activeCaseId && activeCaseId !== 'ALL' ? activeCaseId : 'CASE-1024'])}
+              className={`px-2.5 py-1 rounded text-xs font-semibold transition-all ${
+                !isAllCases
+                  ? 'bg-[#FFFFFF] text-[#087E8B] shadow-sm font-bold'
+                  : 'text-[#64748B] hover:text-[#12304A]'
+              }`}
+            >
+              Case Network
+            </button>
+            <button
+              onClick={() => setSelectedCaseIds(['ALL'])}
+              className={`px-2.5 py-1 rounded text-xs font-semibold transition-all ${
+                isAllCases
+                  ? 'bg-[#087E8B] text-white shadow-sm font-bold'
+                  : 'text-[#64748B] hover:text-[#12304A]'
+              }`}
+            >
+              Authorized Cross-Case Network
+            </button>
+          </div>
+
           {/* A. [ ALL CASES ▼ ] / Multi-Case Selector Dropdown Popover */}
           <div className="relative" ref={caseDropdownRef}>
             <button
@@ -427,7 +451,7 @@ export const NetworkAnalysis: React.FC = () => {
               {isAllCases ? (
                 <>
                   <Globe className="w-3.5 h-3.5" />
-                  <span>All Cases (10)</span>
+                  <span>All Authorized Cases (10)</span>
                 </>
               ) : isSingleCase ? (
                 <>
@@ -545,7 +569,7 @@ export const NetworkAnalysis: React.FC = () => {
               onClick={() => setIsEntityTypeDropdownOpen(!isEntityTypeDropdownOpen)}
               className="px-3 py-1.5 rounded-md bg-[#F8FAFC] hover:bg-[#FFFFFF] border border-[#CBD5E1] text-[#12304A] text-xs font-semibold flex items-center gap-1.5 shadow-sm"
             >
-              <span>Types ({activeEntityTypes.length}/6)</span>
+              <span>Types ({activeEntityTypes.length}/7)</span>
               <ChevronDown className="w-3 h-3 opacity-80" />
             </button>
 
@@ -554,13 +578,13 @@ export const NetworkAnalysis: React.FC = () => {
                 <div className="flex items-center justify-between border-b border-[#E2E8F0] pb-1.5 text-[11px] font-bold text-[#12304A]">
                   <span>Entity Types</span>
                   <button
-                    onClick={() => setActiveEntityTypes(['PERSON', 'PHONE', 'ACCOUNT', 'LOCATION', 'ORGANIZATION', 'VEHICLE'])}
+                    onClick={() => setActiveEntityTypes(['PERSON', 'PHONE', 'ACCOUNT', 'LOCATION', 'ORGANIZATION', 'VEHICLE', 'EVENT'])}
                     className="text-[10px] text-[#087E8B] hover:underline"
                   >
                     All
                   </button>
                 </div>
-                {(['PERSON', 'PHONE', 'ACCOUNT', 'LOCATION', 'ORGANIZATION', 'VEHICLE'] as EntityType[]).map((type) => {
+                {(['PERSON', 'PHONE', 'ACCOUNT', 'LOCATION', 'ORGANIZATION', 'VEHICLE', 'EVENT'] as EntityType[]).map((type) => {
                   const isChecked = activeEntityTypes.includes(type);
                   return (
                     <label

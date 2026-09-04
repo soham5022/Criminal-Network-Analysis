@@ -34,7 +34,12 @@ export type AuditActionType =
   | 'DOWNLOADED_REPORT'
   | 'CREATED_NOTE'
   | 'UPDATED_NOTE'
-  | 'SYSTEM_INGESTION';
+  | 'SYSTEM_INGESTION'
+  | 'REGISTERED_CRIMINAL_HISTORY'
+  | 'IDENTITY_MERGED'
+  | 'IDENTITY_SEPARATED'
+  | 'REGISTERED_SOCIAL_INTEL'
+  | 'GENERATED_STATION_REPORT';
 
 export type AuditModule =
   | 'Cases'
@@ -48,7 +53,8 @@ export type AuditModule =
   | 'Reports'
   | 'Authentication'
   | 'Notes'
-  | 'System';
+  | 'System'
+  | 'Records';
 
 export interface AuditEvent {
   id: string;
@@ -64,7 +70,7 @@ export interface AuditEvent {
   module: AuditModule;
   caseId?: string;
   recordId?: string;
-  recordType?: 'CASE' | 'PERSON' | 'PHONE' | 'ACCOUNT' | 'VEHICLE' | 'EVIDENCE' | 'DOCUMENT' | 'REPORT' | 'ALERT' | 'WITNESS' | 'STATEMENT' | 'NOTE';
+  recordType?: 'CASE' | 'PERSON' | 'PHONE' | 'ACCOUNT' | 'VEHICLE' | 'EVIDENCE' | 'DOCUMENT' | 'REPORT' | 'ALERT' | 'WITNESS' | 'STATEMENT' | 'NOTE' | 'CRIMINAL_HISTORY' | 'ENTITY_MATCH' | 'SOCIAL_INTELLIGENCE' | 'STATION_REPORT';
   recordLabel?: string;
   status: 'SUCCESS' | 'FAILED';
   details: string;
@@ -352,7 +358,12 @@ export const auditService = {
       DOWNLOADED_REPORT: 'Exported Case Intelligence Report',
       CREATED_NOTE: 'Added Investigator Collaboration Memo',
       UPDATED_NOTE: 'Updated Investigator Memo',
-      SYSTEM_INGESTION: 'Executed Multi-Source Telemetry Ingestion'
+      SYSTEM_INGESTION: 'Executed Multi-Source Telemetry Ingestion',
+      REGISTERED_CRIMINAL_HISTORY: 'Registered Criminal History Record',
+      IDENTITY_MERGED: 'Confirmed Identity Resolution Match',
+      IDENTITY_SEPARATED: 'Rejected Identity Merge (Kept Separate)',
+      REGISTERED_SOCIAL_INTEL: 'Registered Social Intelligence Lead',
+      GENERATED_STATION_REPORT: 'Generated Station Intelligence Report'
     };
 
     const newId = `AUD-2026-${Math.floor(100000 + Math.random() * 900000)}`;

@@ -8,7 +8,9 @@ import {
   FolderOpen, 
   Search,
   ShieldCheck,
-  FileSpreadsheet
+  FileSpreadsheet,
+  Plus,
+  Building2
 } from 'lucide-react';
 import { useInvestigation } from '../context/InvestigationContext';
 import { useAuth } from '../context/AuthContext';
@@ -20,7 +22,14 @@ import { mockEntities } from '../data/mockEntities';
 import { Case, Alert } from '../types';
 
 export const Overview: React.FC = () => {
-  const { navigateTo, setActiveCaseId, setSelectedEntityId, setSelectedAlertId, setSearchQuery } = useInvestigation();
+  const { 
+    navigateTo, 
+    setActiveCaseId, 
+    setSelectedEntityId, 
+    setSelectedAlertId, 
+    setSearchQuery,
+    setIsCreateCaseModalOpen
+  } = useInvestigation();
   const { user } = useAuth();
 
   const [cases, setCases] = useState<Case[]>([]);
@@ -101,22 +110,40 @@ export const Overview: React.FC = () => {
           </h1>
         </div>
 
-        <form onSubmit={handleSearchSubmit} className="relative min-w-[280px] sm:min-w-[340px]">
-          <Search className="w-4 h-4 text-[#64748B] absolute left-3 top-1/2 -translate-y-1/2" />
-          <input
-            type="text"
-            value={search}
-            onChange={(e) => setSearch(e.target.value)}
-            placeholder="Search case, entity, phone, account..."
-            className="w-full pl-9 pr-20 py-2 rounded-md bg-[#FFFFFF] border border-[#CBD5E1] text-xs text-[#17212B] placeholder-[#94A3B8] focus:outline-none focus:border-[#087E8B] focus:ring-1 focus:ring-[#087E8B] transition-colors"
-          />
+        <div className="flex flex-wrap items-center gap-2.5">
+          <form onSubmit={handleSearchSubmit} className="relative min-w-[240px] sm:min-w-[280px]">
+            <Search className="w-4 h-4 text-[#64748B] absolute left-3 top-1/2 -translate-y-1/2" />
+            <input
+              type="text"
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+              placeholder="Search case, entity, phone, account..."
+              className="w-full pl-9 pr-16 py-2 rounded-md bg-[#FFFFFF] border border-[#CBD5E1] text-xs text-[#17212B] placeholder-[#94A3B8] focus:outline-none focus:border-[#087E8B] focus:ring-1 focus:ring-[#087E8B] transition-colors"
+            />
+            <button
+              type="submit"
+              className="absolute right-1 top-1/2 -translate-y-1/2 px-2.5 py-1 rounded-md bg-[#087E8B] hover:bg-[#06636E] text-white font-semibold text-xs transition-colors shadow-sm"
+            >
+              Search
+            </button>
+          </form>
+
           <button
-            type="submit"
-            className="absolute right-1.5 top-1/2 -translate-y-1/2 px-3 py-1 rounded-md bg-[#087E8B] hover:bg-[#06636E] text-white font-semibold text-xs transition-colors shadow-sm"
+            onClick={() => setIsCreateCaseModalOpen(true)}
+            className="flex items-center gap-1.5 px-3 py-2 rounded-md bg-[#087E8B] hover:bg-[#06636E] text-white text-xs font-semibold tracking-wide transition-colors shadow-sm whitespace-nowrap"
           >
-            Search
+            <Plus className="w-4 h-4" />
+            <span>+ Register Case</span>
           </button>
-        </form>
+
+          <button
+            onClick={() => navigateTo('reports')}
+            className="flex items-center gap-1.5 px-3 py-2 rounded-md bg-[#FFFFFF] hover:bg-[#F8FAFC] border border-[#CBD5E1] text-[#12304A] text-xs font-semibold tracking-wide transition-colors shadow-sm whitespace-nowrap"
+          >
+            <Building2 className="w-4 h-4 text-[#087E8B]" />
+            <span>Station Intel</span>
+          </button>
+        </div>
       </div>
 
       {/* 2. Compact Operational Statistics (4 KPI Cards) */}
@@ -167,7 +194,7 @@ export const Overview: React.FC = () => {
           </div>
           <div className="text-2xl font-bold text-[#12304A] font-mono">{mockEntities.length || 48}</div>
           <div className="text-[11px] text-[#64748B]">
-            Across 6 network categories
+            Across 7 network categories (incl. Events)
           </div>
         </div>
 

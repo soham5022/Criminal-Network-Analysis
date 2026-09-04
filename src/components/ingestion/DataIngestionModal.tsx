@@ -19,9 +19,20 @@ import { uploadService, GraphBuildResponse } from '../../services/uploadService'
 import { auditService } from '../../services/auditService';
 import { caseRecordsService } from '../../services/caseRecordsService';
 import { timelineService } from '../../services/timelineService';
+import { socialIntelligenceService } from '../../services/socialIntelligenceService';
+import { criminalHistoryService } from '../../services/criminalHistoryService';
 import { Case } from '../../types';
 
-export type IngestionDataType = 'CDR' | 'TRANSACTIONS' | 'LOCATION' | 'INCIDENT' | 'OTHER';
+export type IngestionDataType = 
+  | 'CDR' 
+  | 'TRANSACTIONS' 
+  | 'LOCATION' 
+  | 'INCIDENT' 
+  | 'SOCIAL_INTEL' 
+  | 'CRIMINAL_HISTORY' 
+  | 'INTEL_REPORT' 
+  | 'EVENT_DATA' 
+  | 'OTHER';
 
 export const DataIngestionModal: React.FC = () => {
   const { 
@@ -115,6 +126,38 @@ export const DataIngestionModal: React.FC = () => {
       recordsCount: 6
     },
     {
+      id: 'SOCIAL_INTEL',
+      label: 'Social Intelligence',
+      fullName: 'Open-Source & Social Intelligence (OSINT)',
+      desc: 'Authorized public handles, forum intelligence, and communication metadata.',
+      defaultSampleExt: 'json',
+      recordsCount: 94
+    },
+    {
+      id: 'CRIMINAL_HISTORY',
+      label: 'Criminal History',
+      fullName: 'Prior Criminal Dossier & Offence Records',
+      desc: 'Prior charge sheets, court dispositions, and inter-state police station records.',
+      defaultSampleExt: 'pdf',
+      recordsCount: 28
+    },
+    {
+      id: 'INTEL_REPORT',
+      label: 'Intelligence Report',
+      fullName: 'Formal Intelligence Reports & Informant Debriefs',
+      desc: 'DRI advisories, inter-agency debriefs, and classified field officer summaries.',
+      defaultSampleExt: 'txt',
+      recordsCount: 12
+    },
+    {
+      id: 'EVENT_DATA',
+      label: 'Incident / Event Data',
+      fullName: 'Temporal Rendezvous & Incident Checkpoints',
+      desc: 'Cash drops, clandestine meetings, SIM swaps, and vehicle border crossings.',
+      defaultSampleExt: 'csv',
+      recordsCount: 52
+    },
+    {
       id: 'OTHER',
       label: 'Other Investigation Data',
       fullName: 'Forensic & Auxiliary Investigation Files',
@@ -186,7 +229,7 @@ export const DataIngestionModal: React.FC = () => {
         caseId: targetCaseId,
         firNumber: `FIR-2026-${targetCaseId.replace(/\D/g, '')}-01`,
         title: `Ingested ${currentTypeInfo.fullName} (${selectedFileName})`,
-        documentType: selectedType === 'INCIDENT' ? 'FIR' : selectedType === 'CDR' ? 'CASE_DIARY' : 'INVESTIGATION_REPORT',
+        documentType: selectedType === 'INCIDENT' ? 'FIR' : selectedType === 'CDR' ? 'CASE_DIARY' : selectedType === 'INTEL_REPORT' ? 'INVESTIGATION_REPORT' : 'INVESTIGATION_REPORT',
         policeStation: selectedCase.department || 'Special Cyber & Financial Crimes Division, Central Delhi',
         investigatingOfficer: selectedCase.leadInvestigator || 'Inspector Rajesh Verma',
         pageCount: 3,
@@ -196,10 +239,62 @@ export const DataIngestionModal: React.FC = () => {
           {
             id: `Ent_${targetCaseId.replace(/\D/g, '')}_${Date.now().toString().slice(-3)}`,
             label: `Ingested Subject (${selectedType})`,
-            type: selectedType === 'CDR' ? 'PHONE' : selectedType === 'TRANSACTIONS' ? 'ACCOUNT' : selectedType === 'LOCATION' ? 'LOCATION' : 'PERSON',
+            type: selectedType === 'CDR' ? 'PHONE' : selectedType === 'TRANSACTIONS' ? 'ACCOUNT' : selectedType === 'LOCATION' ? 'LOCATION' : selectedType === 'EVENT_DATA' ? 'EVENT' : 'PERSON',
             roleInDocument: 'Extracted Lead from Data Ingestion'
           }
         ]
+      });
+
+      // Specialized service registrations
+      if (selectedType === 'SOCIAL_INTEL') {
+        socialIntelligenceService.addRecord({
+          caseId: targetCaseId,
+          platform: 'Open Source Intelligence (OSINT)',
+          accountRef: `OSINT-${targetCaseId.replace(/\D/g, '')}`,
+          subject: `Suspect Lead (${targetCaseId})`,
+          date: new Date().toISOString().split('T')[0],
+          time: '12:00 IST',
+          location: 'Regional Transit Node',
+          relatedEntities: [`Ent_${targetCaseId.replace(/\D/g, '')}_01`],
+          content: `Imported social intelligence feed referencing communication patterns associated with ${targetCaseId}.`,
+          sourceReference: `OSINT-IMPORT-${Date.now().toString().slice(-4)}`,
+          confidence: 'HIGH',
+          status: 'REQUIRES_REVIEW',
+          registeredBy: selectedCase.leadInvestigator || 'Inspector Rajesh Verma',
+          registeredDate: new Date().toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' }),
+          tags: ['osint', 'imported-data']
+        });
+      } else if (selectedType === 'CRIMINAL_HISTORY') {
+        criminalHistoryService.addRecord({
+          personEntityId: `Person_${targetCaseId.replace(/\D/g, '')}`,
+          personName: `Subject Entity (${targetCaseId})`,
+          previousCaseId: 'CASE-1031',
+          firReference: `FIR/2024/PREV/${targetCaseId.replace(/\D/g, '')}`,
+          offenceCategory: 'Financial Structuring & Fraud',
+          offenceDate: '2024-05-12',
+          policeStation: selectedCase.department || 'Central EOW',
+          caseStatus: 'Charge Sheet Filed',
+          disposition: 'Under trial',
+          sourceReference: `REGISTRY-${Date.now().toString().slice(-4)}`,
+          notes: `Prior criminal record imported during data ingestion for ${targetCaseId}.`,
+          linkedCurrentCaseId: targetCaseId,
+          registeredBy: selectedCase.leadInvestigator || 'Inspector Rajesh Verma',
+          registeredDate: new Date().toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' })
+        });
+      }
+
+      // Add timeline event
+      timelineService.addTimelineEvent({
+        caseId: targetCaseId,
+        timestamp: new Date().toISOString(),
+        entityId: 'DATA_INGESTION',
+        entityType: 'EVENT',
+        eventType: 'RECORD_ADDED',
+        description: `Ingested ${currentTypeInfo.recordsCount} ${currentTypeInfo.fullName} records into case ${targetCaseId}.`,
+        confidence: 0.95,
+        significance: 'HIGH',
+        sourceType: selectedType,
+        caseCode: targetCaseId
       });
 
       // Audit log

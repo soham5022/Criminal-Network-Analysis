@@ -8,7 +8,8 @@ import {
   identityResolutionService, 
   UnifiedIdentityDossier, 
   IdentityConflict, 
-  PotentialDuplicateEntity 
+  PotentialDuplicateEntity,
+  ConnectedSourceRecord 
 } from '../../services/identityResolutionService';
 import { RecordComparisonModal } from './RecordComparisonModal';
 
@@ -43,8 +44,8 @@ export const IdentityResolutionTab: React.FC<IdentityResolutionTabProps> = ({ en
     loadData();
   };
 
-  const pendingConflictsCount = dossier.conflicts.filter(c => c.status === 'REQUIRES_INVESTIGATOR_REVIEW').length;
-  const pendingDuplicatesCount = dossier.potentialDuplicates.filter(d => d.status === 'PENDING_REVIEW').length;
+  const pendingConflictsCount = dossier.conflicts.filter((c: IdentityConflict) => c.status === 'REQUIRES_INVESTIGATOR_REVIEW').length;
+  const pendingDuplicatesCount = dossier.potentialDuplicates.filter((d: PotentialDuplicateEntity) => d.status === 'PENDING_REVIEW').length;
 
   return (
     <div className="space-y-6 select-none animate-in fade-in max-w-6xl">
@@ -100,7 +101,7 @@ export const IdentityResolutionTab: React.FC<IdentityResolutionTabProps> = ({ en
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
-          {dossier.sourceRecords.map((src) => (
+          {dossier.sourceRecords.map((src: ConnectedSourceRecord) => (
             <div key={src.id} className="p-3 rounded-md bg-[#F8FAFC] border border-[#E2E8F0] space-y-1.5">
               <div className="flex items-center justify-between text-[11px]">
                 <span className="font-semibold text-[#12304A]">{src.sourceName}</span>
