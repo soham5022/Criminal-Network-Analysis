@@ -8,6 +8,7 @@ import {
   Sparkles
 } from 'lucide-react';
 import { EvidenceRecord, evidenceRegistryService } from '../../services/evidenceRegistryService';
+import { FileUploadDropbox, UploadedFileItem } from '../common/FileUploadDropbox';
 
 interface SoftCopyUploadModalProps {
   evidence: EvidenceRecord;
@@ -119,6 +120,29 @@ Integrity verified under Section 65B of Indian Evidence Act.
             <p className="text-[11px] text-[#475569] leading-relaxed font-sans">
               Attaching this soft copy generates an immutable SHA-256 hash seal and increments the document version. It will be immediately available for authorized review and report inclusion.
             </p>
+          </div>
+
+          {/* Drag & Drop File Upload */}
+          <div className="space-y-1.5">
+            <label className="block text-[11px] font-semibold text-[#64748B] uppercase tracking-wider">
+              Attach Scanned File / Forensic Artifact
+            </label>
+            <FileUploadDropbox
+              onFilesChange={(files: UploadedFileItem[]) => {
+                if (files.length > 0) {
+                  const first = files[0];
+                  setFilename(first.name);
+                  setContent(
+                    first.textContent || 
+                    `CENTRAL POLICE CASE RECORDS & EVIDENCE REPOSITORY\nSCANNED SOFT-COPY RECORD ATTACHMENT\nFILE: ${first.name}\nSIZE: ${first.sizeFormatted}\nSHA-256 CHECK-SUM: ${first.sha256Hash}\nEVIDENCE ID: ${evidence.id} // CASE ID: ${evidence.caseId} // FIR: ${evidence.firNumber}\n\nEVIDENCE TITLE: ${evidence.title}\nTYPE: ${evidence.evidenceType}\nREGISTERED LOCATION: ${evidence.location}\nPOLICE STATION: ${evidence.policeStation}\n\nDIGITIZATION FORENSIC SCAN NOTES:\nAttached digital copy verified under Section 65B of Indian Evidence Act.\nSHA-256 integrity seal applied automatically.\n\n[CERTIFIED POLICE DIGITAL REPOSITORY ATTACHMENT]`
+                  );
+                }
+              }}
+              maxFiles={1}
+              allowMultiple={false}
+              label="Drop scanned soft-copy or forensic file here, or"
+              sublabel="Upload PDF, Image, Video, Audio, or Text (Auto SHA-256 hash applied)"
+            />
           </div>
 
           <div className="space-y-1.5">

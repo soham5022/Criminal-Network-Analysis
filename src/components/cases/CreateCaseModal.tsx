@@ -21,6 +21,9 @@ import { useAuth } from '../../context/AuthContext';
 import { caseService } from '../../services/caseService';
 import { auditService } from '../../services/auditService';
 import { timelineService } from '../../services/timelineService';
+import { caseRecordsService } from '../../services/caseRecordsService';
+import { evidenceRegistryService } from '../../services/evidenceRegistryService';
+import { FileUploadDropbox, UploadedFileItem } from '../common/FileUploadDropbox';
 import { Case, CasePriority, CaseStatus } from '../../types';
 
 export const CreateCaseModal: React.FC = () => {
@@ -53,6 +56,7 @@ export const CreateCaseModal: React.FC = () => {
   const [department, setDepartment] = useState<string>('Special Operations & Intelligence Wing');
   const [caseReferenceNumber, setCaseReferenceNumber] = useState<string>(`MHA-INT-${Math.floor(1000 + Math.random() * 9000)}`);
   const [notes, setNotes] = useState<string>('Priority multi-source investigation initiated following supervisory intelligence advisory.');
+  const [uploadedFiles, setUploadedFiles] = useState<UploadedFileItem[]>([]);
 
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
@@ -63,6 +67,7 @@ export const CreateCaseModal: React.FC = () => {
   const resetForm = () => {
     setName('');
     setDescription('');
+    setUploadedFiles([]);
     setCreatedCase(null);
     setErrorMsg(null);
   };
@@ -90,6 +95,46 @@ export const CreateCaseModal: React.FC = () => {
         tags: [caseCategory, offenceType.split('&')[0].trim()]
       });
 
+      // Ingest any dropped files into Case Documents and Evidence Registry
+      for (const f of uploadedFiles) {
+        // Document Record
+        caseRecordsService.addDocument({
+          caseId: newCase.id,
+          firNumber,
+          title: f.name.replace(/\.[^/.]+$/, ''),
+          documentType: f.name.toLowerCase().includes('fir') ? 'FIR' : f.name.toLowerCase().includes('seizure') ? 'SEIZURE_MEMO' : 'INVESTIGATION_REPORT',
+          policeStation,
+          investigatingOfficer: leadInvestigator,
+          pageCount: Math.max(1, Math.ceil(f.size / (100 * 1024))),
+          content: f.textContent || `Attached case filing document: ${f.name}.\nSize: ${f.sizeFormatted}\nSHA-256 Checksum: ${f.sha256Hash}\n\n[SYNTHETIC DEMO EVIDENCE — FOR SIH26189 PROTOTYPE EVALUATION]`,
+          extractedEntities: [
+            { id: `Ent_${newCase.id.replace(/\D/g, '')}_01`, label: `Primary Subject (${name})`, type: 'PERSON', roleInDocument: 'Named in Case Ingestion' }
+          ],
+          summary: `Primary document attachment uploaded during case creation (${f.sizeFormatted}).`
+        });
+
+        // Evidence Record
+        evidenceRegistryService.registerEvidence({
+          caseId: newCase.id,
+          firNumber,
+          title: f.name.replace(/\.[^/.]+$/, ''),
+          evidenceType: f.type.startsWith('image/') ? 'PHOTOGRAPH' : f.type.startsWith('video/') ? 'VIDEO' : f.type.startsWith('audio/') ? 'AUDIO' : 'DOCUMENT',
+          description: `Evidentiary document attached during initial case registration (${f.name}).`,
+          collectedDate: incidentDate,
+          collectedTime: `${incidentTime} IST`,
+          policeStation,
+          registeringOfficer: leadInvestigator,
+          badgeNumber: user?.badge_number || 'MHA-INT-8902',
+          relatedEntities: [],
+          location: incidentLocation,
+          source: 'Case Registration Docket Upload',
+          remarks: `Sealed during case creation. SHA-256: ${f.sha256Hash}`,
+          hasDigitalCopy: true,
+          initialFilename: f.name,
+          initialFileContent: f.textContent || `Evidence scan for ${newCase.id}.\nFile: ${f.name}\nSHA-256: ${f.sha256Hash}`
+        });
+      }
+
       // Add timeline event
       timelineService.addTimelineEvent({
         caseId: newCase.id,
@@ -97,7 +142,7 @@ export const CreateCaseModal: React.FC = () => {
         entityId: 'SYSTEM',
         entityType: 'EVENT',
         eventType: 'CASE_REGISTERED',
-        description: `New investigation dossier ${newCase.id} registered under ${firNumber} at ${policeStation}. Priority: ${priority}.`,
+        description: `New investigation dossier ${newCase.id} registered under ${firNumber} at ${policeStation}.${uploadedFiles.length > 0 ? ` Attached ${uploadedFiles.length} filing evidence document(s).` : ''} Priority: ${priority}.`,
         confidence: 1.0,
         significance: 'CRITICAL',
         sourceType: 'POLICE_RECORD',
@@ -114,7 +159,7 @@ export const CreateCaseModal: React.FC = () => {
         recordType: 'CASE',
         recordLabel: newCase.name,
         status: 'SUCCESS',
-        details: `Investigator registered case ${newCase.id} (${newCase.name}), FIR: ${firNumber}, Police Station: ${policeStation}, Priority: ${priority}.`,
+        details: `Investigator registered case ${newCase.id} (${newCase.name}), FIR: ${firNumber}, Police Station: ${policeStation}, Attached Files: ${uploadedFiles.length}, Priority: ${priority}.`,
         user: user ? {
           id: user.id,
           name: user.name,
@@ -511,6 +556,28 @@ export const CreateCaseModal: React.FC = () => {
                   />
                 </div>
               </div>
+            </div>
+
+            {/* SECTION 3: EVIDENCE & CASE FILES DROPBOX */}
+            <div className="space-y-3">
+              <div className="flex items-center justify-between pb-1 border-b border-[#E2E8F0]">
+                <div className="flex items-center gap-2">
+                  <span className="text-xs font-bold uppercase tracking-wider text-[#087E8B]">
+                    3. Case Documents & Evidence Dropbox
+                  </span>
+                  <span className="text-[10px] text-[#64748B] font-mono">• Drag & Drop Filing Attachments</span>
+                </div>
+                <span className="text-[10px] text-[#16805C] font-mono">
+                  Sec 65B Compliant
+                </span>
+              </div>
+
+              <FileUploadDropbox
+                onFilesChange={setUploadedFiles}
+                maxFiles={5}
+                label="Drop initial case evidence or files here, or"
+                sublabel="Upload FIR copy, seizure memos, warrant documents, CCTV clips, or photos (Auto SHA-256 bitwise verified)"
+              />
             </div>
 
             {/* Bottom Actions */}

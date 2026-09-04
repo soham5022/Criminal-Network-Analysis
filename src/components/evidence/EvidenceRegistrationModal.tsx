@@ -10,6 +10,7 @@ import { EvidenceRecord, EvidenceType, evidenceRegistryService } from '../../ser
 import { mockCases } from '../../data/mockCases';
 import { mockEntities } from '../../data/mockEntities';
 import { EntityType } from '../../types';
+import { FileUploadDropbox, UploadedFileItem } from '../common/FileUploadDropbox';
 
 interface EvidenceRegistrationModalProps {
   onClose: () => void;
@@ -102,6 +103,46 @@ REGISTERING OFFICER: Inspector Rajesh Verma (MHA-INT-8902)
     setInitialContent(
       `CENTRAL POLICE DIGITAL EVIDENCE REGISTRY\nCERTIFIED SOFT COPY RECORD\nCASE FILE: ${newCaseId}\n\nEVIDENCE TITLE: Document scan attachment\nREGISTRATION DATE: ${new Date().toISOString().slice(0, 10)}\n\n[SYNTHETIC DEMO EVIDENCE — FOR SIH26189 PROTOTYPE EVALUATION ONLY]`
     );
+  };
+
+  const handleFilesDropped = (uploaded: UploadedFileItem[]) => {
+    if (uploaded.length > 0) {
+      const first = uploaded[0];
+      setAttachSoftCopy(true);
+      setInitialFilename(first.name);
+
+      // Auto-populate title if investigator hasn't typed one
+      if (!title.trim()) {
+        const cleanName = first.name.replace(/\.[^/.]+$/, '').replace(/[_-]/g, ' ');
+        setTitle(cleanName.charAt(0).toUpperCase() + cleanName.slice(1));
+      }
+
+      // Auto-detect evidence type based on file extension and MIME
+      const n = first.name.toLowerCase();
+      const t = first.type.toLowerCase();
+      if (t.startsWith('video/') || n.match(/\.(mp4|mov|avi|mkv)$/)) {
+        setEvidenceType('VIDEO');
+      } else if (t.startsWith('audio/') || n.match(/\.(mp3|wav|aac|m4a)$/)) {
+        setEvidenceType('AUDIO');
+      } else if (t.startsWith('image/') || n.match(/\.(jpg|jpeg|png|webp|bmp)$/)) {
+        setEvidenceType('PHOTOGRAPH');
+      } else if (n.includes('cdr') || n.includes('call')) {
+        setEvidenceType('CALL_RECORD');
+      } else if (n.includes('transaction') || n.includes('bank') || n.includes('swift')) {
+        setEvidenceType('TRANSACTION_RECORD');
+      } else if (n.includes('anpr') || n.includes('vehicle')) {
+        setEvidenceType('VEHICLE_ANPR_RECORD');
+      } else if (n.includes('forensic') || n.includes('lab') || n.includes('ballistic')) {
+        setEvidenceType('FORENSIC_REPORT');
+      } else if (n.endsWith('.pdf') || n.endsWith('.doc') || n.endsWith('.docx')) {
+        setEvidenceType('DOCUMENT');
+      }
+
+      setInitialContent(
+        first.textContent || 
+        `CENTRAL POLICE DIGITAL EVIDENCE REGISTRY\nCERTIFIED DIGITAL SOFT COPY ATTACHMENT\nFILE: ${first.name}\nFILE SIZE: ${first.sizeFormatted}\nSHA-256 BITWISE SEAL: ${first.sha256Hash}\nCASE FILE: ${caseId} // FIR: ${firNumber}\n\nEVIDENCE TITLE: ${title || first.name}\nCOLLECTED DATE: ${collectedDate} ${collectedTime}\nREGISTERING OFFICER: ${registeringOfficer} (${badgeNumber})\nPOLICE STATION: ${policeStation}\nLOCATION: ${location}\n\n[CERTIFIED SECTION 65B INDIAN EVIDENCE ACT COMPLIANT RECORD]`
+      );
+    }
   };
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -370,7 +411,7 @@ REGISTERING OFFICER: Inspector Rajesh Verma (MHA-INT-8902)
             </select>
           </div>
 
-          {/* Row 7: Attach Digital Soft Copy Option */}
+          {/* Row 7: Attach Digital Soft Copy Option & Dropbox */}
           <div className="p-3.5 rounded-md bg-[#F8FAFC] border border-[#E2E8F0] space-y-3">
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-2">
@@ -383,19 +424,30 @@ REGISTERING OFFICER: Inspector Rajesh Verma (MHA-INT-8902)
                 />
                 <label htmlFor="attachCopy" className="text-xs font-semibold text-[#12304A] cursor-pointer flex items-center gap-1.5">
                   <UploadCloud className="w-3.5 h-3.5 text-[#087E8B]" />
-                  <span>Attach Scanned Digital Soft Copy Immediately</span>
+                  <span>Attach Certified Digital Soft Copy / Forensics File</span>
                 </label>
               </div>
               <span className="text-[10px] text-[#64748B] font-mono">
-                {attachSoftCopy ? 'Digital Copy Attached' : 'Pending Digitization'}
+                {attachSoftCopy ? 'Digital File Attached' : 'Physical Only / Pending Upload'}
               </span>
+            </div>
+
+            {/* Drag and drop dropbox */}
+            <div className="pt-1">
+              <FileUploadDropbox
+                onFilesChange={handleFilesDropped}
+                maxFiles={1}
+                allowMultiple={false}
+                label="Drop evidence file here (CCTV, Audio, Image, PDF, CDR), or"
+                sublabel="Automatic file type detection and real-time SHA-256 bitwise hash generation"
+              />
             </div>
 
             {attachSoftCopy && (
               <div className="space-y-2 pt-2 border-t border-[#E2E8F0] animate-in fade-in">
                 <div className="space-y-1">
                   <label className="block text-[10px] uppercase font-bold text-[#64748B]">
-                    File Name
+                    Attached File Name
                   </label>
                   <input
                     type="text"
@@ -406,7 +458,7 @@ REGISTERING OFFICER: Inspector Rajesh Verma (MHA-INT-8902)
                 </div>
                 <div className="space-y-1">
                   <label className="block text-[10px] uppercase font-bold text-[#64748B]">
-                    Document Text Payload
+                    Document Forensic Certification Payload
                   </label>
                   <textarea
                     rows={3}
